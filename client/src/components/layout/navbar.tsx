@@ -2,8 +2,14 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Menu, User } from "lucide-react";
+import { Search, Menu, User, ChevronDown } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Navbar() {
   const [location] = useLocation();
@@ -11,9 +17,18 @@ export default function Navbar() {
 
   const navItems = [
     { href: "/", label: "홈", id: "home" },
+    { href: "/about", label: "학원소개", id: "about" },
     { href: "/notices", label: "공지사항", id: "notices" },
     { href: "/gallery", label: "작품갤러리", id: "gallery" },
-    { href: "/entrance", label: "입시정보", id: "entrance" },
+    { 
+      href: "/entrance", 
+      label: "입시정보", 
+      id: "entrance",
+      subItems: [
+        { href: "/middle-school", label: "예중입시정보" },
+        { href: "/high-school", label: "예고입시정보" }
+      ]
+    },
     { href: "/admin", label: "관리자", id: "admin" },
   ];
 
@@ -35,19 +50,49 @@ export default function Navbar() {
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
-                {navItems.map((item) => (
-                  <Link key={item.id} href={item.href}>
-                    <a
-                      className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                        isActive(item.href)
-                          ? "text-primary border-b-2 border-primary"
-                          : "text-slate-600 hover:text-primary"
-                      }`}
-                    >
-                      {item.label}
-                    </a>
-                  </Link>
-                ))}
+                {navItems.map((item) => {
+                  if (item.subItems) {
+                    return (
+                      <DropdownMenu key={item.id}>
+                        <DropdownMenuTrigger asChild>
+                          <button
+                            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${
+                              isActive(item.href) || item.subItems.some(sub => isActive(sub.href))
+                                ? "text-primary border-b-2 border-primary"
+                                : "text-slate-600 hover:text-primary"
+                            }`}
+                          >
+                            {item.label}
+                            <ChevronDown className="ml-1 h-4 w-4" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          {item.subItems.map((subItem) => (
+                            <DropdownMenuItem key={subItem.href} asChild>
+                              <Link href={subItem.href}>
+                                <a className="w-full">{subItem.label}</a>
+                              </Link>
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    );
+                  }
+                  
+                  return (
+                    <Link key={item.id} href={item.href}>
+                      <a
+                        className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                          isActive(item.href)
+                            ? "text-primary border-b-2 border-primary"
+                            : "text-slate-600 hover:text-primary"
+                        }`}
+                      >
+                        {item.label}
+                      </a>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -80,19 +125,44 @@ export default function Navbar() {
               </SheetTrigger>
               <SheetContent>
                 <div className="flex flex-col space-y-4 mt-8">
-                  {navItems.map((item) => (
-                    <Link key={item.id} href={item.href}>
-                      <a
-                        className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                          isActive(item.href)
-                            ? "text-primary bg-primary/10"
-                            : "text-slate-600 hover:text-primary hover:bg-slate-100"
-                        }`}
-                      >
-                        {item.label}
-                      </a>
-                    </Link>
-                  ))}
+                  {navItems.map((item) => {
+                    if (item.subItems) {
+                      return (
+                        <div key={item.id} className="space-y-2">
+                          <div className="px-3 py-2 text-base font-medium text-slate-900">
+                            {item.label}
+                          </div>
+                          {item.subItems.map((subItem) => (
+                            <Link key={subItem.href} href={subItem.href}>
+                              <a
+                                className={`block px-6 py-2 rounded-md text-sm transition-colors ${
+                                  isActive(subItem.href)
+                                    ? "text-primary bg-primary/10"
+                                    : "text-slate-600 hover:text-primary hover:bg-slate-100"
+                                }`}
+                              >
+                                {subItem.label}
+                              </a>
+                            </Link>
+                          ))}
+                        </div>
+                      );
+                    }
+                    
+                    return (
+                      <Link key={item.id} href={item.href}>
+                        <a
+                          className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                            isActive(item.href)
+                              ? "text-primary bg-primary/10"
+                              : "text-slate-600 hover:text-primary hover:bg-slate-100"
+                          }`}
+                        >
+                          {item.label}
+                        </a>
+                      </Link>
+                    );
+                  })}
                   <div className="pt-4 border-t">
                     <Input
                       type="text"

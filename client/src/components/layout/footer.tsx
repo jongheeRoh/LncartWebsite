@@ -38,6 +38,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/about">
+                  <a className="text-slate-300 hover:text-white transition-colors">학원소개</a>
+                </Link>
+              </li>
+              <li>
                 <Link href="/notices">
                   <a className="text-slate-300 hover:text-white transition-colors">공지사항</a>
                 </Link>
@@ -45,11 +50,6 @@ export default function Footer() {
               <li>
                 <Link href="/gallery">
                   <a className="text-slate-300 hover:text-white transition-colors">작품갤러리</a>
-                </Link>
-              </li>
-              <li>
-                <Link href="/entrance">
-                  <a className="text-slate-300 hover:text-white transition-colors">입시정보</a>
                 </Link>
               </li>
               <li>
@@ -61,10 +61,18 @@ export default function Footer() {
           </div>
           
           <div>
-            <h4 className="text-lg font-semibold mb-4">교육과정</h4>
+            <h4 className="text-lg font-semibold mb-4">입시정보</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-slate-300 hover:text-white transition-colors">예중 입시</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-white transition-colors">예고 입시</a></li>
+              <li>
+                <Link href="/middle-school">
+                  <a className="text-slate-300 hover:text-white transition-colors">예중입시정보</a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/high-school">
+                  <a className="text-slate-300 hover:text-white transition-colors">예고입시정보</a>
+                </Link>
+              </li>
               <li><a href="#" className="text-slate-300 hover:text-white transition-colors">미대 입시</a></li>
               <li><a href="#" className="text-slate-300 hover:text-white transition-colors">기초 과정</a></li>
             </ul>
