@@ -12,7 +12,8 @@ export default function Navbar() {
   const navItems = [
     { href: "/", label: "홈", id: "home" },
     { href: "/notices", label: "공지사항", id: "notices" },
-    { href: "/gallery", label: "갤러리", id: "gallery" },
+    { href: "/gallery", label: "작품갤러리", id: "gallery" },
+    { href: "/entrance", label: "입시정보", id: "entrance" },
     { href: "/admin", label: "관리자", id: "admin" },
   ];
 
@@ -29,7 +30,7 @@ export default function Navbar() {
           <div className="flex items-center space-x-8">
             <div className="flex-shrink-0">
               <Link href="/">
-                <h1 className="text-2xl font-bold text-primary cursor-pointer">LNCart</h1>
+                <h1 className="text-2xl font-bold text-primary cursor-pointer">선과색미술학원</h1>
               </Link>
             </div>
             <div className="hidden md:block">

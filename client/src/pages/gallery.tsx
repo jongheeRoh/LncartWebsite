@@ -51,8 +51,8 @@ export default function Gallery() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h3 className="text-3xl font-bold text-slate-900 mb-2">갤러리</h3>
-            <p className="text-slate-600">다양한 이미지와 미디어 콘텐츠를 관리하세요.</p>
+            <h3 className="text-3xl font-bold text-slate-900 mb-2">작품 갤러리</h3>
+            <p className="text-slate-600">학생들의 우수한 작품과 성과를 확인해보세요.</p>
           </div>
           
           <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>

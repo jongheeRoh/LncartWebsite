@@ -44,6 +44,81 @@ export class MemStorage implements IStorage {
     this.createUser({ username: "admin", password: "admin123" }).then(user => {
       this.users.set(user.id, { ...user, isAdmin: true });
     });
+
+    // Add sample notices
+    this.initializeSampleData();
+  }
+
+  private async initializeSampleData() {
+    // Sample notices
+    const sampleNotices = [
+      {
+        title: "2024년 예중 입시 설명회 안내",
+        content: "2024년 예술중학교 입시를 준비하는 학생과 학부모님들을 위한 설명회를 개최합니다. 입시 전형 방법, 준비 과정, 포트폴리오 작성법 등에 대해 자세히 안내해드리겠습니다.",
+        excerpt: "예중 입시 설명회가 3월 15일 오후 2시에 개최됩니다.",
+        category: "긴급"
+      },
+      {
+        title: "신학기 수업 시간표 안내",
+        content: "새 학기가 시작됨에 따라 수업 시간표를 안내해드립니다. 기초소묘반, 수채화반, 디자인반 등 각 반별 시간표를 확인하시기 바랍니다.",
+        excerpt: "신학기 수업 시간표가 업데이트되었습니다.",
+        category: "일반"
+      },
+      {
+        title: "학생 작품 전시회 개최",
+        content: "우리 학원 학생들의 우수한 작품들을 선보이는 전시회를 개최합니다. 한 학기 동안 열심히 작업한 학생들의 성과를 확인하실 수 있습니다.",
+        excerpt: "학생 작품 전시회가 4월 중 개최될 예정입니다.",
+        category: "이벤트"
+      }
+    ];
+
+    for (const notice of sampleNotices) {
+      await this.createNotice(notice);
+    }
+
+    // Sample gallery items
+    const sampleGalleryItems = [
+      {
+        title: "기초소묘 - 정물화",
+        description: "예중 입시반 학생의 정물 소묘 작품입니다. 형태의 정확성과 명암 표현이 뛰어납니다.",
+        imageUrl: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=500&h=500&fit=crop",
+        category: "소묘"
+      },
+      {
+        title: "수채화 풍경화",
+        description: "자연을 주제로 한 수채화 작품으로, 색채의 조화가 아름답게 표현되었습니다.",
+        imageUrl: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=500&fit=crop",
+        category: "수채화"
+      },
+      {
+        title: "디자인 포스터 작품",
+        description: "창의적인 아이디어와 디자인 감각이 돋보이는 포스터 작품입니다.",
+        imageUrl: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=500&fit=crop",
+        category: "디자인"
+      },
+      {
+        title: "예고 입시 자화상",
+        description: "예술고등학교 입시를 위한 자화상 작품으로 뛰어난 관찰력을 보여줍니다.",
+        imageUrl: "https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=500&h=500&fit=crop",
+        category: "입시작품"
+      },
+      {
+        title: "조소 작품 - 인체",
+        description: "점토를 이용한 인체 조소 작품으로 입체감이 잘 표현되었습니다.",
+        imageUrl: "https://images.unsplash.com/photo-1594736797933-d0d2ee4e7bf3?w=500&h=500&fit=crop",
+        category: "조소"
+      },
+      {
+        title: "연필 소묘 - 인물화",
+        description: "섬세한 터치와 정확한 비례로 완성된 인물 소묘 작품입니다.",
+        imageUrl: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=500&h=500&fit=crop",
+        category: "소묘"
+      }
+    ];
+
+    for (const item of sampleGalleryItems) {
+      await this.createGalleryItem(item);
+    }
   }
 
   async getUser(id: number): Promise<User | undefined> {
@@ -101,8 +176,11 @@ export class MemStorage implements IStorage {
     const id = this.currentNoticeId++;
     const now = new Date();
     const notice: Notice = {
-      ...insertNotice,
       id,
+      title: insertNotice.title,
+      content: insertNotice.content,
+      excerpt: insertNotice.excerpt,
+      category: insertNotice.category || "일반",
       createdAt: now,
       updatedAt: now,
     };
@@ -151,8 +229,11 @@ export class MemStorage implements IStorage {
   async createGalleryItem(insertItem: InsertGalleryItem): Promise<GalleryItem> {
     const id = this.currentGalleryItemId++;
     const item: GalleryItem = {
-      ...insertItem,
       id,
+      title: insertItem.title,
+      description: insertItem.description,
+      imageUrl: insertItem.imageUrl,
+      category: insertItem.category || "전체",
       createdAt: new Date(),
     };
     this.galleryItems.set(id, item);

@@ -6,9 +6,12 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
-            <h3 className="text-2xl font-bold mb-4">LNCart</h3>
+            <h3 className="text-2xl font-bold mb-4">선과색미술학원</h3>
             <p className="text-slate-300 mb-4 max-w-md">
-              현대적이고 효율적인 콘텐츠 관리 시스템으로 공지사항과 갤러리를 손쉽게 관리하세요.
+              예중/예고, 미대입시 전문학원으로 체계적인 교육을 통해 학생들의 꿈을 실현해드립니다.
+            </p>
+            <p className="text-slate-400 text-sm mb-4">
+              학원등록번호: 제2030호
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-slate-400 hover:text-white transition-colors">
@@ -41,7 +44,12 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/gallery">
-                  <a className="text-slate-300 hover:text-white transition-colors">갤러리</a>
+                  <a className="text-slate-300 hover:text-white transition-colors">작품갤러리</a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/entrance">
+                  <a className="text-slate-300 hover:text-white transition-colors">입시정보</a>
                 </Link>
               </li>
               <li>
@@ -53,19 +61,19 @@ export default function Footer() {
           </div>
           
           <div>
-            <h4 className="text-lg font-semibold mb-4">지원</h4>
+            <h4 className="text-lg font-semibold mb-4">교육과정</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-slate-300 hover:text-white transition-colors">고객 지원</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-white transition-colors">사용 가이드</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-white transition-colors">개발자 문서</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-white transition-colors">문의하기</a></li>
+              <li><a href="#" className="text-slate-300 hover:text-white transition-colors">예중 입시</a></li>
+              <li><a href="#" className="text-slate-300 hover:text-white transition-colors">예고 입시</a></li>
+              <li><a href="#" className="text-slate-300 hover:text-white transition-colors">미대 입시</a></li>
+              <li><a href="#" className="text-slate-300 hover:text-white transition-colors">기초 과정</a></li>
             </ul>
           </div>
         </div>
         
         <div className="border-t border-slate-800 mt-8 pt-8 text-center">
           <p className="text-slate-400">
-            © 2024 LNCart. All rights reserved. | 
+            © 2024 선과색미술학원. All rights reserved. | 
             <a href="#" className="hover:text-white transition-colors ml-1">개인정보처리방침</a> | 
             <a href="#" className="hover:text-white transition-colors ml-1">이용약관</a>
           </p>
