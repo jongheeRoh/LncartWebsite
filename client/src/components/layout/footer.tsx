@@ -79,12 +79,19 @@ export default function Footer() {
           </div>
         </div>
         
-        <div className="border-t border-slate-800 mt-8 pt-8 text-center">
-          <p className="text-slate-400">
+        <div className="border-t border-slate-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-slate-400 mb-4 md:mb-0">
             © 2024 선과색미술학원. All rights reserved. | 
             <a href="#" className="hover:text-white transition-colors ml-1">개인정보처리방침</a> | 
             <a href="#" className="hover:text-white transition-colors ml-1">이용약관</a>
           </p>
+          <div className="text-center md:text-right">
+            <Link href="/admin">
+              <a className="text-slate-400 hover:text-white transition-colors text-sm">
+                관리자 페이지
+              </a>
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

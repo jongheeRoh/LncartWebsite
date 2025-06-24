@@ -26,7 +26,6 @@ export default function Navbar() {
         { href: "/high-school", label: "예고입시정보" }
       ]
     },
-    { href: "/admin", label: "관리자", id: "admin" },
   ];
 
   const isActive = (href: string) => {
