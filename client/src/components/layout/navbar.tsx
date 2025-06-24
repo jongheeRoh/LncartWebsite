@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search, Menu, User, ChevronDown } from "lucide-react";
+import { Menu, ChevronDown } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu,
@@ -13,7 +11,6 @@ import {
 
 export default function Navbar() {
   const [location] = useLocation();
-  const [searchQuery, setSearchQuery] = useState("");
 
   const navItems = [
     { href: "/", label: "홈", id: "home" },
@@ -70,7 +67,7 @@ export default function Navbar() {
                           {item.subItems.map((subItem) => (
                             <DropdownMenuItem key={subItem.href} asChild>
                               <Link href={subItem.href}>
-                                <a className="w-full">{subItem.label}</a>
+                                <span className="w-full cursor-pointer">{subItem.label}</span>
                               </Link>
                             </DropdownMenuItem>
                           ))}
@@ -94,25 +91,6 @@ export default function Navbar() {
                   );
                 })}
               </div>
-            </div>
-          </div>
-          
-          <div className="hidden md:block">
-            <div className="ml-4 flex items-center md:ml-6">
-              <div className="relative">
-                <Input
-                  type="text"
-                  placeholder="검색..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-64 pl-10 pr-4 py-2"
-                />
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
-              </div>
-              <Button className="ml-4 bg-primary hover:bg-primary/90">
-                <User className="mr-2 h-4 w-4" />
-                로그인
-              </Button>
             </div>
           </div>
 
@@ -163,19 +141,6 @@ export default function Navbar() {
                       </Link>
                     );
                   })}
-                  <div className="pt-4 border-t">
-                    <Input
-                      type="text"
-                      placeholder="검색..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="mb-4"
-                    />
-                    <Button className="w-full">
-                      <User className="mr-2 h-4 w-4" />
-                      로그인
-                    </Button>
-                  </div>
                 </div>
               </SheetContent>
             </Sheet>
