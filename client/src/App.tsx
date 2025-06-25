@@ -12,6 +12,7 @@ import Gallery from "@/pages/gallery";
 import Entrance from "@/pages/entrance";
 import MiddleSchool from "@/pages/middle-school";
 import HighSchool from "@/pages/high-school";
+import Directions from "@/pages/directions";
 import Admin from "@/pages/admin";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
@@ -29,6 +30,7 @@ function Router() {
         <Route path="/entrance" component={Entrance} />
         <Route path="/middle-school" component={MiddleSchool} />
         <Route path="/high-school" component={HighSchool} />
+        <Route path="/directions" component={Directions} />
         <Route path="/admin" component={Admin} />
         <Route component={NotFound} />
       </Switch>

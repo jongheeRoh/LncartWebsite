@@ -27,6 +27,7 @@ export default function Navbar() {
         { href: "/high-school", label: "예고입시정보" }
       ]
     },
+    { href: "/directions", label: "오시는길", id: "directions" },
   ];
 
   const isActive = (href: string) => {

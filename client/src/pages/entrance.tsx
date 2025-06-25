@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { GraduationCap, Calendar, BookOpen, Users, Star, Clock, ArrowRight, Target, Award } from "lucide-react";
+import { GraduationCap, Calendar, BookOpen, Users, Star, Clock, ArrowRight, Target, Award, Phone } from "lucide-react";
 
 export default function Entrance() {
   return (
