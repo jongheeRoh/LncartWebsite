@@ -266,4 +266,150 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    return user;
+  }
+
+  async getAllNotices(page: number = 1, limit: number = 10, category?: string, search?: string): Promise<{ notices: Notice[], total: number }> {
+    let whereConditions = [];
+    
+    if (category && category !== "전체") {
+      whereConditions.push(eq(notices.category, category));
+    }
+    
+    if (search) {
+      whereConditions.push(like(notices.title, `%${search}%`));
+    }
+
+    const whereClause = whereConditions.length > 0 ? and(...whereConditions) : undefined;
+
+    const [totalResult] = await db
+      .select({ count: count() })
+      .from(notices)
+      .where(whereClause);
+
+    const noticesList = await db
+      .select()
+      .from(notices)
+      .where(whereClause)
+      .orderBy(desc(notices.createdAt))
+      .limit(limit)
+      .offset((page - 1) * limit);
+
+    return {
+      notices: noticesList,
+      total: totalResult.count
+    };
+  }
+
+  async getNotice(id: number): Promise<Notice | undefined> {
+    const [notice] = await db.select().from(notices).where(eq(notices.id, id));
+    return notice || undefined;
+  }
+
+  async createNotice(insertNotice: InsertNotice): Promise<Notice> {
+    const [notice] = await db
+      .insert(notices)
+      .values(insertNotice)
+      .returning();
+    return notice;
+  }
+
+  async updateNotice(id: number, updates: UpdateNotice): Promise<Notice | undefined> {
+    const [notice] = await db
+      .update(notices)
+      .set(updates)
+      .where(eq(notices.id, id))
+      .returning();
+    return notice || undefined;
+  }
+
+  async deleteNotice(id: number): Promise<boolean> {
+    const result = await db.delete(notices).where(eq(notices.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getAllGalleryItems(page: number = 1, limit: number = 12, category?: string): Promise<{ items: GalleryItem[], total: number }> {
+    let whereConditions = [];
+    
+    if (category && category !== "전체") {
+      whereConditions.push(eq(galleryItems.category, category));
+    }
+
+    const whereClause = whereConditions.length > 0 ? and(...whereConditions) : undefined;
+
+    const [totalResult] = await db
+      .select({ count: count() })
+      .from(galleryItems)
+      .where(whereClause);
+
+    const items = await db
+      .select()
+      .from(galleryItems)
+      .where(whereClause)
+      .orderBy(desc(galleryItems.createdAt))
+      .limit(limit)
+      .offset((page - 1) * limit);
+
+    return {
+      items: items,
+      total: totalResult.count
+    };
+  }
+
+  async getGalleryItem(id: number): Promise<GalleryItem | undefined> {
+    const [item] = await db.select().from(galleryItems).where(eq(galleryItems.id, id));
+    return item || undefined;
+  }
+
+  async createGalleryItem(insertItem: InsertGalleryItem): Promise<GalleryItem> {
+    const [item] = await db
+      .insert(galleryItems)
+      .values(insertItem)
+      .returning();
+    return item;
+  }
+
+  async updateGalleryItem(id: number, updates: UpdateGalleryItem): Promise<GalleryItem | undefined> {
+    const [item] = await db
+      .update(galleryItems)
+      .set(updates)
+      .where(eq(galleryItems.id, id))
+      .returning();
+    return item || undefined;
+  }
+
+  async deleteGalleryItem(id: number): Promise<boolean> {
+    const result = await db.delete(galleryItems).where(eq(galleryItems.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getStats(): Promise<{ totalNotices: number, totalImages: number, monthlyVisitors: number, viewsGrowth: string }> {
+    const [noticesCount] = await db.select({ count: count() }).from(notices);
+    const [imagesCount] = await db.select({ count: count() }).from(galleryItems);
+    
+    return {
+      totalNotices: noticesCount.count,
+      totalImages: imagesCount.count,
+      monthlyVisitors: 1250,
+      viewsGrowth: "+12.5%"
+    };
+  }
+}
+
+export const storage = new DatabaseStorage();

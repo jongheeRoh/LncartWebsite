@@ -1,214 +1,155 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, FileText, Image, BarChart3 } from "lucide-react";
 import AdminStats from "@/components/admin/admin-stats";
 import NoticeForm from "@/components/notices/notice-form";
+import NoticeList from "@/components/notices/notice-list";
 import ImageUpload from "@/components/gallery/image-upload";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import {
-  PlusCircle,
-  Upload,
-  Edit,
-  CheckSquare,
-  Users,
-  BarChart3,
-  Database,
-  Settings,
-  Plus,
-  Image,
-  Download,
-  PieChart,
-  ChevronRight,
-} from "lucide-react";
+import GalleryGrid from "@/components/gallery/gallery-grid";
+import type { Notice, GalleryItem } from "@shared/schema";
+import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
 
 export default function Admin() {
-  const [isNoticeFormOpen, setIsNoticeFormOpen] = useState(false);
-  const [isImageUploadOpen, setIsImageUploadOpen] = useState(false);
+  const [showNoticeForm, setShowNoticeForm] = useState(false);
+  const [showImageUpload, setShowImageUpload] = useState(false);
 
-  const handleNoticeCreated = () => {
-    setIsNoticeFormOpen(false);
-  };
+  const { data: noticesData, isLoading: noticesLoading, refetch: refetchNotices } = useQuery<{
+    notices: Notice[];
+    total: number;
+  }>({
+    queryKey: ["/api/notices"],
+    queryFn: async () => {
+      const response = await fetch("/api/notices?limit=50");
+      if (!response.ok) throw new Error("Failed to fetch notices");
+      return response.json();
+    },
+  });
 
-  const handleImageUploaded = () => {
-    setIsImageUploadOpen(false);
-  };
+  const { data: galleryData, isLoading: galleryLoading, refetch: refetchGallery } = useQuery<{
+    items: GalleryItem[];
+    total: number;
+  }>({
+    queryKey: ["/api/gallery"],
+    queryFn: async () => {
+      const response = await fetch("/api/gallery?limit=50");
+      if (!response.ok) throw new Error("Failed to fetch gallery items");
+      return response.json();
+    },
+  });
 
   return (
-    <section className="py-16 bg-slate-100 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h3 className="text-3xl font-bold text-slate-900 mb-4">관리자 패널</h3>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            콘텐츠를 효율적으로 관리하고 시스템을 모니터링하세요.
-          </p>
+    <div className="min-h-screen bg-slate-50">
+      {/* Hero Section */}
+      <section className="relative text-white py-16 overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src={heroImage} 
+            alt="선과색 미술학원 간판" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/60"></div>
         </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">관리자 페이지</h1>
+            <p className="text-xl text-orange-100 max-w-3xl mx-auto drop-shadow-lg">
+              공지사항과 갤러리를 관리하고 통계를 확인하세요
+            </p>
+          </div>
+        </div>
+      </section>
 
-        {/* Admin Stats */}
-        <AdminStats />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <Tabs defaultValue="stats" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 mb-8">
+            <TabsTrigger value="stats">
+              <BarChart3 className="mr-2 h-4 w-4" />
+              통계
+            </TabsTrigger>
+            <TabsTrigger value="notices">
+              <FileText className="mr-2 h-4 w-4" />
+              공지사항
+            </TabsTrigger>
+            <TabsTrigger value="gallery">
+              <Image className="mr-2 h-4 w-4" />
+              갤러리
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Admin Actions */}
-        <div className="grid md:grid-cols-2 gap-8 mb-8">
-          {/* Content Management */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold">콘텐츠 관리</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <Dialog open={isNoticeFormOpen} onOpenChange={setIsNoticeFormOpen}>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-between p-4 bg-slate-50 hover:bg-slate-100 h-auto"
-                    >
-                      <div className="flex items-center">
-                        <PlusCircle className="text-primary mr-3 h-5 w-5" />
-                        <span className="font-medium">새 공지사항 작성</span>
-                      </div>
-                      <ChevronRight className="text-slate-400 h-4 w-4" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
-                    <NoticeForm onSuccess={handleNoticeCreated} />
-                  </DialogContent>
-                </Dialog>
+          <TabsContent value="stats">
+            <AdminStats />
+          </TabsContent>
 
-                <Dialog open={isImageUploadOpen} onOpenChange={setIsImageUploadOpen}>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-between p-4 bg-slate-50 hover:bg-slate-100 h-auto"
-                    >
-                      <div className="flex items-center">
-                        <Upload className="text-primary mr-3 h-5 w-5" />
-                        <span className="font-medium">갤러리 이미지 업로드</span>
-                      </div>
-                      <ChevronRight className="text-slate-400 h-4 w-4" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
-                    <ImageUpload onSuccess={handleImageUploaded} />
-                  </DialogContent>
-                </Dialog>
-
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between p-4 bg-slate-50 hover:bg-slate-100 h-auto"
-                >
-                  <div className="flex items-center">
-                    <Edit className="text-primary mr-3 h-5 w-5" />
-                    <span className="font-medium">콘텐츠 수정 및 관리</span>
-                  </div>
-                  <ChevronRight className="text-slate-400 h-4 w-4" />
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between p-4 bg-slate-50 hover:bg-slate-100 h-auto"
-                >
-                  <div className="flex items-center">
-                    <CheckSquare className="text-primary mr-3 h-5 w-5" />
-                    <span className="font-medium">일괄 처리 작업</span>
-                  </div>
-                  <ChevronRight className="text-slate-400 h-4 w-4" />
+          <TabsContent value="notices">
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold text-slate-900">공지사항 관리</h2>
+                <Button onClick={() => setShowNoticeForm(!showNoticeForm)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  새 공지사항
                 </Button>
               </div>
-            </CardContent>
-          </Card>
+              
+              {showNoticeForm && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>새 공지사항 작성</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <NoticeForm onSuccess={() => {
+                      setShowNoticeForm(false);
+                      refetchNotices();
+                    }} />
+                  </CardContent>
+                </Card>
+              )}
 
-          {/* System Management */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold">시스템 관리</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between p-4 bg-slate-50 hover:bg-slate-100 h-auto"
-                >
-                  <div className="flex items-center">
-                    <Users className="text-primary mr-3 h-5 w-5" />
-                    <span className="font-medium">사용자 권한 관리</span>
-                  </div>
-                  <ChevronRight className="text-slate-400 h-4 w-4" />
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between p-4 bg-slate-50 hover:bg-slate-100 h-auto"
-                >
-                  <div className="flex items-center">
-                    <BarChart3 className="text-primary mr-3 h-5 w-5" />
-                    <span className="font-medium">통계 및 분석</span>
-                  </div>
-                  <ChevronRight className="text-slate-400 h-4 w-4" />
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between p-4 bg-slate-50 hover:bg-slate-100 h-auto"
-                >
-                  <div className="flex items-center">
-                    <Database className="text-primary mr-3 h-5 w-5" />
-                    <span className="font-medium">데이터베이스 백업</span>
-                  </div>
-                  <ChevronRight className="text-slate-400 h-4 w-4" />
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between p-4 bg-slate-50 hover:bg-slate-100 h-auto"
-                >
-                  <div className="flex items-center">
-                    <Settings className="text-primary mr-3 h-5 w-5" />
-                    <span className="font-medium">시스템 설정</span>
-                  </div>
-                  <ChevronRight className="text-slate-400 h-4 w-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Quick Actions Toolbar */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">빠른 작업</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-4">
-              <Dialog open={isNoticeFormOpen} onOpenChange={setIsNoticeFormOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-primary hover:bg-primary/90">
-                    <Plus className="mr-2 h-4 w-4" />
-                    공지 작성
-                  </Button>
-                </DialogTrigger>
-              </Dialog>
-
-              <Dialog open={isImageUploadOpen} onOpenChange={setIsImageUploadOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-green-600 hover:bg-green-700">
-                    <Image className="mr-2 h-4 w-4" />
-                    이미지 추가
-                  </Button>
-                </DialogTrigger>
-              </Dialog>
-
-              <Button className="bg-orange-600 hover:bg-orange-700">
-                <Download className="mr-2 h-4 w-4" />
-                데이터 내보내기
-              </Button>
-
-              <Button className="bg-purple-600 hover:bg-purple-700">
-                <PieChart className="mr-2 h-4 w-4" />
-                보고서 보기
-              </Button>
+              <NoticeList 
+                notices={noticesData?.notices || []} 
+                isLoading={noticesLoading}
+                onNoticeUpdated={refetchNotices}
+                onNoticeDeleted={refetchNotices}
+              />
             </div>
-          </CardContent>
-        </Card>
+          </TabsContent>
+
+          <TabsContent value="gallery">
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold text-slate-900">갤러리 관리</h2>
+                <Button onClick={() => setShowImageUpload(!showImageUpload)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  새 작품
+                </Button>
+              </div>
+              
+              {showImageUpload && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>새 작품 업로드</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ImageUpload onSuccess={() => {
+                      setShowImageUpload(false);
+                      refetchGallery();
+                    }} />
+                  </CardContent>
+                </Card>
+              )}
+
+              <GalleryGrid 
+                items={galleryData?.items || []} 
+                isLoading={galleryLoading}
+                onImageUpdated={refetchGallery}
+                onImageDeleted={refetchGallery}
+              />
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
-    </section>
+    </div>
   );
 }
