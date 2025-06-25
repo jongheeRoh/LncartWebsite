@@ -15,6 +15,7 @@ export default function Navbar() {
   const navItems = [
     { href: "/", label: "홈", id: "home" },
     { href: "/about", label: "학원소개", id: "about" },
+    { href: "/schedule", label: "학원 시간표", id: "schedule" },
     { href: "/notices", label: "공지사항", id: "notices" },
     { href: "/gallery", label: "작품갤러리", id: "gallery" },
     { 
