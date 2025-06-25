@@ -8,6 +8,7 @@ import { Search, Calendar, User } from "lucide-react";
 import { Link } from "wouter";
 import { GALLERY_CATEGORIES, type GalleryCategory } from "@/lib/types";
 import type { GalleryItem } from "@shared/schema";
+import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
 
 export default function Gallery() {
   const [page, setPage] = useState(1);
@@ -55,7 +56,7 @@ export default function Gallery() {
       <section className="relative text-white py-16 overflow-hidden">
         <div className="absolute inset-0">
           <img 
-            src="@assets/스크린샷 2025-06-25 222106_1750857872681.png" 
+            src={heroImage} 
             alt="선과색 미술학원 간판" 
             className="w-full h-full object-cover"
           />

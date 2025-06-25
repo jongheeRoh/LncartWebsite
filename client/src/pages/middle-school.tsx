@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, BookOpen, Users, Target, CheckCircle, Clock, Award, Palette, FileText, Trophy } from "lucide-react";
+import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
 
 export default function MiddleSchool() {
   const announcements = [
@@ -21,7 +22,7 @@ export default function MiddleSchool() {
       <section className="relative text-white py-16 overflow-hidden">
         <div className="absolute inset-0">
           <img 
-            src="@assets/스크린샷 2025-06-25 222106_1750857872681.png" 
+            src={heroImage} 
             alt="선과색 미술학원 간판" 
             className="w-full h-full object-cover"
           />
