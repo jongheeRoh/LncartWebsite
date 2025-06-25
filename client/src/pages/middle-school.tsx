@@ -1,9 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, BookOpen, Users, Target, CheckCircle, Clock } from "lucide-react";
+import { Calendar, BookOpen, Users, Target, CheckCircle, Clock, Award, Palette, FileText, Trophy } from "lucide-react";
 
 export default function MiddleSchool() {
+  const announcements = [
+    { id: 23, title: "[실기대회] 2025선화미술실기대회 수상자", author: "관리자" },
+    { id: 22, title: "[재현작] 2025 선화예중 재현작", author: "관리자" },
+    { id: 21, title: "[합격자] 2025선화예중 합격자", author: "관리자" },
+    { id: 20, title: "[출제문제] 2025 선화예중 출제문제", author: "관리자" },
+    { id: 19, title: "[방학특강] 예중대비 여름방학특강 선과색미술학원", author: "관리자" },
+    { id: 18, title: "[입시요강]2025 선화예술중학교 입시요강", author: "관리자" },
+    { id: 17, title: "[방학특강] 2024 선화예중 입시 안내", author: "관리자" },
+    { id: 16, title: "[실기대회] 2023 선화 미술대회 시상식", author: "관리자" }
+  ];
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
@@ -12,7 +23,7 @@ export default function MiddleSchool() {
           <div className="text-center">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">예중 입시정보</h2>
             <p className="text-xl text-orange-100 max-w-3xl mx-auto">
-              예술중학교 입시를 위한 체계적이고 전문적인 교육과정
+              선화예술중학교 입시를 위한 체계적이고 전문적인 교육과정
             </p>
           </div>
         </div>
@@ -28,7 +39,7 @@ export default function MiddleSchool() {
             <CardContent>
               <div className="text-center max-w-4xl mx-auto">
                 <p className="text-lg text-slate-700 mb-6">
-                  예술중학교 입시는 학생의 예술적 재능과 잠재력을 평가하는 전형입니다.
+                  선화예술중학교 입시는 학생의 예술적 재능과 잠재력을 평가하는 전형입니다.
                 </p>
                 <p className="text-slate-600 mb-4">
                   기초적인 미술 실기 능력과 창의성, 표현력을 종합적으로 평가하며, 
@@ -48,198 +59,119 @@ export default function MiddleSchool() {
           <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">전형 방법</h3>
           <div className="grid md:grid-cols-3 gap-6">
             <Card className="text-center card-hover">
-              <CardHeader>
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <BookOpen className="h-8 w-8 text-primary" />
+              <CardContent className="p-6">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FileText className="h-8 w-8 text-blue-600" />
                 </div>
-                <CardTitle className="text-lg">실기고사</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-slate-600 mb-4">기초소묘, 수채화, 상상화 등</p>
-                <Badge variant="outline">배점: 60%</Badge>
+                <h4 className="text-xl font-semibold text-slate-900 mb-2">서류전형</h4>
+                <p className="text-slate-600 text-sm mb-4">
+                  학교생활기록부 및 자기소개서
+                </p>
+                <Badge variant="outline" className="bg-blue-50 text-blue-700">30%</Badge>
               </CardContent>
             </Card>
 
             <Card className="text-center card-hover">
-              <CardHeader>
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Target className="h-8 w-8 text-primary" />
+              <CardContent className="p-6">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Palette className="h-8 w-8 text-green-600" />
                 </div>
-                <CardTitle className="text-lg">포트폴리오</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-slate-600 mb-4">개인 작품집 평가</p>
-                <Badge variant="outline">배점: 30%</Badge>
+                <h4 className="text-xl font-semibold text-slate-900 mb-2">실기전형</h4>
+                <p className="text-slate-600 text-sm mb-4">
+                  기초소묘 및 수채화 실기고사
+                </p>
+                <Badge variant="outline" className="bg-green-50 text-green-700">50%</Badge>
               </CardContent>
             </Card>
 
             <Card className="text-center card-hover">
-              <CardHeader>
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="h-8 w-8 text-primary" />
+              <CardContent className="p-6">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Users className="h-8 w-8 text-purple-600" />
                 </div>
-                <CardTitle className="text-lg">면접</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-slate-600 mb-4">예술적 소양 및 의지</p>
-                <Badge variant="outline">배점: 10%</Badge>
+                <h4 className="text-xl font-semibold text-slate-900 mb-2">면접전형</h4>
+                <p className="text-slate-600 text-sm mb-4">
+                  예술적 소양 및 학습의지 평가
+                </p>
+                <Badge variant="outline" className="bg-purple-50 text-purple-700">20%</Badge>
               </CardContent>
             </Card>
           </div>
         </section>
 
-        {/* 실기 과목별 안내 */}
+        {/* 실기 과목 상세 */}
         <section className="mb-16">
-          <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">실기 과목별 안내</h3>
-          <div className="grid gap-8">
-            <Card>
+          <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">실기 과목</h3>
+          <div className="grid md:grid-cols-2 gap-8">
+            <Card className="bg-white shadow-lg">
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <CheckCircle className="mr-3 text-primary" />
+                  <Palette className="mr-3 text-blue-600" />
                   기초소묘
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-semibold mb-3">주요 내용</h4>
-                    <ul className="space-y-2 text-slate-600">
-                      <li>• 정물 소묘 (기본 도형, 정물 조합)</li>
-                      <li>• 명암 표현과 질감 묘사</li>
-                      <li>• 비례와 형태 정확성</li>
-                      <li>• 구도와 화면 구성</li>
-                    </ul>
+                <div className="space-y-4">
+                  <p className="text-slate-600">
+                    정물화를 중심으로 한 기초적인 소묘 능력을 평가합니다.
+                  </p>
+                  <div className="space-y-2">
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                      <span className="text-sm">형태 관찰력과 표현력</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                      <span className="text-sm">명암과 질감 표현</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                      <span className="text-sm">비례와 구성력</span>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold mb-3">평가 요소</h4>
-                    <ul className="space-y-2 text-slate-600">
-                      <li>• 관찰력과 표현력</li>
-                      <li>• 비례의 정확성</li>
-                      <li>• 명암 처리 능력</li>
-                      <li>• 완성도</li>
-                    </ul>
+                  <div className="bg-slate-50 p-3 rounded-lg">
+                    <p className="text-sm text-slate-700">
+                      <strong>시험시간:</strong> 3시간<br/>
+                      <strong>준비물:</strong> 4절지, 연필(2H~6B), 지우개
+                    </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-white shadow-lg">
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <CheckCircle className="mr-3 text-primary" />
+                  <Palette className="mr-3 text-purple-600" />
                   수채화
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-semibold mb-3">주요 내용</h4>
-                    <ul className="space-y-2 text-slate-600">
-                      <li>• 정물 수채화</li>
-                      <li>• 색채 조화와 대비</li>
-                      <li>• 수채화 기법 활용</li>
-                      <li>• 색감과 톤 표현</li>
-                    </ul>
+                <div className="space-y-4">
+                  <p className="text-slate-600">
+                    색채 감각과 조형 능력을 종합적으로 평가합니다.
+                  </p>
+                  <div className="space-y-2">
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                      <span className="text-sm">색채 감각과 조화</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                      <span className="text-sm">수채화 기법 활용</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                      <span className="text-sm">창의적 표현력</span>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold mb-3">평가 요소</h4>
-                    <ul className="space-y-2 text-slate-600">
-                      <li>• 색채 감각</li>
-                      <li>• 수채화 기법 숙련도</li>
-                      <li>• 조형 감각</li>
-                      <li>• 창의적 표현</li>
-                    </ul>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <CheckCircle className="mr-3 text-primary" />
-                  상상화
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-semibold mb-3">주요 내용</h4>
-                    <ul className="space-y-2 text-slate-600">
-                      <li>• 주제 표현</li>
-                      <li>• 창의적 구성</li>
-                      <li>• 상상력 발휘</li>
-                      <li>• 자유로운 표현</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-3">평가 요소</h4>
-                    <ul className="space-y-2 text-slate-600">
-                      <li>• 창의성과 독창성</li>
-                      <li>• 주제 이해도</li>
-                      <li>• 표현 능력</li>
-                      <li>• 화면 구성력</li>
-                    </ul>
+                  <div className="bg-slate-50 p-3 rounded-lg">
+                    <p className="text-sm text-slate-700">
+                      <strong>시험시간:</strong> 3시간<br/>
+                      <strong>준비물:</strong> 4절지, 수채화 도구 일체
+                    </p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-
-        {/* 준비 일정 */}
-        <section className="mb-16">
-          <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">연간 준비 일정</h3>
-          <div className="grid md:grid-cols-4 gap-6">
-            <Card className="text-center">
-              <CardHeader>
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Calendar className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="text-lg">3-6월</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <h4 className="font-semibold mb-2">기초 다지기</h4>
-                <p className="text-sm text-slate-600">기본 소묘, 수채화 기초 기법 습득</p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center">
-              <CardHeader>
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Calendar className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="text-lg">7-9월</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <h4 className="font-semibold mb-2">실력 향상</h4>
-                <p className="text-sm text-slate-600">다양한 주제 연습, 포트폴리오 제작</p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center">
-              <CardHeader>
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Calendar className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="text-lg">10-11월</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <h4 className="font-semibold mb-2">심화 과정</h4>
-                <p className="text-sm text-slate-600">고난도 작품 연습, 개인별 집중 지도</p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center">
-              <CardHeader>
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Calendar className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="text-lg">12-2월</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <h4 className="font-semibold mb-2">입시 실전</h4>
-                <p className="text-sm text-slate-600">모의고사, 실전 연습, 최종 점검</p>
               </CardContent>
             </Card>
           </div>
@@ -247,76 +179,223 @@ export default function MiddleSchool() {
 
         {/* 수업 시간표 */}
         <section className="mb-16">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl text-center flex items-center justify-center">
-                <Clock className="mr-3" />
-                예중반 수업 시간표
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+          <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">예중반 수업 시간표</h3>
+          <Card className="bg-white shadow-lg">
+            <CardContent className="p-8">
               <div className="overflow-x-auto">
-                <table className="w-full border-collapse border border-slate-300">
+                <table className="w-full">
                   <thead>
-                    <tr className="bg-slate-100">
-                      <th className="border border-slate-300 p-3 text-left">시간</th>
-                      <th className="border border-slate-300 p-3 text-center">월</th>
-                      <th className="border border-slate-300 p-3 text-center">화</th>
-                      <th className="border border-slate-300 p-3 text-center">수</th>
-                      <th className="border border-slate-300 p-3 text-center">목</th>
-                      <th className="border border-slate-300 p-3 text-center">금</th>
-                      <th className="border border-slate-300 p-3 text-center">토</th>
+                    <tr className="border-b-2 border-slate-200">
+                      <th className="text-left py-3 px-4 font-semibold text-slate-900">시간</th>
+                      <th className="text-center py-3 px-4 font-semibold text-slate-900">월</th>
+                      <th className="text-center py-3 px-4 font-semibold text-slate-900">화</th>
+                      <th className="text-center py-3 px-4 font-semibold text-slate-900">수</th>
+                      <th className="text-center py-3 px-4 font-semibold text-slate-900">목</th>
+                      <th className="text-center py-3 px-4 font-semibold text-slate-900">금</th>
+                      <th className="text-center py-3 px-4 font-semibold text-slate-900">토</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td className="border border-slate-300 p-3 font-semibold">09:00-12:00</td>
-                      <td className="border border-slate-300 p-3 text-center">기초소묘</td>
-                      <td className="border border-slate-300 p-3 text-center">수채화</td>
-                      <td className="border border-slate-300 p-3 text-center">기초소묘</td>
-                      <td className="border border-slate-300 p-3 text-center">상상화</td>
-                      <td className="border border-slate-300 p-3 text-center">포트폴리오</td>
-                      <td className="border border-slate-300 p-3 text-center">종합실기</td>
+                    <tr className="border-b border-slate-100">
+                      <td className="py-3 px-4 font-medium">09:00-12:00</td>
+                      <td className="py-3 px-4 text-center bg-blue-50">기초소묘</td>
+                      <td className="py-3 px-4 text-center">-</td>
+                      <td className="py-3 px-4 text-center bg-blue-50">기초소묘</td>
+                      <td className="py-3 px-4 text-center">-</td>
+                      <td className="py-3 px-4 text-center bg-blue-50">기초소묘</td>
+                      <td className="py-3 px-4 text-center bg-purple-50">포트폴리오</td>
                     </tr>
-                    <tr>
-                      <td className="border border-slate-300 p-3 font-semibold">14:00-17:00</td>
-                      <td className="border border-slate-300 p-3 text-center">수채화</td>
-                      <td className="border border-slate-300 p-3 text-center">기초소묘</td>
-                      <td className="border border-slate-300 p-3 text-center">수채화</td>
-                      <td className="border border-slate-300 p-3 text-center">기초소묘</td>
-                      <td className="border border-slate-300 p-3 text-center">상상화</td>
-                      <td className="border border-slate-300 p-3 text-center">개별지도</td>
+                    <tr className="border-b border-slate-100">
+                      <td className="py-3 px-4 font-medium">13:00-16:00</td>
+                      <td className="py-3 px-4 text-center bg-purple-50">수채화</td>
+                      <td className="py-3 px-4 text-center">-</td>
+                      <td className="py-3 px-4 text-center bg-purple-50">수채화</td>
+                      <td className="py-3 px-4 text-center">-</td>
+                      <td className="py-3 px-4 text-center bg-purple-50">수채화</td>
+                      <td className="py-3 px-4 text-center bg-green-50">개별지도</td>
                     </tr>
-                    <tr>
-                      <td className="border border-slate-300 p-3 font-semibold">18:00-21:00</td>
-                      <td className="border border-slate-300 p-3 text-center">상상화</td>
-                      <td className="border border-slate-300 p-3 text-center">포트폴리오</td>
-                      <td className="border border-slate-300 p-3 text-center">개별지도</td>
-                      <td className="border border-slate-300 p-3 text-center">수채화</td>
-                      <td className="border border-slate-300 p-3 text-center">개별지도</td>
-                      <td className="border border-slate-300 p-3 text-center bg-slate-100">-</td>
+                    <tr className="border-b border-slate-100">
+                      <td className="py-3 px-4 font-medium">17:00-20:00</td>
+                      <td className="py-3 px-4 text-center bg-green-50">개별지도</td>
+                      <td className="py-3 px-4 text-center">-</td>
+                      <td className="py-3 px-4 text-center bg-green-50">개별지도</td>
+                      <td className="py-3 px-4 text-center">-</td>
+                      <td className="py-3 px-4 text-center bg-green-50">개별지도</td>
+                      <td className="py-3 px-4 text-center">-</td>
                     </tr>
                   </tbody>
                 </table>
+              </div>
+              <div className="mt-6 text-center">
+                <p className="text-sm text-slate-600">
+                  ※ 수업 시간은 학생 개별 상황에 따라 조정 가능합니다.
+                </p>
               </div>
             </CardContent>
           </Card>
         </section>
 
-        {/* 상담 신청 */}
-        <section>
-          <Card className="bg-primary text-white text-center">
+        {/* 단계별 학습 과정 */}
+        <section className="mb-16">
+          <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">단계별 학습 과정</h3>
+          <div className="grid md:grid-cols-4 gap-6">
+            <Card className="text-center bg-white shadow-lg card-hover">
+              <CardContent className="p-6">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Target className="h-8 w-8 text-blue-600" />
+                </div>
+                <h4 className="text-lg font-semibold text-slate-900 mb-2">1단계: 기초</h4>
+                <p className="text-sm text-slate-600 mb-4">
+                  기초 소묘 및 관찰력 향상
+                </p>
+                <Badge variant="outline" className="bg-blue-50 text-blue-700">1-2개월</Badge>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center bg-white shadow-lg card-hover">
+              <CardContent className="p-6">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <BookOpen className="h-8 w-8 text-green-600" />
+                </div>
+                <h4 className="text-lg font-semibold text-slate-900 mb-2">2단계: 발전</h4>
+                <p className="text-sm text-slate-600 mb-4">
+                  수채화 기법 및 색채 감각 개발
+                </p>
+                <Badge variant="outline" className="bg-green-50 text-green-700">2-3개월</Badge>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center bg-white shadow-lg card-hover">
+              <CardContent className="p-6">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Award className="h-8 w-8 text-purple-600" />
+                </div>
+                <h4 className="text-lg font-semibold text-slate-900 mb-2">3단계: 완성</h4>
+                <p className="text-sm text-slate-600 mb-4">
+                  포트폴리오 제작 및 개성 표현
+                </p>
+                <Badge variant="outline" className="bg-purple-50 text-purple-700">2-3개월</Badge>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center bg-white shadow-lg card-hover">
+              <CardContent className="p-6">
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Trophy className="h-8 w-8 text-primary" />
+                </div>
+                <h4 className="text-lg font-semibold text-slate-900 mb-2">4단계: 실전</h4>
+                <p className="text-sm text-slate-600 mb-4">
+                  모의고사 및 입시 최종 준비
+                </p>
+                <Badge variant="outline" className="bg-orange-50 text-orange-700">1-2개월</Badge>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* 최신 공지사항 */}
+        <section className="mb-16">
+          <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">예중 입시 최신 정보</h3>
+          <Card className="bg-white shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Calendar className="mr-3 text-primary" />
+                공지사항
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {announcements.map((announcement) => (
+                  <div key={announcement.id} className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg cursor-pointer">
+                    <div className="flex items-center">
+                      <Badge variant="outline" className="mr-3 text-xs">{announcement.id}</Badge>
+                      <span className="text-slate-900 hover:text-primary transition-colors">
+                        {announcement.title}
+                      </span>
+                    </div>
+                    <span className="text-sm text-slate-500">{announcement.author}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 text-center">
+                <Button variant="outline">더 많은 공지사항 보기</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* 입시 일정 */}
+        <section className="mb-16">
+          <Card className="bg-white shadow-lg">
+            <CardHeader className="bg-slate-50">
+              <CardTitle className="text-center text-2xl flex items-center justify-center">
+                <Clock className="mr-3 text-primary" />
+                2025년 선화예중 입시 일정
+              </CardTitle>
+            </CardHeader>
             <CardContent className="p-8">
-              <h3 className="text-2xl font-bold mb-4">예중 입시 상담 신청</h3>
-              <p className="text-orange-100 mb-6">
-                개인별 맞춤 상담을 통해 체계적인 입시 준비 계획을 세워보세요
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <h4 className="text-xl font-semibold text-slate-900 mb-4">주요 일정</h4>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                      <span className="font-medium">원서 접수</span>
+                      <Badge className="bg-blue-100 text-blue-800">12월 중순</Badge>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                      <span className="font-medium">실기 고사</span>
+                      <Badge className="bg-green-100 text-green-800">1월 초</Badge>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                      <span className="font-medium">면접 고사</span>
+                      <Badge className="bg-purple-100 text-purple-800">1월 중순</Badge>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                      <span className="font-medium">합격 발표</span>
+                      <Badge className="bg-orange-100 text-orange-800">1월 말</Badge>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <h4 className="text-xl font-semibold text-slate-900 mb-4">준비 사항</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center">
+                      <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                      <span className="text-slate-700">학교생활기록부 및 자기소개서</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                      <span className="text-slate-700">포트폴리오 (10점 내외)</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                      <span className="text-slate-700">실기 도구 일체</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                      <span className="text-slate-700">면접 준비 (예술관, 진로 계획)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* CTA Section */}
+        <section className="text-center">
+          <Card className="bg-primary text-white">
+            <CardContent className="p-12">
+              <h3 className="text-3xl font-bold mb-4">예중 입시 상담 받아보세요</h3>
+              <p className="text-xl text-orange-100 mb-8">
+                30년 노하우로 학생 개별 맞춤 상담을 제공합니다
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" className="bg-white text-primary hover:bg-slate-100">
-                  전화 상담 신청
+                  상담 신청하기
                 </Button>
                 <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-primary">
-                  방문 상담 예약
+                  작품 포트폴리오 상담
                 </Button>
               </div>
             </CardContent>
