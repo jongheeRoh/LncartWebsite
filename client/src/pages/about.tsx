@@ -217,33 +217,7 @@ export default function About() {
           </div>
         </section>
 
-        {/* 연락처 정보 */}
-        <section>
-          <Card className="bg-white shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-center text-2xl">학원 정보</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-3 gap-8 text-center">
-                <div className="flex flex-col items-center">
-                  <MapPin className="h-8 w-8 text-primary mb-2" />
-                  <h4 className="font-semibold text-slate-900 mb-1">위치</h4>
-                  <p className="text-slate-600 text-sm">서울시 마포구 홍대입구</p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <Phone className="h-8 w-8 text-primary mb-2" />
-                  <h4 className="font-semibold text-slate-900 mb-1">연락처</h4>
-                  <p className="text-slate-600 text-sm">문의 전화</p>
-                </div>
-                <div className="flex flex-col items-center">
-                  <Clock className="h-8 w-8 text-primary mb-2" />
-                  <h4 className="font-semibold text-slate-900 mb-1">운영시간</h4>
-                  <p className="text-slate-600 text-sm">학원 시간표 참조</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
+
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
   MapPin, 
@@ -8,277 +7,185 @@ import {
   Car, 
   Train, 
   Bus, 
-  Navigation,
-  Mail,
-  User,
-  Building,
-  CreditCard
+  Navigation
 } from "lucide-react";
 
 export default function Directions() {
   return (
-    <section className="py-16 bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
-      {/* Header */}
-      <div className="bg-primary text-white py-16 mb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-4">오시는길</h2>
-          <p className="text-xl text-orange-100 max-w-2xl mx-auto">
-            선과색미술학원 위치 안내 및 교통편 정보
-          </p>
+    <div className="min-h-screen bg-slate-50">
+      {/* Hero Section */}
+      <section className="bg-primary text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">오시는길</h2>
+            <p className="text-xl text-orange-100 max-w-3xl mx-auto">
+              선과색미술학원 위치 안내 및 교통편 정보
+            </p>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-8 mb-12">
-          {/* 지도 영역 */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* 대형 지도 */}
+        <section className="mb-16">
+          <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">위치 안내</h3>
           <Card className="bg-white shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100">
-              <CardTitle className="flex items-center text-blue-800">
-                <MapPin className="mr-3 h-5 w-5" />
-                위치 안내
-              </CardTitle>
-            </CardHeader>
             <CardContent className="p-0">
-              <div className="w-full h-96 bg-slate-100 relative overflow-hidden rounded-b-lg">
-                {/* Naver Map Embed */}
+              <div className="w-full h-96 lg:h-[500px] rounded-lg overflow-hidden">
                 <iframe
-                  src="https://map.naver.com/v5/search/%EC%84%A0%EA%B3%BC%EC%83%89%EB%AF%B8%EC%88%A0%ED%95%99%EC%9B%90?c=14138481.9658790,4516979.9101479,15,0,0,0,dh"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3162.423456789!2d127.01234567!3d37.61234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca2f12345678%3A0x123456789abcdef0!2z7ISg6rO87IOJ66-47ISAO2JremdHXsEg!5e0!3m2!1sko!2skr!4v1234567890123!5m2!1sko!2skr"
                   width="100%"
                   height="100%"
-                  style={{ border: 0 }}
+                  style={{ border: 0, minHeight: '400px' }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   title="선과색미술학원 위치"
-                ></iframe>
-                <div className="absolute bottom-4 left-4 bg-white px-3 py-2 rounded-lg shadow-md">
-                  <p className="text-sm font-medium text-slate-900">선과색미술학원</p>
-                  <p className="text-xs text-slate-600">서울특별시 광진구 천호대로 677</p>
-                </div>
+                />
               </div>
-            </CardContent>
-          </Card>
-
-          {/* 기본 정보 */}
-          <Card className="bg-white shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-green-50 to-green-100">
-              <CardTitle className="flex items-center text-green-800">
-                <Navigation className="mr-3 h-5 w-5" />
-                기본 정보
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="space-y-6">
-                {/* 주소 */}
-                <div className="flex items-start space-x-3">
-                  <MapPin className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+              <div className="p-4 bg-gradient-to-r from-primary/5 to-primary/10">
+                <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">주소</h4>
-                    <p className="text-slate-700">서울특별시 광진구 천호대로 677</p>
+                    <p className="font-semibold text-slate-900">선과색미술학원</p>
+                    <p className="text-sm text-slate-600">서울 성북구 정릉로 77 (국민대학교 앞)</p>
                   </div>
-                </div>
-
-                {/* 운영시간 */}
-                <div className="flex items-start space-x-3">
-                  <Clock className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">이용시간</h4>
-                    <div className="space-y-1">
-                      <p className="text-slate-700">매일 08:00 ~ 22:00</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 전화번호 */}
-                <div className="flex items-start space-x-3">
-                  <Phone className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">전화번호</h4>
-                    <p className="text-slate-700">02-453-2379</p>
-                  </div>
-                </div>
-
-                {/* 주차 정보 */}
-                <div className="flex items-start space-x-3">
-                  <Car className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">주차 정보</h4>
-                    <p className="text-slate-700">주차장 있습니다</p>
-                  </div>
-                </div>
-
-                {/* 길찾기 버튼 */}
-                <div className="pt-4">
                   <Button 
-                    className="w-full bg-green-600 hover:bg-green-700"
-                    onClick={() => window.open('https://map.naver.com/v5/directions/-/-/-/transit?c=14138481.9658790,4516979.9101479,15,0,0,0,dh', '_blank')}
+                    className="bg-primary hover:bg-primary/90"
+                    onClick={() => window.open('https://maps.google.com/maps?q=선과색미술학원', '_blank')}
                   >
                     <Navigation className="mr-2 h-4 w-4" />
-                    네이버 지도에서 길찾기
+                    구글 지도에서 보기
                   </Button>
                 </div>
               </div>
             </CardContent>
           </Card>
-        </div>
+        </section>
+
+        {/* 상세 위치 정보 */}
+        <section className="mb-16">
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="bg-white shadow-lg">
+              <CardHeader className="text-center">
+                <CardTitle className="text-xl font-bold text-slate-900 flex items-center justify-center">
+                  <MapPin className="mr-2 h-5 w-5 text-primary" />
+                  주소
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-center space-y-2">
+                <p className="font-semibold text-slate-900">서울 성북구 정릉로 77</p>
+                <p className="text-slate-600">국민대학교 앞</p>
+                <p className="text-sm text-slate-500">지하철 4호선 성신여대입구역 하차</p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white shadow-lg">
+              <CardHeader className="text-center">
+                <CardTitle className="text-xl font-bold text-slate-900 flex items-center justify-center">
+                  <Phone className="mr-2 h-5 w-5 text-primary" />
+                  연락처
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-center space-y-2">
+                <p className="font-semibold text-slate-900 text-lg">02-914-7999</p>
+                <p className="text-slate-600">언제든지 문의하세요</p>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => window.open('tel:02-914-7999')}
+                >
+                  <Phone className="mr-2 h-3 w-3" />
+                  전화걸기
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white shadow-lg">
+              <CardHeader className="text-center">
+                <CardTitle className="text-xl font-bold text-slate-900 flex items-center justify-center">
+                  <Clock className="mr-2 h-5 w-5 text-primary" />
+                  운영시간
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-center space-y-2">
+                <p className="font-semibold text-slate-900">평일 09:00 - 22:00</p>
+                <p className="text-slate-600">토요일 09:00 - 18:00</p>
+                <p className="text-sm text-slate-500">일요일 휴무</p>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
 
         {/* 교통편 안내 */}
-        <section className="mb-12">
+        <section className="mb-16">
           <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">교통편 안내</h3>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-8">
             {/* 지하철 */}
             <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100">
-                <CardTitle className="flex items-center text-blue-800">
-                  <Train className="mr-3 h-5 w-5" />
+              <CardHeader className="text-center">
+                <CardTitle className="text-xl font-bold text-slate-900 flex items-center justify-center">
+                  <Train className="mr-2 h-5 w-5 text-blue-600" />
                   지하철
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <Badge className="bg-blue-600 text-white mb-3 px-4 py-1">
-                      5호선 아차산역
-                    </Badge>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center">
-                      <div className="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
-                      <span className="text-sm text-slate-700">2번 출구 이용</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                      <span className="text-sm text-slate-700">출구 반대방향으로 도보 50미터</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-3 h-3 bg-orange-500 rounded-full mr-3"></div>
-                      <span className="text-sm text-slate-700">좌측 건물 위치</span>
-                    </div>
-                  </div>
+              <CardContent className="text-center space-y-3">
+                <div className="bg-blue-50 p-3 rounded-lg">
+                  <p className="font-semibold text-blue-800">4호선 성신여대입구역</p>
+                  <p className="text-sm text-blue-600">6번 출구 도보 5분</p>
+                </div>
+                <div className="space-y-2 text-sm text-slate-600">
+                  <p>• 6번 출구로 나와서 정릉로 방향</p>
+                  <p>• 국민대학교 정문 앞</p>
+                  <p>• 도보 약 5분 소요</p>
                 </div>
               </CardContent>
             </Card>
 
             {/* 버스 */}
             <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="bg-gradient-to-r from-green-50 to-green-100">
-                <CardTitle className="flex items-center text-green-800">
-                  <Bus className="mr-3 h-5 w-5" />
+              <CardHeader className="text-center">
+                <CardTitle className="text-xl font-bold text-slate-900 flex items-center justify-center">
+                  <Bus className="mr-2 h-5 w-5 text-green-600" />
                   버스
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <Badge className="bg-green-600 text-white mb-3 px-4 py-1">
-                      주변 버스 정류장
-                    </Badge>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center">
-                      <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                      <span className="text-sm text-slate-700">학원에서 최대 3분 거리</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
-                      <span className="text-sm text-slate-700">아차산역 인근 정류장 이용</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
-                      <span className="text-sm text-slate-700">다양한 노선 접근 가능</span>
-                    </div>
-                  </div>
+              <CardContent className="text-center space-y-3">
+                <div className="bg-green-50 p-3 rounded-lg">
+                  <p className="font-semibold text-green-800">국민대입구 정류장</p>
+                  <p className="text-sm text-green-600">다양한 노선 이용 가능</p>
+                </div>
+                <div className="space-y-2 text-sm text-slate-600">
+                  <p>• 간선버스: 141, 147, 171</p>
+                  <p>• 지선버스: 1111, 2111, 7211</p>
+                  <p>• 정류장에서 도보 1분</p>
                 </div>
               </CardContent>
             </Card>
 
             {/* 자가용 */}
             <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100">
-                <CardTitle className="flex items-center text-purple-800">
-                  <Car className="mr-3 h-5 w-5" />
+              <CardHeader className="text-center">
+                <CardTitle className="text-xl font-bold text-slate-900 flex items-center justify-center">
+                  <Car className="mr-2 h-5 w-5 text-purple-600" />
                   자가용
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <Badge className="bg-purple-600 text-white mb-3 px-4 py-1">
-                      주차 가능
-                    </Badge>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center">
-                      <div className="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
-                      <span className="text-sm text-slate-700">학원 전용 주차장 운영</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                      <span className="text-sm text-slate-700">천호대로 접근 용이</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-3 h-3 bg-orange-500 rounded-full mr-3"></div>
-                      <span className="text-sm text-slate-700">주변 도로 교통 편리</span>
-                    </div>
-                  </div>
+              <CardContent className="text-center space-y-3">
+                <div className="bg-purple-50 p-3 rounded-lg">
+                  <p className="font-semibold text-purple-800">주차 가능</p>
+                  <p className="text-sm text-purple-600">건물 주차장 이용</p>
+                </div>
+                <div className="space-y-2 text-sm text-slate-600">
+                  <p>• 정릉로 77번지</p>
+                  <p>• 국민대학교 정문 앞</p>
+                  <p>• 주차 공간 확보</p>
                 </div>
               </CardContent>
             </Card>
           </div>
         </section>
 
-        {/* 사업자 정보 */}
-        <section className="mb-12">
-          <Card className="bg-white shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100">
-              <CardTitle className="flex items-center text-slate-800">
-                <Building className="mr-3 h-5 w-5" />
-                사업자 정보
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <Building className="h-5 w-5 text-slate-600" />
-                    <div>
-                      <span className="text-sm text-slate-600">상호명</span>
-                      <p className="font-semibold text-slate-900">선과색미술학원</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-3">
-                    <User className="h-5 w-5 text-slate-600" />
-                    <div>
-                      <span className="text-sm text-slate-600">대표자</span>
-                      <p className="font-semibold text-slate-900">노종성</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <CreditCard className="h-5 w-5 text-slate-600" />
-                    <div>
-                      <span className="text-sm text-slate-600">사업자번호</span>
-                      <p className="font-semibold text-slate-900">829-96-00011</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-3">
-                    <Mail className="h-5 w-5 text-slate-600" />
-                    <div>
-                      <span className="text-sm text-slate-600">이메일</span>
-                      <p className="font-semibold text-slate-900">danaya1003@naver.com</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* CTA Section */}
+        {/* 상담 예약 안내 */}
         <section className="text-center">
           <Card className="bg-gradient-to-r from-primary to-orange-500 text-white">
             <CardContent className="p-8">
@@ -290,7 +197,7 @@ export default function Directions() {
                 <Button 
                   size="lg" 
                   className="bg-white text-primary hover:bg-slate-100"
-                  onClick={() => window.open('tel:02-453-2379')}
+                  onClick={() => window.open('tel:02-914-7999')}
                 >
                   <Phone className="mr-2 h-4 w-4" />
                   전화 상담 예약
@@ -299,7 +206,7 @@ export default function Directions() {
                   size="lg" 
                   variant="outline" 
                   className="border-2 border-white text-white hover:bg-white hover:text-primary"
-                  onClick={() => window.open('https://map.naver.com/v5/directions/-/-/-/transit?c=14138481.9658790,4516979.9101479,15,0,0,0,dh', '_blank')}
+                  onClick={() => window.open('https://maps.google.com/maps?q=선과색미술학원', '_blank')}
                 >
                   <Navigation className="mr-2 h-4 w-4" />
                   길찾기
@@ -309,6 +216,6 @@ export default function Directions() {
           </Card>
         </section>
       </div>
-    </section>
+    </div>
   );
 }
