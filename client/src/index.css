@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Naver Web Font Configuration */
+@layer base {
+  * {
+    font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  }
+  
+  body {
+    font-feature-settings: "tnum";
+    font-variation-settings: "wght" 400;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    font-variation-settings: "wght" 600;
+  }
+}
+
 :root {
   --background: hsl(0, 0%, 100%);
   --foreground: hsl(20, 14.3%, 4.1%);
