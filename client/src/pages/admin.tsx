@@ -1,20 +1,97 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, FileText, Image, BarChart3 } from "lucide-react";
+import { Plus, FileText, Image, BarChart3, LogOut } from "lucide-react";
 import AdminStats from "@/components/admin/admin-stats";
 import NoticeForm from "@/components/notices/notice-form";
 import NoticeList from "@/components/notices/notice-list";
 import ImageUpload from "@/components/gallery/image-upload";
 import GalleryGrid from "@/components/gallery/gallery-grid";
+import AdminLogin from "./admin-login";
 import type { Notice, GalleryItem } from "@shared/schema";
+import { useToast } from "@/hooks/use-toast";
 import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
 
 export default function Admin() {
   const [showNoticeForm, setShowNoticeForm] = useState(false);
   const [showImageUpload, setShowImageUpload] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Check if already logged in
+    const savedSessionId = localStorage.getItem('adminSessionId');
+    if (savedSessionId) {
+      verifySession(savedSessionId);
+    }
+  }, []);
+
+  const verifySession = async (sessionId: string) => {
+    try {
+      const response = await fetch('/api/auth/verify', {
+        headers: {
+          'Authorization': `Bearer ${sessionId}`
+        }
+      });
+      
+      if (response.ok) {
+        setSessionId(sessionId);
+        setIsLoggedIn(true);
+      } else {
+        localStorage.removeItem('adminSessionId');
+      }
+    } catch (error) {
+      localStorage.removeItem('adminSessionId');
+    }
+  };
+
+  const handleLoginSuccess = (newSessionId: string) => {
+    setSessionId(newSessionId);
+    setIsLoggedIn(true);
+    localStorage.setItem('adminSessionId', newSessionId);
+  };
+
+  const handleLogout = async () => {
+    try {
+      if (sessionId) {
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${sessionId}`
+          }
+        });
+      }
+      
+      setIsLoggedIn(false);
+      setSessionId(null);
+      localStorage.removeItem('adminSessionId');
+      
+      toast({
+        title: "로그아웃 완료",
+        description: "관리자 페이지에서 로그아웃되었습니다.",
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  // Create authenticated fetch function
+  const authenticatedFetch = async (url: string, options: RequestInit = {}) => {
+    return fetch(url, {
+      ...options,
+      headers: {
+        ...options.headers,
+        'Authorization': `Bearer ${sessionId}`
+      }
+    });
+  };
+
+  if (!isLoggedIn) {
+    return <AdminLogin onLoginSuccess={handleLoginSuccess} />;
+  }
 
   const { data: noticesData, isLoading: noticesLoading, refetch: refetchNotices } = useQuery<{
     notices: Notice[];
@@ -26,6 +103,7 @@ export default function Admin() {
       if (!response.ok) throw new Error("Failed to fetch notices");
       return response.json();
     },
+    enabled: isLoggedIn,
   });
 
   const { data: galleryData, isLoading: galleryLoading, refetch: refetchGallery } = useQuery<{
@@ -38,6 +116,7 @@ export default function Admin() {
       if (!response.ok) throw new Error("Failed to fetch gallery items");
       return response.json();
     },
+    enabled: isLoggedIn,
   });
 
   return (
@@ -54,10 +133,22 @@ export default function Admin() {
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">관리자 페이지</h1>
-            <p className="text-xl text-orange-100 max-w-3xl mx-auto drop-shadow-lg">
-              공지사항과 갤러리를 관리하고 통계를 확인하세요
-            </p>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex-1">
+                <h1 className="text-4xl md:text-5xl font-bold drop-shadow-lg">관리자 페이지</h1>
+                <p className="text-xl text-orange-100 max-w-3xl mx-auto drop-shadow-lg mt-4">
+                  공지사항과 갤러리를 관리하고 통계를 확인하세요
+                </p>
+              </div>
+              <Button 
+                onClick={handleLogout}
+                variant="outline"
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                로그아웃
+              </Button>
+            </div>
           </div>
         </div>
       </section>

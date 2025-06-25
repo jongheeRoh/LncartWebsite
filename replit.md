@@ -89,12 +89,15 @@ This is a full-stack web application for an art academy (선과색미술학원) 
 - **Sessions**: Secure session management with PostgreSQL store
 - **Development**: Node environment detection for conditional features
 
-## Changelog
+## Recent Changes
 
-```
-Changelog:
-- June 24, 2025. Initial setup
-```
+- **December 25, 2025**: Added PostgreSQL database integration with Drizzle ORM
+- **December 25, 2025**: Implemented admin panel with content management for notices and gallery
+- **December 25, 2025**: Updated all sub-pages with academy signage hero images
+- **December 25, 2025**: Added entrance exam information pages (예중/예고 입시정보)
+- **December 25, 2025**: Applied academy contact information and address updates
+- **December 25, 2025**: Integrated YouTube background video on homepage
+- **June 24, 2025**: Initial setup
 
 ## User Preferences
 

@@ -1,8 +1,53 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { storage, authStorage } from "./storage";
 import { insertNoticeSchema, updateNoticeSchema, insertGalleryItemSchema, updateGalleryItemSchema } from "@shared/schema";
 import { ZodError } from "zod";
+
+// Simple session middleware
+interface AdminSession {
+  isLoggedIn: boolean;
+  loginTime: number;
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      adminSession?: AdminSession;
+    }
+  }
+}
+
+// Session storage in memory (use Redis in production)
+const adminSessions = new Map<string, AdminSession>();
+
+// Create session ID
+function createSessionId(): string {
+  return Math.random().toString(36).substr(2, 15) + Math.random().toString(36).substr(2, 15);
+}
+
+// Auth middleware
+function requireAuth(req: Request, res: Response, next: NextFunction) {
+  const sessionId = req.headers.authorization?.replace('Bearer ', '');
+  
+  if (!sessionId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const session = adminSessions.get(sessionId);
+  if (!session || !session.isLoggedIn) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  // Check if session is expired (24 hours)
+  if (Date.now() - session.loginTime > 24 * 60 * 60 * 1000) {
+    adminSessions.delete(sessionId);
+    return res.status(401).json({ error: "Session expired" });
+  }
+
+  req.adminSession = session;
+  next();
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Notices routes
