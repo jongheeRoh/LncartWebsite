@@ -50,14 +50,29 @@ export default function Gallery() {
   };
 
   return (
-    <section className="py-16 bg-slate-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h3 className="text-3xl font-bold text-slate-900 mb-4">갤러리</h3>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            학생들의 창의적이고 아름다운 작품들을 감상해보세요.
-          </p>
+    <div className="min-h-screen bg-slate-50">
+      {/* Hero Section */}
+      <section className="relative text-white py-16 overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src="@assets/스크린샷 2025-06-25 222106_1750857872681.png" 
+            alt="선과색 미술학원 간판" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/60"></div>
         </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">갤러리</h2>
+            <p className="text-xl text-orange-100 max-w-3xl mx-auto drop-shadow-lg">
+              학생들의 창의적이고 아름다운 작품들을 감상해보세요
+            </p>
+          </div>
+        </div>
+      </section>
+      
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Search */}
         <div className="mb-8">
@@ -222,7 +237,8 @@ export default function Gallery() {
             </nav>
           </div>
         )}
-      </div>
-    </section>
+        </div>
+      </section>
+    </div>
   );
 }

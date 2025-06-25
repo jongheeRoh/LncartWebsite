@@ -5,15 +5,23 @@ import { Clock, Users, BookOpen, Calendar, Star } from "lucide-react";
 export default function Schedule() {
   return (
     <section className="py-16 bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
-      {/* Header */}
-      <div className="bg-primary text-white py-16 mb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-4">학원 시간표</h2>
-          <p className="text-xl text-orange-100 max-w-2xl mx-auto">
+      {/* Hero Section */}
+      <section className="relative text-white py-16 overflow-hidden mb-12">
+        <div className="absolute inset-0">
+          <img 
+            src="@assets/스크린샷 2025-06-25 222106_1750857872681.png" 
+            alt="선과색 미술학원 간판" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/60"></div>
+        </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-bold mb-4 drop-shadow-lg">학원 시간표</h2>
+          <p className="text-xl text-orange-100 max-w-2xl mx-auto drop-shadow-lg">
             선과색미술학원의 체계적인 수업 시간표를 확인하세요
           </p>
         </div>
-      </div>
+      </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* 초등 4, 5학년 */}

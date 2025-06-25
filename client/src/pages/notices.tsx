@@ -51,11 +51,19 @@ export default function Notices() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <section className="bg-primary text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative text-white py-16 overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src="@assets/스크린샷 2025-06-25 222106_1750857872681.png" 
+            alt="선과색 미술학원 간판" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/60"></div>
+        </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">공지사항</h2>
-            <p className="text-xl text-orange-100 max-w-3xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">공지사항</h2>
+            <p className="text-xl text-orange-100 max-w-3xl mx-auto drop-shadow-lg">
               최신 소식과 중요한 공지사항을 확인하세요
             </p>
           </div>

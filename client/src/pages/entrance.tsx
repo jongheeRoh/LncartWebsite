@@ -8,14 +8,22 @@ export default function Entrance() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <section className="bg-primary text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative text-white py-20 overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src="@assets/스크린샷 2025-06-25 222106_1750857872681.png" 
+            alt="선과색 미술학원 간판" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/60"></div>
+        </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-4xl md:text-6xl font-bold mb-6">입시정보</h2>
-            <p className="text-xl text-orange-100 max-w-3xl mx-auto mb-4">
+            <h2 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">입시정보</h2>
+            <p className="text-xl text-orange-100 max-w-3xl mx-auto mb-4 drop-shadow-lg">
               30년 전통의 선화 예중/예고 입시 전문 교육
             </p>
-            <p className="text-lg text-orange-100">
+            <p className="text-lg text-orange-100 drop-shadow-lg">
               대한민국을 대표하는 실기력으로 학생들의 꿈을 실현합니다
             </p>
           </div>
