@@ -47,7 +47,7 @@ export default function Directions() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-semibold text-slate-900">선과색미술학원</p>
-                    <p className="text-sm text-slate-600">서울 성북구 정릉로 77 (국민대학교 앞)</p>
+                    <p className="text-sm text-slate-600">서울특별시 광진구 천호대로 677</p>
                   </div>
                   <Button 
                     className="bg-primary hover:bg-primary/90"
@@ -73,9 +73,9 @@ export default function Directions() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-center space-y-2">
-                <p className="font-semibold text-slate-900">서울 성북구 정릉로 77</p>
-                <p className="text-slate-600">국민대학교 앞</p>
-                <p className="text-sm text-slate-500">지하철 4호선 성신여대입구역 하차</p>
+                <p className="font-semibold text-slate-900">서울특별시 광진구 천호대로 677</p>
+                <p className="text-slate-600">아차산역 인근</p>
+                <p className="text-sm text-slate-500">지하철 5호선 아차산역 하차</p>
               </CardContent>
             </Card>
 
@@ -87,12 +87,12 @@ export default function Directions() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-center space-y-2">
-                <p className="font-semibold text-slate-900 text-lg">02-914-7999</p>
+                <p className="font-semibold text-slate-900 text-lg">02-453-2379</p>
                 <p className="text-slate-600">언제든지 문의하세요</p>
                 <Button 
                   variant="outline" 
                   size="sm"
-                  onClick={() => window.open('tel:02-914-7999')}
+                  onClick={() => window.open('tel:02-453-2379')}
                 >
                   <Phone className="mr-2 h-3 w-3" />
                   전화걸기
@@ -130,13 +130,13 @@ export default function Directions() {
               </CardHeader>
               <CardContent className="text-center space-y-3">
                 <div className="bg-blue-50 p-3 rounded-lg">
-                  <p className="font-semibold text-blue-800">4호선 성신여대입구역</p>
-                  <p className="text-sm text-blue-600">6번 출구 도보 5분</p>
+                  <p className="font-semibold text-blue-800">5호선 아차산역</p>
+                  <p className="text-sm text-blue-600">2번 출구 도보 1분</p>
                 </div>
                 <div className="space-y-2 text-sm text-slate-600">
-                  <p>• 6번 출구로 나와서 정릉로 방향</p>
-                  <p>• 국민대학교 정문 앞</p>
-                  <p>• 도보 약 5분 소요</p>
+                  <p>• 2번 출구로 나와서 천호대로 방향</p>
+                  <p>• 아차산역 바로 앞</p>
+                  <p>• 도보 약 1분 소요</p>
                 </div>
               </CardContent>
             </Card>
@@ -151,12 +151,12 @@ export default function Directions() {
               </CardHeader>
               <CardContent className="text-center space-y-3">
                 <div className="bg-green-50 p-3 rounded-lg">
-                  <p className="font-semibold text-green-800">국민대입구 정류장</p>
+                  <p className="font-semibold text-green-800">아차산역 정류장</p>
                   <p className="text-sm text-green-600">다양한 노선 이용 가능</p>
                 </div>
                 <div className="space-y-2 text-sm text-slate-600">
-                  <p>• 간선버스: 141, 147, 171</p>
-                  <p>• 지선버스: 1111, 2111, 7211</p>
+                  <p>• 간선버스: 240, 241, 2224</p>
+                  <p>• 지선버스: 3217, 3318, 3412</p>
                   <p>• 정류장에서 도보 1분</p>
                 </div>
               </CardContent>
@@ -176,13 +176,59 @@ export default function Directions() {
                   <p className="text-sm text-purple-600">건물 주차장 이용</p>
                 </div>
                 <div className="space-y-2 text-sm text-slate-600">
-                  <p>• 정릉로 77번지</p>
-                  <p>• 국민대학교 정문 앞</p>
+                  <p>• 천호대로 677번지</p>
+                  <p>• 아차산역 바로 앞</p>
                   <p>• 주차 공간 확보</p>
                 </div>
               </CardContent>
             </Card>
           </div>
+        </section>
+
+        {/* 사업자 정보 */}
+        <section className="mb-16">
+          <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">사업자 정보</h3>
+          <Card className="bg-white shadow-lg">
+            <CardContent className="p-8">
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-primary rounded-full"></div>
+                    <div>
+                      <span className="text-sm text-slate-600">상호명</span>
+                      <p className="font-semibold text-slate-900">선과색미술학원</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-primary rounded-full"></div>
+                    <div>
+                      <span className="text-sm text-slate-600">대표자</span>
+                      <p className="font-semibold text-slate-900">노종성</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-primary rounded-full"></div>
+                    <div>
+                      <span className="text-sm text-slate-600">사업자번호</span>
+                      <p className="font-semibold text-slate-900">829-96-00011</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-primary rounded-full"></div>
+                    <div>
+                      <span className="text-sm text-slate-600">이메일</span>
+                      <p className="font-semibold text-slate-900">danaya1003@naver.com</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </section>
 
         {/* 상담 예약 안내 */}
@@ -197,7 +243,7 @@ export default function Directions() {
                 <Button 
                   size="lg" 
                   className="bg-white text-primary hover:bg-slate-100"
-                  onClick={() => window.open('tel:02-914-7999')}
+                  onClick={() => window.open('tel:02-453-2379')}
                 >
                   <Phone className="mr-2 h-4 w-4" />
                   전화 상담 예약
