@@ -41,69 +41,69 @@ export default function About() {
           </Card>
         </section>
 
-        {/* 원장 소개 */}
+        {/* 원장 및 부원장 소개 */}
         <section className="mb-16">
-          <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">원장 소개</h3>
-          <Card className="bg-white shadow-lg">
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold text-slate-900">원장 노종성</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <div className="max-w-3xl mx-auto space-y-4">
-                <div className="flex justify-center mb-6">
-                  <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center">
-                    <GraduationCap className="h-12 w-12 text-primary" />
+          <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">원장 및 부원장 소개</h3>
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* 원장 */}
+            <Card className="bg-white shadow-lg">
+              <CardHeader className="text-center">
+                <CardTitle className="text-2xl font-bold text-slate-900">원장 노종성</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <div className="max-w-3xl mx-auto space-y-4">
+                  <div className="flex justify-center mb-6">
+                    <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center">
+                      <GraduationCap className="h-12 w-12 text-primary" />
+                    </div>
+                  </div>
+                  <div className="space-y-3 text-slate-700">
+                    <div className="font-semibold text-lg">
+                      <span className="inline-block bg-slate-100 text-slate-700 px-2 py-1 rounded text-xs mr-2">1990</span>
+                      홍익대학교 서양학과 졸업, 동대학원 졸업
+                    </div>
+                    <div>
+                      <span className="inline-block bg-slate-100 text-slate-700 px-2 py-1 rounded text-xs mr-2">1990~현재</span>
+                      전) 다나미술학원 원장(홍대앞, 중랑)
+                    </div>
+                    <div className="font-semibold text-primary">
+                      현) 선과색미술학원 원장
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-3 text-slate-700">
-                  <p className="font-semibold text-lg">
-                    <Badge variant="outline" className="mr-2">1990</Badge>
-                    홍익대학교 서양학과 졸업, 동대학원 졸업
-                  </p>
-                  <p>
-                    <Badge variant="outline" className="mr-2">1990~현재</Badge>
-                    전) 다나미술학원 원장(홍대앞, 중랑)
-                  </p>
-                  <p className="font-semibold text-primary">
-                    현) 선과색미술학원 원장
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
+              </CardContent>
+            </Card>
 
-        {/* 부원장 소개 */}
-        <section className="mb-16">
-          <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">부원장 소개</h3>
-          <Card className="bg-white shadow-lg">
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold text-slate-900">부원장 이도영</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <div className="max-w-3xl mx-auto space-y-4">
-                <div className="flex justify-center mb-6">
-                  <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center">
-                    <Star className="h-12 w-12 text-primary" />
+            {/* 부원장 */}
+            <Card className="bg-white shadow-lg">
+              <CardHeader className="text-center">
+                <CardTitle className="text-2xl font-bold text-slate-900">부원장 이도영</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <div className="max-w-3xl mx-auto space-y-4">
+                  <div className="flex justify-center mb-6">
+                    <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center">
+                      <Star className="h-12 w-12 text-primary" />
+                    </div>
+                  </div>
+                  <div className="space-y-3 text-slate-700">
+                    <div className="font-semibold text-lg">
+                      <span className="inline-block bg-slate-100 text-slate-700 px-2 py-1 rounded text-xs mr-2">2002</span>
+                      홍익대학교 서양학과 졸업
+                    </div>
+                    <div>
+                      <span className="inline-block bg-slate-100 text-slate-700 px-2 py-1 rounded text-xs mr-2">경력</span>
+                      입시반 지도 15년 경력
+                    </div>
+                    <div>전) 다나미술학원 부원장</div>
+                    <div className="font-semibold text-primary">
+                      현) 선과색미술학원 부원장
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-3 text-slate-700">
-                  <p className="font-semibold text-lg">
-                    <Badge variant="outline" className="mr-2">2002</Badge>
-                    홍익대학교 서양학과 졸업
-                  </p>
-                  <p>
-                    <Badge variant="outline" className="mr-2">경력</Badge>
-                    입시반 지도 15년 경력
-                  </p>
-                  <p>전) 다나미술학원 부원장</p>
-                  <p className="font-semibold text-primary">
-                    현) 선과색미술학원 부원장
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </section>
 
         {/* 전임 강사진 소개 */}
