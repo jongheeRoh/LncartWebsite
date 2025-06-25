@@ -5,30 +5,36 @@ import { Rocket, Play, Megaphone, Images, Smartphone } from "lucide-react";
 export default function Home() {
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-primary text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Hero Section with Background Video */}
+      <section className="relative text-white overflow-hidden min-h-screen flex items-center">
+        {/* Background Video */}
+        <div className="absolute inset-0 w-full h-full">
+          <iframe
+            src="https://www.youtube.com/embed/wcq3v3sydzA?autoplay=1&mute=1&loop=1&playlist=wcq3v3sydzA&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&disablekb=1&fs=0&cc_load_policy=0&playsinline=1&enablejsapi=0"
+            className="absolute top-1/2 left-1/2 w-[177.77777778vh] h-[56.25vw] min-h-full min-w-full transform -translate-x-1/2 -translate-y-1/2"
+            allow="autoplay; encrypted-media"
+            allowFullScreen={false}
+            style={{
+              border: 'none',
+              pointerEvents: 'none',
+            }}
+            title="Background Video"
+          />
+          <div className="absolute inset-0 bg-black/40"></div>
+        </div>
+        
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="text-center">
-            <h2 className="text-4xl md:text-6xl font-bold mb-6 fade-in">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 drop-shadow-2xl fade-in">
               선과색미술학원
-            </h2>
-            <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto fade-in">
-              예중/예고, 미대입시 전문학원으로 학생들의 꿈을 실현합니다
+            </h1>
+            <p className="text-xl md:text-2xl text-orange-100 mb-4 drop-shadow-lg fade-in">
+              지난 30년간 선화 예중, 예고 입시를 전문적으로 운영하였습니다.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center fade-in">
-              <Link href="/entrance">
-                <Button size="lg" className="bg-white text-primary hover:bg-slate-100">
-                  <Rocket className="mr-2 h-5 w-5" />
-                  입시정보 보기
-                </Button>
-              </Link>
-              <Link href="/gallery">
-                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-primary">
-                  <Play className="mr-2 h-5 w-5" />
-                  작품갤러리
-                </Button>
-              </Link>
-            </div>
+            <p className="text-lg md:text-xl text-orange-200 mb-8 drop-shadow-lg fade-in">
+              대한민국을 대표하는 실기력이라 자신합니다!
+            </p>
           </div>
         </div>
       </section>
