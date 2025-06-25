@@ -4,9 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import NoticeList from "@/components/notices/notice-list";
-import NoticeForm from "@/components/notices/notice-form";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { NOTICE_CATEGORIES, type NoticeCategory } from "@/lib/types";
 import type { Notice } from "@shared/schema";
 
@@ -14,7 +12,6 @@ export default function Notices() {
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState<NoticeCategory>("전체");
   const [search, setSearch] = useState("");
-  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const { data, isLoading, refetch } = useQuery<{
     notices: Notice[];
@@ -40,11 +37,6 @@ export default function Notices() {
     refetch();
   };
 
-  const handleNoticeCreated = () => {
-    setIsFormOpen(false);
-    refetch();
-  };
-
   const handleNoticeUpdated = () => {
     refetch();
   };
@@ -58,23 +50,9 @@ export default function Notices() {
   return (
     <section className="py-16 bg-slate-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h3 className="text-3xl font-bold text-slate-900 mb-2">공지사항</h3>
-            <p className="text-slate-600">최신 소식과 중요한 공지사항을 확인하세요.</p>
-          </div>
-          
-          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-primary hover:bg-primary/90">
-                <Plus className="mr-2 h-4 w-4" />
-                새 공지 작성
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <NoticeForm onSuccess={handleNoticeCreated} />
-            </DialogContent>
-          </Dialog>
+        <div className="mb-8">
+          <h3 className="text-3xl font-bold text-slate-900 mb-2">공지사항</h3>
+          <p className="text-slate-600">최신 소식과 중요한 공지사항을 확인하세요.</p>
         </div>
 
         {/* Search and Filters */}
