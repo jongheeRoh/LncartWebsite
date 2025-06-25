@@ -13,6 +13,7 @@ import Entrance from "@/pages/entrance";
 import MiddleSchool from "@/pages/middle-school";
 import HighSchool from "@/pages/high-school";
 import Directions from "@/pages/directions";
+import GalleryDetail from "@/pages/gallery-detail";
 import Admin from "@/pages/admin";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
@@ -27,6 +28,7 @@ function Router() {
         <Route path="/schedule" component={Schedule} />
         <Route path="/notices" component={Notices} />
         <Route path="/gallery" component={Gallery} />
+        <Route path="/gallery/:id" component={GalleryDetail} />
         <Route path="/entrance" component={Entrance} />
         <Route path="/middle-school" component={MiddleSchool} />
         <Route path="/high-school" component={HighSchool} />
