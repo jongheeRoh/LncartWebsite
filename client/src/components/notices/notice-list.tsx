@@ -109,17 +109,16 @@ export default function NoticeList({ notices, isLoading, onNoticeUpdated, onNoti
                   <div 
                     onClick={async () => {
                       try {
-                        // Fetch the full notice data first
                         const response = await fetch(`/api/notices/${notice.id}`);
                         if (!response.ok) throw new Error('Failed to fetch notice');
                         const fullNotice = await response.json();
                         
-                        // Create popup with the full content
                         const popup = window.open('', '_blank', 'width=900,height=700,scrollbars=yes,resizable=yes');
                         if (popup) {
                           const content = fullNotice.content || '내용이 없습니다.';
-                          const safeTitle = fullNotice.title.replace(/'/g, "\\'");
-                          const safeContent = content.replace(/'/g, "\\'").replace(/\n/g, '');
+                          const title = fullNotice.title || '제목 없음';
+                          const category = fullNotice.category || '일반';
+                          const date = new Date(fullNotice.createdAt).toLocaleDateString('ko-KR');
                           
                           popup.document.write(`
                             <!DOCTYPE html>
@@ -127,22 +126,21 @@ export default function NoticeList({ notices, isLoading, onNoticeUpdated, onNoti
                               <head>
                                 <meta charset="utf-8">
                                 <meta name="viewport" content="width=device-width, initial-scale=1">
-                                <title>${safeTitle} - 선과색미술학원</title>
+                                <title>${title} - 선과색미술학원</title>
                                 <style>
-                                  * { box-sizing: border-box; }
                                   body { 
-                                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', Roboto, sans-serif;
+                                    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
                                     max-width: 800px;
                                     margin: 0 auto;
-                                    padding: 40px 20px;
-                                    line-height: 1.7;
+                                    padding: 20px;
+                                    line-height: 1.6;
                                     color: #333;
-                                    background: #fafafa;
+                                    background: #f9f9f9;
                                   }
                                   .container {
                                     background: white;
-                                    border-radius: 12px;
-                                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                                    border-radius: 8px;
+                                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
                                     overflow: hidden;
                                   }
                                   .header {
@@ -152,92 +150,54 @@ export default function NoticeList({ notices, isLoading, onNoticeUpdated, onNoti
                                     text-align: center;
                                   }
                                   .title {
-                                    font-size: 28px;
-                                    font-weight: 700;
-                                    margin-bottom: 15px;
-                                    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                                    font-size: 24px;
+                                    font-weight: bold;
+                                    margin-bottom: 10px;
                                   }
                                   .meta {
                                     font-size: 14px;
                                     opacity: 0.9;
                                   }
                                   .category {
-                                    display: inline-block;
                                     background: rgba(255,255,255,0.2);
-                                    backdrop-filter: blur(10px);
-                                    padding: 6px 12px;
-                                    border-radius: 20px;
+                                    padding: 4px 8px;
+                                    border-radius: 12px;
                                     font-size: 12px;
-                                    font-weight: 500;
-                                    margin-right: 15px;
-                                    border: 1px solid rgba(255,255,255,0.3);
+                                    margin-right: 10px;
                                   }
                                   .content {
-                                    padding: 40px;
+                                    padding: 30px;
                                     font-size: 16px;
-                                    line-height: 1.8;
+                                    line-height: 1.7;
                                   }
+                                  .content p { margin-bottom: 16px; }
                                   .content h1, .content h2, .content h3 { 
                                     color: #2d3748; 
-                                    margin: 30px 0 15px 0;
-                                    font-weight: 600;
-                                  }
-                                  .content h1 { font-size: 24px; }
-                                  .content h2 { font-size: 20px; }
-                                  .content h3 { font-size: 18px; }
-                                  .content p { 
-                                    margin-bottom: 20px; 
-                                    text-align: justify;
-                                  }
-                                  .content ul, .content ol { 
-                                    margin: 20px 0; 
-                                    padding-left: 30px; 
-                                  }
-                                  .content li { 
-                                    margin-bottom: 10px; 
-                                    line-height: 1.6;
+                                    margin: 20px 0 10px 0;
                                   }
                                   .content img { 
                                     max-width: 100%; 
                                     height: auto; 
-                                    margin: 30px 0; 
-                                    border-radius: 8px;
-                                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                                  }
-                                  .content blockquote {
-                                    border-left: 4px solid #ff6b35;
-                                    padding-left: 20px;
                                     margin: 20px 0;
-                                    font-style: italic;
-                                    color: #666;
+                                    border-radius: 4px;
                                   }
                                   .footer {
-                                    padding: 20px 40px;
+                                    padding: 20px;
                                     background: #f8f9fa;
-                                    border-top: 1px solid #e2e8f0;
                                     text-align: center;
-                                    color: #6b7280;
+                                    color: #666;
                                     font-size: 14px;
-                                  }
-                                  @media (max-width: 600px) {
-                                    body { padding: 20px 10px; }
-                                    .content, .header { padding: 20px; }
-                                    .title { font-size: 24px; }
+                                    border-top: 1px solid #eee;
                                   }
                                 </style>
                               </head>
                               <body>
                                 <div class="container">
                                   <div class="header">
-                                    <div class="title">${fullNotice.title}</div>
+                                    <div class="title">${title}</div>
                                     <div class="meta">
-                                      <span class="category">${fullNotice.category}</span>
-                                      ${new Date(fullNotice.createdAt).toLocaleDateString('ko-KR', {
-                                        year: 'numeric',
-                                        month: 'long', 
-                                        day: 'numeric',
-                                        weekday: 'short'
-                                      })}
+                                      <span class="category">${category}</span>
+                                      ${date}
                                     </div>
                                   </div>
                                   <div class="content">
@@ -247,15 +207,6 @@ export default function NoticeList({ notices, isLoading, onNoticeUpdated, onNoti
                                     선과색미술학원 | 서울특별시 광진구 천호대로 677 | 02-453-2379
                                   </div>
                                 </div>
-                                <script>
-                                  document.title = '${safeTitle} - 선과색미술학원';
-                                  document.addEventListener('keydown', function(e) {
-                                    if (e.ctrlKey && e.key === 'p') {
-                                      window.print();
-                                      e.preventDefault();
-                                    }
-                                  });
-                                </script>
                               </body>
                             </html>
                           `);

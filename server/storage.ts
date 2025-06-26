@@ -408,4 +408,6 @@ export class AuthStorage implements IAuthStorage {
 
 export const authStorage = new AuthStorage();
 
-export const storage = new MemStorage();
+import { DatabaseStorage } from "./db-storage";
+
+export const storage = new DatabaseStorage();
