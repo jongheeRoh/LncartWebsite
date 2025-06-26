@@ -44,6 +44,10 @@ export interface IStorage {
 }
 
 export class MemStorage implements IStorage {
+  private middleSchoolAdmissions: Map<number, MiddleSchoolAdmission>;
+  private highSchoolAdmissions: Map<number, HighSchoolAdmission>;
+  private currentMiddleSchoolAdmissionId: number;
+  private currentHighSchoolAdmissionId: number;
   private users: Map<number, User>;
   private notices: Map<number, Notice>;
   private galleryItems: Map<number, GalleryItem>;

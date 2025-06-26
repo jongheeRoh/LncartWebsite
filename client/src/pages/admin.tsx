@@ -1,528 +1,460 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Notice, InsertNotice } from "@shared/schema";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { format } from "date-fns";
-import { ko } from "date-fns/locale";
-import { Edit2, Trash2, ArrowLeft, Save, X, Plus, Eye } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import EnhancedRichTextEditor from "@/components/ui/enhanced-rich-text-editor";
-import NoticeForm from "@/components/notices/notice-form";
-import { apiRequest, getQueryFn } from "@/lib/queryClient";
-import AdminLogin from "./admin-login";
-import type { GalleryItem, Roadmap } from "@shared/schema";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { Trash2, Edit, Plus, Calendar, BarChart3, Bell, Image, School, GraduationCap } from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
 import { DataImportDialog } from "@/components/data-import";
-import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
+import NoticeForm from "@/components/notices/notice-form";
+import RoadmapForm from "@/components/roadmap/roadmap-form";
+import { MiddleSchoolAdmissionForm } from "@/components/admission/middle-school-form";
+import { HighSchoolAdmissionForm } from "@/components/admission/high-school-form";
+import type { Notice, GalleryItem, MiddleSchoolAdmission, HighSchoolAdmission } from "@shared/schema";
+import AdminLogin from "./admin-login";
 
-// 입시정보 리스트 컴포넌트
-function EntranceInfoList({ category, onNoticeClick }: { category: string, onNoticeClick: (notice: Notice) => void }) {
-  const { data: notices, isLoading } = useQuery({
-    queryKey: ['/api/notices', { category }],
-    queryFn: async () => {
-      const response = await fetch(`/api/notices?category=${encodeURIComponent(category)}`);
-      if (!response.ok) throw new Error('Failed to fetch notices');
-      return response.json();
-    },
-  });
-
-  if (isLoading) {
-    return <div className="text-center py-8">로딩 중...</div>;
-  }
-
-  if (!notices?.notices?.length) {
-    return (
-      <Card>
-        <CardContent className="text-center py-8">
-          <p className="text-muted-foreground">등록된 {category === '예중입시정보' ? '예중' : '예고'} 입시정보가 없습니다.</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  return (
-    <div className="space-y-4">
-      {notices.notices.map((notice: Notice) => (
-        <Card key={notice.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onNoticeClick(notice)}>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>{notice.title}</CardTitle>
-              <Badge variant={notice.category === '긴급' ? 'destructive' : 'secondary'}>
-                {notice.category}
-              </Badge>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              작성일: {format(new Date(notice.createdAt), 'yyyy년 MM월 dd일', { locale: ko })}
-            </p>
-          </CardHeader>
-        </Card>
-      ))}
-    </div>
-  );
-}
-
-function AdminNoticeManager() {
-  const [viewMode, setViewMode] = useState<'list' | 'view' | 'edit' | 'create' | 'middle_entrance' | 'high_entrance'>('list');
-  const [selectedNotice, setSelectedNotice] = useState<Notice | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [editContent, setEditContent] = useState("");
-  const [editTitle, setEditTitle] = useState("");
-  const [editCategory, setEditCategory] = useState("");
+function AdminDashboard() {
   const { toast } = useToast();
-
-  const { data: notices, isLoading } = useQuery({
-    queryKey: ['/api/notices'],
-    retry: false,
-  });
-
   const queryClient = useQueryClient();
+  const [activeSection, setActiveSection] = useState<"dashboard" | "notices" | "middle-admission" | "high-admission">("dashboard");
+  const [showNoticeForm, setShowNoticeForm] = useState(false);
+  const [showMiddleAdmissionForm, setShowMiddleAdmissionForm] = useState(false);
+  const [showHighAdmissionForm, setShowHighAdmissionForm] = useState(false);
+  const [editingNotice, setEditingNotice] = useState<Notice | null>(null);
+  const [editingMiddleAdmission, setEditingMiddleAdmission] = useState<MiddleSchoolAdmission | null>(null);
+  const [editingHighAdmission, setEditingHighAdmission] = useState<HighSchoolAdmission | null>(null);
 
-  const authenticatedFetch = async (url: string, options: RequestInit = {}) => {
-    const sessionId = localStorage.getItem('adminSessionId');
-    return fetch(url, {
-      ...options,
-      headers: {
-        ...options.headers,
-        'Authorization': `Bearer ${sessionId}`,
-      },
-    });
-  };
-
-  const updateNotice = useMutation({
-    mutationFn: async ({ id, title, content, category }: { id: number, title: string, content: string, category: string }) => {
-      const response = await authenticatedFetch(`/api/notices/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ title, content, category }),
-      });
-      if (!response.ok) throw new Error('공지사항 수정 실패');
-      return response.json();
-    },
-    onSuccess: (updatedNotice) => {
-      toast({ title: "공지사항이 수정되었습니다" });
-      setSelectedNotice(updatedNotice);
-      queryClient.invalidateQueries({ queryKey: ['/api/notices'] });
-      setViewMode('view');
-    },
-    onError: () => {
-      toast({ title: "수정 실패", variant: "destructive" });
-    },
+  // Fetch stats for dashboard
+  const { data: stats } = useQuery({
+    queryKey: ["/api/stats"],
+    enabled: activeSection === "dashboard",
   });
 
-  const deleteNotice = useMutation({
+  // Fetch data based on active section
+  const { data: noticesData } = useQuery({
+    queryKey: ["/api/notices", { limit: 100 }],
+    enabled: activeSection === "notices",
+  });
+
+
+
+  const { data: middleAdmissionsData } = useQuery({
+    queryKey: ["/api/middle-school-admission", { limit: 100 }],
+    enabled: activeSection === "middle-admission",
+  });
+
+  const { data: highAdmissionsData } = useQuery({
+    queryKey: ["/api/high-school-admission", { limit: 100 }],
+    enabled: activeSection === "high-admission",
+  });
+
+  const notices = noticesData?.notices || [];
+  const middleAdmissions = middleAdmissionsData?.items || [];
+  const highAdmissions = highAdmissionsData?.items || [];
+
+  // Delete mutations
+  const deleteNoticeMutation = useMutation({
     mutationFn: async (id: number) => {
-      const response = await authenticatedFetch(`/api/notices/${id}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error('공지사항을 찾을 수 없습니다');
-        }
-        throw new Error('삭제 실패');
-      }
-      return true;
+      await apiRequest(`/api/notices/${id}`, "DELETE");
     },
     onSuccess: () => {
-      toast({ title: "공지사항이 삭제되었습니다" });
-      queryClient.invalidateQueries({ queryKey: ['/api/notices'] });
-      setViewMode('list');
-      setSelectedNotice(null);
+      toast({ title: "성공", description: "공지사항이 삭제되었습니다." });
+      queryClient.invalidateQueries({ queryKey: ["/api/notices"] });
     },
-    onError: (error: Error) => {
-      toast({ 
-        title: "삭제 실패", 
-        description: error.message,
-        variant: "destructive" 
-      });
+    onError: () => {
+      toast({ title: "오류", description: "삭제에 실패했습니다.", variant: "destructive" });
     },
   });
 
-  const handleNoticeClick = (notice: Notice) => {
-    setSelectedNotice(notice);
-    setEditContent(notice.content);
-    setEditTitle(notice.title);
-    setEditCategory(notice.category);
-    setViewMode('view');
-  };
+  const deleteMiddleAdmissionMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest(`/api/middle-school-admission/${id}`, "DELETE");
+    },
+    onSuccess: () => {
+      toast({ title: "성공", description: "예중 입시정보가 삭제되었습니다." });
+      queryClient.invalidateQueries({ queryKey: ["/api/middle-school-admission"] });
+    },
+    onError: () => {
+      toast({ title: "오류", description: "삭제에 실패했습니다.", variant: "destructive" });
+    },
+  });
 
-  const handleEditClick = () => {
-    setViewMode('edit');
-  };
+  const deleteHighAdmissionMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest(`/api/high-school-admission/${id}`, "DELETE");
+    },
+    onSuccess: () => {
+      toast({ title: "성공", description: "예고 입시정보가 삭제되었습니다." });
+      queryClient.invalidateQueries({ queryKey: ["/api/high-school-admission"] });
+    },
+    onError: () => {
+      toast({ title: "오류", description: "삭제에 실패했습니다.", variant: "destructive" });
+    },
+  });
 
-  const handleBackToList = () => {
-    setViewMode('list');
-    setSelectedNotice(null);
-  };
-
-  const handleSaveEdit = () => {
-    if (selectedNotice && editTitle.trim() && editContent.trim()) {
-      updateNotice.mutate({
-        id: selectedNotice.id,
-        title: editTitle,
-        content: editContent,
-        category: editCategory,
-      });
-    }
-  };
-
-  const handleDelete = () => {
-    if (selectedNotice && !deleteNotice.isPending && confirm('정말 삭제하시겠습니까?')) {
-      deleteNotice.mutate(selectedNotice.id);
-    }
-  };
-
-  // View mode - individual notice view
-  if (viewMode === 'view' && selectedNotice) {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <Button variant="outline" onClick={handleBackToList}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            목록으로
-          </Button>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={handleDelete} disabled={deleteNotice.isPending}>
-              <Trash2 className="h-4 w-4 mr-2" />
-              삭제
-            </Button>
-            <Button onClick={handleEditClick}>
-              <Edit2 className="h-4 w-4 mr-2" />
-              수정
-            </Button>
-          </div>
-        </div>
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-xl">{selectedNotice?.title}</CardTitle>
-              <Badge variant={selectedNotice?.category === '긴급' ? 'destructive' : 'secondary'}>
-                {selectedNotice?.category}
-              </Badge>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              작성일: {selectedNotice?.createdAt && format(new Date(selectedNotice.createdAt), 'yyyy년 MM월 dd일 HH:mm', { locale: ko })}
-            </p>
-          </CardHeader>
-          <CardContent>
-            <div 
-              className="prose prose-sm max-w-none"
-              dangerouslySetInnerHTML={{ __html: selectedNotice?.content || '' }}
-            />
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  // Edit mode
-  if (viewMode === 'edit' && selectedNotice) {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <Button variant="outline" onClick={() => setViewMode('view')}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            돌아가기
-          </Button>
-        </div>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>공지사항 수정</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">제목</label>
-              <Input
-                value={editTitle}
-                onChange={(e) => setEditTitle(e.target.value)}
-                placeholder="공지사항 제목"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">카테고리</label>
-              <Select value={editCategory} onValueChange={setEditCategory}>
-                <SelectTrigger>
-                  <SelectValue placeholder="카테고리 선택" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="일반">일반</SelectItem>
-                  <SelectItem value="긴급">긴급</SelectItem>
-                  <SelectItem value="이벤트">이벤트</SelectItem>
-                  <SelectItem value="예중입시정보">예중입시정보</SelectItem>
-                  <SelectItem value="예고입시정보">예고입시정보</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label className="text-sm font-medium">내용</label>
-              <EnhancedRichTextEditor
-                value={editContent}
-                onChange={setEditContent}
-                placeholder="공지사항 내용을 입력하세요..."
-              />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <div className="flex justify-center gap-4 py-6">
-          <Button variant="outline" onClick={() => setViewMode('view')} className="min-w-[100px]">
-            취소
-          </Button>
-          <Button onClick={handleSaveEdit} disabled={updateNotice.isPending} className="min-w-[100px]">
-            <Save className="h-4 w-4 mr-2" />
-            {updateNotice.isPending ? '저장중...' : '저장'}
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  // Create mode
-  if (viewMode === 'create') {
-    return (
-      <div className="space-y-6">
-        <div className="flex gap-2 mb-4 flex-wrap">
-          <Button
-            variant='outline'
-            onClick={() => {
-              if (selectedCategory === '예중입시정보') {
-                setViewMode('middle_entrance');
-              } else if (selectedCategory === '예고입시정보') {
-                setViewMode('high_entrance');
-              } else {
-                setViewMode('list');
-              }
-              setSelectedCategory('');
-            }}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            돌아가기
-          </Button>
-        </div>
-        <NoticeForm 
-          onSuccess={() => {
-            if (selectedCategory === '예중입시정보') {
-              setViewMode('middle_entrance');
-            } else if (selectedCategory === '예고입시정보') {
-              setViewMode('high_entrance');
-            } else {
-              setViewMode('list');
-            }
-            queryClient.invalidateQueries({ queryKey: ['/api/notices'] });
-            setSelectedCategory('');
-          }}
-          notice={selectedCategory ? { category: selectedCategory } : undefined}
-        />
-      </div>
-    );
-  }
-
-  // Middle entrance info mode
-  if (viewMode === 'middle_entrance') {
-    return (
-      <div className="space-y-6">
-        <div className="flex gap-2 mb-4 flex-wrap">
-          <Button
-            variant='outline'
-            onClick={() => setViewMode('list')}
-          >
-            공지사항 목록
-          </Button>
-          <Button
-            variant='default'
-          >
-            예중 입시정보
-          </Button>
-          <Button
-            variant='outline'
-            onClick={() => {
-              setViewMode('high_entrance');
-              setSelectedCategory('예고입시정보');
-            }}
-          >
-            예고 입시정보
-          </Button>
-        </div>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">예중 입시정보 관리</h2>
-          <Button onClick={() => {
-            setViewMode('create');
-            setSelectedCategory('예중입시정보');
-          }}>
-            새 입시정보 추가
-          </Button>
-        </div>
-        <EntranceInfoList category="예중입시정보" onNoticeClick={handleNoticeClick} />
-      </div>
-    );
-  }
-
-  // High school entrance info mode
-  if (viewMode === 'high_entrance') {
-    return (
-      <div className="space-y-6">
-        <div className="flex gap-2 mb-4 flex-wrap">
-          <Button
-            variant='outline'
-            onClick={() => setViewMode('list')}
-          >
-            공지사항 목록
-          </Button>
-          <Button
-            variant='outline'
-            onClick={() => {
-              setViewMode('middle_entrance');
-              setSelectedCategory('예중입시정보');
-            }}
-          >
-            예중 입시정보
-          </Button>
-          <Button
-            variant='default'
-          >
-            예고 입시정보
-          </Button>
-        </div>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">예고 입시정보 관리</h2>
-          <Button onClick={() => {
-            setViewMode('create');
-            setSelectedCategory('예고입시정보');
-          }}>
-            새 입시정보 추가
-          </Button>
-        </div>
-        <EntranceInfoList category="예고입시정보" onNoticeClick={handleNoticeClick} />
-      </div>
-    );
-  }
-
-  // List view (default)
   return (
-    <div className="space-y-6">
-      <div className="flex gap-2 mb-4 flex-wrap">
-        <Button
-          variant='default'
-        >
-          공지사항 목록
-        </Button>
-        <Button
-          variant='outline'
-          onClick={() => setViewMode('create')}
-        >
-          새 공지사항
-        </Button>
-        <Button
-          variant='outline'
-          onClick={() => {
-            setViewMode('middle_entrance');
-            setSelectedCategory('예중입시정보');
-          }}
-        >
-          예중 입시정보
-        </Button>
-        <Button
-          variant='outline'
-          onClick={() => {
-            setViewMode('high_entrance');
-            setSelectedCategory('예고입시정보');
-          }}
-        >
-          예고 입시정보
-        </Button>
-      </div>
-
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">공지사항 관리</h2>
-        <Button onClick={() => setViewMode('create')}>
-          <Plus className="h-4 w-4 mr-2" />
-          새 공지사항
-        </Button>
-      </div>
-
-      {isLoading ? (
-        <div className="text-center py-8">로딩 중...</div>
-      ) : (
-        <div className="grid gap-4">
-          {notices?.notices?.map((notice: Notice) => (
-            <Card key={notice.id} className="cursor-pointer hover:shadow-md transition-shadow">
-              <CardContent className="p-4" onClick={() => handleNoticeClick(notice)}>
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h3 className="font-medium">{notice.title}</h3>
-                      <Badge variant={notice.category === '긴급' ? 'destructive' : 'secondary'} className="text-xs">
-                        {notice.category}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      {format(new Date(notice.createdAt), 'yyyy년 MM월 dd일', { locale: ko })}
-                    </p>
-                  </div>
-                  <Eye className="h-4 w-4 text-muted-foreground" />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">관리자 패널</h1>
+          <DataImportDialog />
         </div>
-      )}
+
+        {/* Dashboard Navigation */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <Card 
+            className={`cursor-pointer transition-all ${activeSection === "dashboard" ? "ring-2 ring-blue-500" : ""}`}
+            onClick={() => setActiveSection("dashboard")}
+          >
+            <CardContent className="flex flex-col items-center justify-center p-6">
+              <BarChart3 className="h-8 w-8 mb-2 text-blue-600" />
+              <span className="text-sm font-medium">대시보드</span>
+            </CardContent>
+          </Card>
+          
+          <Card 
+            className={`cursor-pointer transition-all ${activeSection === "notices" ? "ring-2 ring-blue-500" : ""}`}
+            onClick={() => setActiveSection("notices")}
+          >
+            <CardContent className="flex flex-col items-center justify-center p-6">
+              <Bell className="h-8 w-8 mb-2 text-green-600" />
+              <span className="text-sm font-medium">공지사항</span>
+            </CardContent>
+          </Card>
+          
+          <Card 
+            className={`cursor-pointer transition-all ${activeSection === "middle-admission" ? "ring-2 ring-blue-500" : ""}`}
+            onClick={() => setActiveSection("middle-admission")}
+          >
+            <CardContent className="flex flex-col items-center justify-center p-6">
+              <School className="h-8 w-8 mb-2 text-orange-600" />
+              <span className="text-sm font-medium">예중입시</span>
+            </CardContent>
+          </Card>
+          
+          <Card 
+            className={`cursor-pointer transition-all ${activeSection === "high-admission" ? "ring-2 ring-blue-500" : ""}`}
+            onClick={() => setActiveSection("high-admission")}
+          >
+            <CardContent className="flex flex-col items-center justify-center p-6">
+              <GraduationCap className="h-8 w-8 mb-2 text-red-600" />
+              <span className="text-sm font-medium">예고입시</span>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Dashboard Overview */}
+        {activeSection === "dashboard" && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold mb-6">대시보드 개요</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">총 공지사항</CardTitle>
+                  <Bell className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stats?.totalNotices || 0}</div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">갤러리 이미지</CardTitle>
+                  <Image className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stats?.totalImages || 0}</div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">월간 방문자</CardTitle>
+                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stats?.monthlyVisitors || 0}</div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">조회수 증가</CardTitle>
+                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-green-600">{stats?.viewsGrowth || "+0%"}</div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="space-y-6">
+              <h3 className="text-xl font-semibold">로드맵 관리</h3>
+              <RoadmapForm type="middle_school" />
+              <RoadmapForm type="high_school" />
+            </div>
+          </div>
+        )}
+
+        {/* Notices Management */}
+        {activeSection === "notices" && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold">공지사항 관리</h2>
+              <Button onClick={() => setShowNoticeForm(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                새 공지사항
+              </Button>
+            </div>
+
+            <div className="grid gap-4">
+              {notices.length === 0 ? (
+                <Card>
+                  <CardContent className="p-8 text-center">
+                    <Bell className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                    <p className="text-gray-500">등록된 공지사항이 없습니다.</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                notices.map((notice: Notice) => (
+                  <Card key={notice.id}>
+                    <CardContent className="p-6">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="text-lg font-semibold">{notice.title}</h3>
+                            <Badge variant="outline">{notice.category}</Badge>
+                          </div>
+                          <p className="text-gray-600 mb-2">{notice.excerpt}</p>
+                          <div className="flex items-center text-sm text-gray-500">
+                            <Calendar className="w-4 h-4 mr-1" />
+                            {new Date(notice.createdAt).toLocaleDateString('ko-KR')}
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setEditingNotice(notice);
+                              setShowNoticeForm(true);
+                            }}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => deleteNoticeMutation.mutate(notice.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+
+
+
+        {/* Middle School Admission Management */}
+        {activeSection === "middle-admission" && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold">예중 입시정보 관리</h2>
+              <Button onClick={() => setShowMiddleAdmissionForm(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                새 예중 입시정보
+              </Button>
+            </div>
+
+            <div className="grid gap-4">
+              {middleAdmissions.length === 0 ? (
+                <Card>
+                  <CardContent className="p-8 text-center">
+                    <School className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                    <p className="text-gray-500">등록된 예중 입시정보가 없습니다.</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                middleAdmissions.map((admission: MiddleSchoolAdmission) => (
+                  <Card key={admission.id}>
+                    <CardContent className="p-6">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="text-lg font-semibold">{admission.title}</h3>
+                            <Badge variant="outline">{admission.category}</Badge>
+                          </div>
+                          <p className="text-gray-600 mb-2">{admission.excerpt}</p>
+                          <div className="flex items-center text-sm text-gray-500">
+                            <Calendar className="w-4 h-4 mr-1" />
+                            {new Date(admission.createdAt).toLocaleDateString('ko-KR')}
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setEditingMiddleAdmission(admission);
+                              setShowMiddleAdmissionForm(true);
+                            }}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => deleteMiddleAdmissionMutation.mutate(admission.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* High School Admission Management */}
+        {activeSection === "high-admission" && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold">예고 입시정보 관리</h2>
+              <Button onClick={() => setShowHighAdmissionForm(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                새 예고 입시정보
+              </Button>
+            </div>
+
+            <div className="grid gap-4">
+              {highAdmissions.length === 0 ? (
+                <Card>
+                  <CardContent className="p-8 text-center">
+                    <GraduationCap className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                    <p className="text-gray-500">등록된 예고 입시정보가 없습니다.</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                highAdmissions.map((admission: HighSchoolAdmission) => (
+                  <Card key={admission.id}>
+                    <CardContent className="p-6">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="text-lg font-semibold">{admission.title}</h3>
+                            <Badge variant="outline">{admission.category}</Badge>
+                          </div>
+                          <p className="text-gray-600 mb-2">{admission.excerpt}</p>
+                          <div className="flex items-center text-sm text-gray-500">
+                            <Calendar className="w-4 h-4 mr-1" />
+                            {new Date(admission.createdAt).toLocaleDateString('ko-KR')}
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setEditingHighAdmission(admission);
+                              setShowHighAdmissionForm(true);
+                            }}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => deleteHighAdmissionMutation.mutate(admission.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Dialogs */}
+        <Dialog open={showNoticeForm} onOpenChange={setShowNoticeForm}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>
+                {editingNotice ? "공지사항 수정" : "새 공지사항"}
+              </DialogTitle>
+            </DialogHeader>
+            <NoticeForm
+              notice={editingNotice}
+              onSuccess={() => {
+                setShowNoticeForm(false);
+                setEditingNotice(null);
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={showMiddleAdmissionForm} onOpenChange={setShowMiddleAdmissionForm}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>
+                {editingMiddleAdmission ? "예중 입시정보 수정" : "새 예중 입시정보"}
+              </DialogTitle>
+            </DialogHeader>
+            <MiddleSchoolAdmissionForm
+              admission={editingMiddleAdmission}
+              onSuccess={() => {
+                setShowMiddleAdmissionForm(false);
+                setEditingMiddleAdmission(null);
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={showHighAdmissionForm} onOpenChange={setShowHighAdmissionForm}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>
+                {editingHighAdmission ? "예고 입시정보 수정" : "새 예고 입시정보"}
+              </DialogTitle>
+            </DialogHeader>
+            <HighSchoolAdmissionForm
+              admission={editingHighAdmission}
+              onSuccess={() => {
+                setShowHighAdmissionForm(false);
+                setEditingHighAdmission(null);
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 }
 
 export default function Admin() {
-  const [sessionId, setSessionId] = useState<string | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const handleLoginSuccess = (newSessionId: string) => {
-    setSessionId(newSessionId);
-    setIsLoggedIn(true);
-    localStorage.setItem('adminSessionId', newSessionId);
-  };
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('adminSessionId') !== null;
+  });
 
   if (!isLoggedIn) {
-    return (
-      <div
-        className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center"
-        style={{
-          backgroundImage: `url(${heroImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
-      >
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="relative z-10">
-          <AdminLogin onLoginSuccess={handleLoginSuccess} />
-        </div>
-      </div>
-    );
+    return <AdminLogin onLogin={() => setIsLoggedIn(true)} />;
   }
 
-  return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">관리자 패널</h1>
-        <Button 
-          variant="outline" 
-          onClick={() => {
-            setIsLoggedIn(false);
-            setSessionId(null);
-            localStorage.removeItem('adminSessionId');
-          }}
-        >
-          로그아웃
-        </Button>
-      </div>
-
-      <div className="space-y-8">
-        <AdminNoticeManager />
-      </div>
-    </div>
-  );
+  return <AdminDashboard />;
 }

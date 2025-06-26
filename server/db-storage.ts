@@ -12,6 +12,139 @@ import type {
 import type { IStorage } from "./storage";
 
 export class DatabaseStorage implements IStorage {
+  // Middle School Admission methods
+  async getAllMiddleSchoolAdmission(page: number = 1, limit: number = 10, category?: string, search?: string): Promise<{ items: MiddleSchoolAdmission[], total: number }> {
+    let query = db.select().from(middleSchoolAdmission);
+    
+    if (category) {
+      query = query.where(eq(middleSchoolAdmission.category, category)) as any;
+    }
+    
+    if (search) {
+      query = query.where(
+        or(
+          like(middleSchoolAdmission.title, `%${search}%`),
+          like(middleSchoolAdmission.content, `%${search}%`)
+        )
+      ) as any;
+    }
+    
+    const items = await query
+      .orderBy(desc(middleSchoolAdmission.createdAt))
+      .limit(limit)
+      .offset((page - 1) * limit);
+    
+    const totalResult = await db.select({ count: sql<number>`count(*)` })
+      .from(middleSchoolAdmission);
+    
+    return {
+      items,
+      total: totalResult[0]?.count || 0
+    };
+  }
+
+  async getMiddleSchoolAdmission(id: number): Promise<MiddleSchoolAdmission | undefined> {
+    const [admission] = await db.select().from(middleSchoolAdmission).where(eq(middleSchoolAdmission.id, id));
+    return admission;
+  }
+
+  async createMiddleSchoolAdmission(insertAdmission: InsertMiddleSchoolAdmission): Promise<MiddleSchoolAdmission> {
+    const [admission] = await db
+      .insert(middleSchoolAdmission)
+      .values({
+        ...insertAdmission,
+        excerpt: insertAdmission.content?.substring(0, 200) || '',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning();
+    return admission;
+  }
+
+  async updateMiddleSchoolAdmission(id: number, updates: UpdateMiddleSchoolAdmission): Promise<MiddleSchoolAdmission | undefined> {
+    const [admission] = await db
+      .update(middleSchoolAdmission)
+      .set({
+        ...updates,
+        excerpt: updates.content?.substring(0, 200) || undefined,
+        updatedAt: new Date(),
+      })
+      .where(eq(middleSchoolAdmission.id, id))
+      .returning();
+    return admission;
+  }
+
+  async deleteMiddleSchoolAdmission(id: number): Promise<boolean> {
+    const result = await db.delete(middleSchoolAdmission).where(eq(middleSchoolAdmission.id, id));
+    return result.rowCount > 0;
+  }
+
+  // High School Admission methods
+  async getAllHighSchoolAdmission(page: number = 1, limit: number = 10, category?: string, search?: string): Promise<{ items: HighSchoolAdmission[], total: number }> {
+    let query = db.select().from(highSchoolAdmission);
+    
+    if (category) {
+      query = query.where(eq(highSchoolAdmission.category, category)) as any;
+    }
+    
+    if (search) {
+      query = query.where(
+        or(
+          like(highSchoolAdmission.title, `%${search}%`),
+          like(highSchoolAdmission.content, `%${search}%`)
+        )
+      ) as any;
+    }
+    
+    const items = await query
+      .orderBy(desc(highSchoolAdmission.createdAt))
+      .limit(limit)
+      .offset((page - 1) * limit);
+    
+    const totalResult = await db.select({ count: sql<number>`count(*)` })
+      .from(highSchoolAdmission);
+    
+    return {
+      items,
+      total: totalResult[0]?.count || 0
+    };
+  }
+
+  async getHighSchoolAdmission(id: number): Promise<HighSchoolAdmission | undefined> {
+    const [admission] = await db.select().from(highSchoolAdmission).where(eq(highSchoolAdmission.id, id));
+    return admission;
+  }
+
+  async createHighSchoolAdmission(insertAdmission: InsertHighSchoolAdmission): Promise<HighSchoolAdmission> {
+    const [admission] = await db
+      .insert(highSchoolAdmission)
+      .values({
+        ...insertAdmission,
+        excerpt: insertAdmission.content?.substring(0, 200) || '',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning();
+    return admission;
+  }
+
+  async updateHighSchoolAdmission(id: number, updates: UpdateHighSchoolAdmission): Promise<HighSchoolAdmission | undefined> {
+    const [admission] = await db
+      .update(highSchoolAdmission)
+      .set({
+        ...updates,
+        excerpt: updates.content?.substring(0, 200) || undefined,
+        updatedAt: new Date(),
+      })
+      .where(eq(highSchoolAdmission.id, id))
+      .returning();
+    return admission;
+  }
+
+  async deleteHighSchoolAdmission(id: number): Promise<boolean> {
+    const result = await db.delete(highSchoolAdmission).where(eq(highSchoolAdmission.id, id));
+    return result.rowCount > 0;
+  }
   constructor() {
     this.initializeSampleData();
   }

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { EnhancedRichTextEditor } from "@/components/ui/enhanced-rich-text-editor";
+import EnhancedRichTextEditor from "@/components/ui/enhanced-rich-text-editor";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import type { HighSchoolAdmission, InsertHighSchoolAdmission } from "@shared/schema";
@@ -101,7 +101,7 @@ export function HighSchoolAdmissionForm({ admission, onSuccess }: HighSchoolForm
       <div className="space-y-2">
         <Label htmlFor="content">내용</Label>
         <EnhancedRichTextEditor
-          content={content}
+          value={content}
           onChange={setContent}
           placeholder="입시정보 내용을 작성하세요..."
         />
