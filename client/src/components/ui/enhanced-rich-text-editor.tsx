@@ -154,8 +154,16 @@ export default function EnhancedRichTextEditor({
 
   const updateLineHeight = (height: string) => {
     setLineHeight(height);
-    if (editor?.view?.dom) {
-      (editor.view.dom as HTMLElement).style.lineHeight = height;
+    if (editor) {
+      // Apply line height to the entire content using CSS
+      const content = editor.getHTML();
+      const wrappedContent = `<div style="line-height: ${height};">${content}</div>`;
+      editor.commands.setContent(wrappedContent);
+      
+      // Also update the editor's DOM element
+      if (editor.view?.dom) {
+        (editor.view.dom as HTMLElement).style.lineHeight = height;
+      }
     }
   };
 
@@ -246,16 +254,18 @@ export default function EnhancedRichTextEditor({
 
           {/* Line Height */}
           <Select value={lineHeight} onValueChange={updateLineHeight}>
-            <SelectTrigger className="w-24">
+            <SelectTrigger className="w-28">
               <AlignJustify className="h-4 w-4 mr-1" />
-              <SelectValue />
+              <SelectValue placeholder="줄간격" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="1.0">아주좁게</SelectItem>
               <SelectItem value="1.2">좁게</SelectItem>
               <SelectItem value="1.4">기본</SelectItem>
               <SelectItem value="1.6">보통</SelectItem>
               <SelectItem value="1.8">넓게</SelectItem>
               <SelectItem value="2.0">매우넓게</SelectItem>
+              <SelectItem value="2.5">극넓게</SelectItem>
             </SelectContent>
           </Select>
 
@@ -421,19 +431,21 @@ export default function EnhancedRichTextEditor({
       </div>
 
       {/* Editor Content */}
-      <EditorContent 
-        editor={editor} 
+      <div 
         className="prose prose-sm max-w-none focus-within:outline-none"
         style={{ 
           fontSize: `${fontSize}px`,
           lineHeight: lineHeight,
           minHeight: minHeight
         }}
-      />
+      >
+        <EditorContent editor={editor} />
+      </div>
       
       {/* Status Bar */}
-      <div className="border-t bg-slate-50 px-3 py-2 text-xs text-slate-500">
-        글자 크기: {fontSize}px | 줄 간격: {lineHeight} | {editor.getCharacterCount()}자
+      <div className="border-t bg-slate-50 px-3 py-2 text-xs text-slate-500 flex justify-between">
+        <span>글자 크기: {fontSize}px | 줄 간격: {lineHeight}</span>
+        <span>글자 수: {editor.storage.characterCount?.characters() || 0}자</span>
       </div>
     </div>
   );
