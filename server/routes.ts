@@ -124,6 +124,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Data import endpoint
+  app.post("/api/import-data", requireAuth, upload.single('dataFile'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+
+      const { importDataFromFile } = await import('./data-import');
+      const result = await importDataFromFile(req.file.path, req.file.mimetype);
+      
+      res.json(result);
+    } catch (error) {
+      console.error("Data import error:", error);
+      res.status(500).json({ error: "Data import failed" });
+    }
+  });
+
+  // Generate sample data file
+  app.get("/api/sample-data", requireAuth, async (req, res) => {
+    try {
+      const { generateSampleDataFile } = await import('./data-import');
+      const filePath = generateSampleDataFile();
+      const fileName = 'sample-data.json';
+      
+      res.download(filePath, fileName, (err) => {
+        if (err) {
+          console.error('File download error:', err);
+        }
+      });
+    } catch (error) {
+      console.error("Sample data generation error:", error);
+      res.status(500).json({ error: "Sample data generation failed" });
+    }
+  });
+
   // Serve uploaded files
   const uploadsPath = path.join(process.cwd(), 'uploads');
   app.use('/uploads', (req, res, next) => {

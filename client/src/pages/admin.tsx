@@ -15,6 +15,7 @@ import { apiRequest, getQueryFn } from "@/lib/queryClient";
 import AdminLogin from "./admin-login";
 import type { GalleryItem, Roadmap } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
+import { DataImportDialog } from "@/components/data-import";
 import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
 
 // 입시정보 리스트 컴포넌트
