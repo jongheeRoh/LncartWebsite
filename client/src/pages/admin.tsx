@@ -128,6 +128,16 @@ export default function Admin() {
     enabled: isLoggedIn,
   });
 
+  const { data: middleRoadmap, isLoading: middleRoadmapLoading } = useQuery<Roadmap>({
+    queryKey: ["/api/roadmaps/middle_school"],
+    enabled: isLoggedIn,
+  });
+
+  const { data: highRoadmap, isLoading: highRoadmapLoading } = useQuery<Roadmap>({
+    queryKey: ["/api/roadmaps/high_school"], 
+    enabled: isLoggedIn,
+  });
+
   if (!isLoggedIn) {
     return <AdminLogin onLoginSuccess={handleLoginSuccess} />;
   }
