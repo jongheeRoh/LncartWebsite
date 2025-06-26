@@ -2,14 +2,9 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
-import TextStyle from '@tiptap/extension-text-style';
-import Color from '@tiptap/extension-color';
-import ListItem from '@tiptap/extension-list-item';
-import BulletList from '@tiptap/extension-bullet-list';
-import OrderedList from '@tiptap/extension-ordered-list';
 import { Button } from './button';
 import { Input } from './input';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { 
   Bold, 
   Italic, 
@@ -21,8 +16,9 @@ import {
   Redo,
   Image as ImageIcon,
   Link as LinkIcon,
-  Type
+  Upload
 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface RichTextEditorProps {
   content: string;
@@ -36,10 +32,18 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
   const [imageUrl, setImageUrl] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
   const [linkText, setLinkText] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        // Disable duplicate extensions that come with StarterKit
+        listItem: false,
+        bulletList: false,
+        orderedList: false,
+      }),
       Image.configure({
         inline: true,
         allowBase64: true,
@@ -47,11 +51,6 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
       Link.configure({
         openOnClick: false,
       }),
-      TextStyle,
-      Color,
-      ListItem,
-      BulletList,
-      OrderedList,
     ],
     content,
     onUpdate: ({ editor }) => {
@@ -73,6 +72,71 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
       editor.chain().focus().setImage({ src: imageUrl }).run();
       setImageUrl('');
       setShowImageDialog(false);
+    }
+  };
+
+  const handleImageUpload = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "오류",
+        description: "이미지 파일만 업로드할 수 있습니다.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      toast({
+        title: "파일 크기 초과",
+        description: "이미지 크기는 5MB 이하여야 합니다.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUploadingImage(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const sessionId = localStorage.getItem('adminSessionId');
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${sessionId}`
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const uploadedFile = await response.json();
+      
+      // Insert the uploaded image into the editor
+      editor.chain().focus().setImage({ src: uploadedFile.url }).run();
+      
+      toast({
+        title: "업로드 완료",
+        description: "이미지가 성공적으로 업로드되었습니다.",
+      });
+    } catch (error) {
+      toast({
+        title: "업로드 실패",
+        description: "이미지 업로드에 실패했습니다.",
+        variant: "destructive",
+      });
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleImageFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      handleImageUpload(file);
     }
   };
 
@@ -165,6 +229,16 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
         >
           <ImageIcon className="h-4 w-4" />
         </Button>
+
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploadingImage}
+        >
+          <Upload className="h-4 w-4" />
+        </Button>
         
         <Button
           type="button"
@@ -198,27 +272,52 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
         </Button>
       </div>
 
+      {/* Hidden file input for image upload */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleImageFileSelect}
+        className="hidden"
+      />
+
       {/* Image Dialog */}
       {showImageDialog && (
         <div className="p-4 border-b border-gray-300 bg-gray-50">
-          <div className="flex gap-2">
-            <Input
-              placeholder="이미지 URL을 입력하세요"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              className="flex-1"
-            />
-            <Button type="button" onClick={addImage} size="sm">
-              추가
-            </Button>
-            <Button 
-              type="button" 
-              variant="ghost" 
-              onClick={() => setShowImageDialog(false)}
-              size="sm"
-            >
-              취소
-            </Button>
+          <div className="space-y-3">
+            <div className="text-sm font-medium">이미지 추가</div>
+            <div className="flex gap-2">
+              <Input
+                placeholder="이미지 URL을 입력하세요"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                className="flex-1"
+              />
+              <Button type="button" onClick={addImage} size="sm">
+                URL 추가
+              </Button>
+            </div>
+            <div className="text-center text-sm text-gray-500">또는</div>
+            <div className="flex gap-2">
+              <Button 
+                type="button" 
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingImage}
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <Upload className="h-4 w-4" />
+                {uploadingImage ? '업로드 중...' : '파일 업로드'}
+              </Button>
+              <Button 
+                type="button" 
+                variant="ghost" 
+                onClick={() => setShowImageDialog(false)}
+                size="sm"
+              >
+                취소
+              </Button>
+            </div>
           </div>
         </div>
       )}
