@@ -200,7 +200,7 @@ function AdminNoticeManager() {
   if (viewMode === 'edit' && selectedNotice) {
     return (
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-start items-center">
           <Button 
             variant="outline" 
             onClick={() => setViewMode('view')}
@@ -209,15 +209,6 @@ function AdminNoticeManager() {
             <ArrowLeft className="h-4 w-4" />
             뒤로
           </Button>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setViewMode('view')}>
-              취소
-            </Button>
-            <Button onClick={handleSaveEdit} disabled={updateNotice.isPending}>
-              <Save className="h-4 w-4 mr-2" />
-              {updateNotice.isPending ? '저장중...' : '저장'}
-            </Button>
-          </div>
         </div>
         <Card>
           <CardHeader>
@@ -256,6 +247,17 @@ function AdminNoticeManager() {
             </div>
           </CardContent>
         </Card>
+        
+        {/* Bottom Center Buttons */}
+        <div className="flex justify-center gap-4 py-6">
+          <Button variant="outline" onClick={() => setViewMode('view')} className="min-w-[100px]">
+            취소
+          </Button>
+          <Button onClick={handleSaveEdit} disabled={updateNotice.isPending} className="min-w-[100px]">
+            <Save className="h-4 w-4 mr-2" />
+            {updateNotice.isPending ? '저장중...' : '저장'}
+          </Button>
+        </div>
       </div>
     );
   }
