@@ -123,8 +123,10 @@ export class DatabaseStorage implements IStorage {
       console.log(`DB: Filtering by category: "${category}"`);
       const beforeFilter = filteredNotices.length;
       filteredNotices = filteredNotices.filter((notice: Notice) => {
-        console.log(`DB: Checking notice "${notice.title}" with category "${notice.category}"`);
-        return notice.category === category;
+        console.log(`DB: Checking notice "${notice.title}" with category "${notice.category}" against filter "${category}"`);
+        const matches = notice.category === category;
+        console.log(`DB: Match result: ${matches}`);
+        return matches;
       });
       console.log(`DB: Filtered from ${beforeFilter} to ${filteredNotices.length} notices`);
     }
