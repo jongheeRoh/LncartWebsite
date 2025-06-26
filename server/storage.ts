@@ -277,7 +277,10 @@ export class AuthStorage implements IAuthStorage {
   private readonly ADMIN_PASSWORD = "line2024!"; // Change this in production
 
   async validateAdmin(username: string, password: string): Promise<boolean> {
-    return username === this.ADMIN_USERNAME && password === this.ADMIN_PASSWORD;
+    console.log("Auth validation:", { username, password: "***" });
+    const isValid = username === this.ADMIN_USERNAME && password === this.ADMIN_PASSWORD;
+    console.log("Auth result:", isValid);
+    return isValid;
   }
 }
 

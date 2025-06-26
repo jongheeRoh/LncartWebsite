@@ -31,24 +31,32 @@ export default function Admin() {
 
   const verifySession = async (sessionId: string) => {
     try {
+      console.log("Verifying session:", sessionId);
       const response = await fetch('/api/auth/verify', {
         headers: {
           'Authorization': `Bearer ${sessionId}`
         }
       });
       
+      console.log("Verify response status:", response.status);
+      
       if (response.ok) {
+        const result = await response.json();
+        console.log("Session verified:", result);
         setSessionId(sessionId);
         setIsLoggedIn(true);
       } else {
+        console.log("Session verification failed");
         localStorage.removeItem('adminSessionId');
       }
     } catch (error) {
+      console.error("Session verification error:", error);
       localStorage.removeItem('adminSessionId');
     }
   };
 
   const handleLoginSuccess = (newSessionId: string) => {
+    console.log("Login success callback:", newSessionId);
     setSessionId(newSessionId);
     setIsLoggedIn(true);
     localStorage.setItem('adminSessionId', newSessionId);

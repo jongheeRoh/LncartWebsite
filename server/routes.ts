@@ -58,15 +58,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth routes
   app.post("/api/auth/login", async (req, res) => {
     try {
+      console.log("Login request received:", req.body);
       const { username, password } = req.body;
       
       if (!username || !password) {
+        console.log("Missing credentials");
         return res.status(400).json({ error: "Username and password required" });
       }
 
       const isValid = await authStorage.validateAdmin(username, password);
       
       if (!isValid) {
+        console.log("Invalid credentials");
         return res.status(401).json({ error: "Invalid credentials" });
       }
 
@@ -76,6 +79,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         loginTime: Date.now()
       });
 
+      console.log("Login successful, sessionId:", sessionId);
       res.json({ 
         message: "Login successful",
         sessionId,

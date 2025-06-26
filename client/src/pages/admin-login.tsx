@@ -30,20 +30,27 @@ export default function AdminLogin({ onLoginSuccess }: LoginProps) {
 
   const loginMutation = useMutation({
     mutationFn: async (data: LoginFormData) => {
+      console.log("Login attempt:", data);
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
       
+      console.log("Login response status:", response.status);
+      
       if (!response.ok) {
         const error = await response.json();
+        console.error("Login error:", error);
         throw new Error(error.error || "Login failed");
       }
       
-      return response.json();
+      const result = await response.json();
+      console.log("Login success:", result);
+      return result;
     },
     onSuccess: (data) => {
+      console.log("Login mutation success:", data);
       toast({
         title: "로그인 성공",
         description: "관리자 페이지에 접속했습니다.",
@@ -51,6 +58,7 @@ export default function AdminLogin({ onLoginSuccess }: LoginProps) {
       onLoginSuccess(data.sessionId);
     },
     onError: (error: Error) => {
+      console.error("Login mutation error:", error);
       toast({
         title: "로그인 실패",
         description: error.message || "아이디나 비밀번호를 확인해주세요.",
@@ -154,9 +162,12 @@ export default function AdminLogin({ onLoginSuccess }: LoginProps) {
 
             <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-sm text-blue-800">
-                <strong>기본 로그인 정보:</strong><br />
-                아이디: admin<br />
-                비밀번호: line2024!
+                <strong>관리자 로그인 정보:</strong><br />
+                아이디: <code className="bg-blue-100 px-1 rounded">admin</code><br />
+                비밀번호: <code className="bg-blue-100 px-1 rounded">line2024!</code>
+              </p>
+              <p className="text-xs text-blue-600 mt-2">
+                위 정보를 정확히 입력해주세요. 대소문자를 구분합니다.
               </p>
             </div>
           </CardContent>
