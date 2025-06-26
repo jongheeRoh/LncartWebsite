@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import RichTextEditor from "@/components/ui/rich-text-editor";
+import FileUpload, { type FileAttachment } from "@/components/ui/file-upload";
 // Removed Dialog imports since we're using Card instead
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -20,6 +22,7 @@ interface ImageUploadProps {
 
 export default function ImageUpload({ onSuccess, item }: ImageUploadProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [attachments, setAttachments] = useState<FileAttachment[]>(item?.attachments || []);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -80,10 +83,15 @@ export default function ImageUpload({ onSuccess, item }: ImageUploadProps) {
   const onSubmit = async (data: InsertGalleryItem) => {
     setIsSubmitting(true);
     try {
+      const galleryData = {
+        ...data,
+        attachments
+      };
+      
       if (item) {
-        await updateItemMutation.mutateAsync(data);
+        await updateItemMutation.mutateAsync(galleryData);
       } else {
-        await createItemMutation.mutateAsync(data);
+        await createItemMutation.mutateAsync(galleryData);
       }
     } finally {
       setIsSubmitting(false);
@@ -174,17 +182,27 @@ export default function ImageUpload({ onSuccess, item }: ImageUploadProps) {
               <FormItem>
                 <FormLabel>설명</FormLabel>
                 <FormControl>
-                  <Textarea 
-                    placeholder="이미지 설명을 입력하세요"
-                    className="resize-none"
-                    rows={4}
-                    {...field}
+                  <RichTextEditor
+                    content={field.value || ""}
+                    onChange={field.onChange}
+                    placeholder="작품에 대한 설명을 입력하세요. 이미지와 링크를 추가할 수 있습니다."
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              첨부파일
+            </label>
+            <FileUpload
+              files={attachments}
+              onChange={setAttachments}
+              maxFiles={5}
+            />
+          </div>
 
           <div className="flex justify-end space-x-2">
             <Button type="button" variant="outline" onClick={onSuccess}>

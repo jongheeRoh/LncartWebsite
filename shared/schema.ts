@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -15,6 +15,7 @@ export const notices = pgTable("notices", {
   content: text("content").notNull(),
   excerpt: text("excerpt").notNull(),
   category: text("category").notNull().default("일반"),
+  attachments: jsonb("attachments").default([]),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -25,7 +26,9 @@ export const galleryItems = pgTable("gallery_items", {
   description: text("description").notNull(),
   imageUrl: text("image_url").notNull(),
   category: text("category").notNull().default("전체"),
+  attachments: jsonb("attachments").default([]),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -38,6 +41,7 @@ export const insertNoticeSchema = createInsertSchema(notices).pick({
   content: true,
   excerpt: true,
   category: true,
+  attachments: true,
 });
 
 export const updateNoticeSchema = insertNoticeSchema.partial();
@@ -47,6 +51,7 @@ export const insertGalleryItemSchema = createInsertSchema(galleryItems).pick({
   description: true,
   imageUrl: true,
   category: true,
+  attachments: true,
 });
 
 export const updateGalleryItemSchema = insertGalleryItemSchema.partial();

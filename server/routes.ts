@@ -3,6 +3,9 @@ import { createServer, type Server } from "http";
 import { storage, authStorage } from "./storage";
 import { insertNoticeSchema, updateNoticeSchema, insertGalleryItemSchema, updateGalleryItemSchema } from "@shared/schema";
 import { ZodError } from "zod";
+import { upload, createFileAttachment } from "./upload";
+import path from "path";
+import fs from "fs";
 
 // Simple session middleware
 interface AdminSession {
@@ -105,6 +108,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
       username: "관리자"
     });
   });
+
+  // File upload endpoint
+  app.post("/api/upload", requireAuth, upload.single('file'), (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+
+      const fileAttachment = createFileAttachment(req.file);
+      res.json(fileAttachment);
+    } catch (error) {
+      console.error("File upload error:", error);
+      res.status(500).json({ error: "File upload failed" });
+    }
+  });
+
+  // Serve uploaded files
+  const uploadsPath = path.join(process.cwd(), 'uploads');
+  app.use('/uploads', (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+  });
+  
+  // Create uploads directory if it doesn't exist
+  if (!fs.existsSync(uploadsPath)) {
+    fs.mkdirSync(uploadsPath, { recursive: true });
+  }
+  
+  // Serve static files from uploads directory
+  const express = await import('express');
+  app.use('/uploads', express.static(uploadsPath));
 
   // Notices routes
   app.get("/api/notices", async (req, res) => {

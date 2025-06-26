@@ -181,6 +181,7 @@ export class MemStorage implements IStorage {
       content: insertNotice.content,
       excerpt: insertNotice.excerpt,
       category: insertNotice.category || "일반",
+      attachments: insertNotice.attachments || [],
       createdAt: now,
       updatedAt: now,
     };
@@ -234,7 +235,9 @@ export class MemStorage implements IStorage {
       description: insertItem.description,
       imageUrl: insertItem.imageUrl,
       category: insertItem.category || "전체",
+      attachments: insertItem.attachments || [],
       createdAt: new Date(),
+      updatedAt: new Date(),
     };
     this.galleryItems.set(id, item);
     return item;
@@ -247,6 +250,7 @@ export class MemStorage implements IStorage {
     const updatedItem: GalleryItem = {
       ...item,
       ...updates,
+      updatedAt: new Date(),
     };
     this.galleryItems.set(id, updatedItem);
     return updatedItem;

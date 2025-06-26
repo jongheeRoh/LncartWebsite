@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import RichTextEditor from "@/components/ui/rich-text-editor";
+import FileUpload, { type FileAttachment } from "@/components/ui/file-upload";
 // Dialog components removed - using Card layout instead
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -20,6 +22,7 @@ interface NoticeFormProps {
 
 export default function NoticeForm({ onSuccess, notice }: NoticeFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [attachments, setAttachments] = useState<FileAttachment[]>(notice?.attachments || []);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -80,10 +83,15 @@ export default function NoticeForm({ onSuccess, notice }: NoticeFormProps) {
   const onSubmit = async (data: InsertNotice) => {
     setIsSubmitting(true);
     try {
+      const noticeData = {
+        ...data,
+        attachments
+      };
+      
       if (notice) {
-        await updateNoticeMutation.mutateAsync(data);
+        await updateNoticeMutation.mutateAsync(noticeData);
       } else {
-        await createNoticeMutation.mutateAsync(data);
+        await createNoticeMutation.mutateAsync(noticeData);
       }
     } finally {
       setIsSubmitting(false);
@@ -160,17 +168,27 @@ export default function NoticeForm({ onSuccess, notice }: NoticeFormProps) {
               <FormItem>
                 <FormLabel>내용</FormLabel>
                 <FormControl>
-                  <Textarea 
-                    placeholder="공지사항 내용을 입력하세요"
-                    className="resize-none"
-                    rows={8}
-                    {...field}
+                  <RichTextEditor
+                    content={field.value}
+                    onChange={field.onChange}
+                    placeholder="공지사항 내용을 입력하세요. 이미지와 링크를 추가할 수 있습니다."
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              첨부파일
+            </label>
+            <FileUpload
+              files={attachments}
+              onChange={setAttachments}
+              maxFiles={5}
+            />
+          </div>
 
           <div className="flex justify-end space-x-2">
             <Button type="button" variant="outline" onClick={onSuccess}>

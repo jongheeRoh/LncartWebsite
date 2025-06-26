@@ -91,6 +91,11 @@ This is a full-stack web application for an art academy (선과색미술학원) 
 
 ## Recent Changes
 
+- **June 26, 2025**: Enhanced content management with rich text editor and file attachments
+- **June 26, 2025**: Added TipTap rich text editor with image embedding and formatting tools
+- **June 26, 2025**: Implemented file upload system supporting PDF, JPG, HWP, and various formats
+- **June 26, 2025**: Extended attachment functionality to notices and gallery items
+- **June 26, 2025**: Added single admin authentication system with session management
 - **December 25, 2025**: Added PostgreSQL database integration with Drizzle ORM
 - **December 25, 2025**: Implemented admin panel with content management for notices and gallery
 - **December 25, 2025**: Updated all sub-pages with academy signage hero images
