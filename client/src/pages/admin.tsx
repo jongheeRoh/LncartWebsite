@@ -79,8 +79,14 @@ function AdminNoticeManager() {
       const response = await authenticatedFetch(`/api/notices/${id}`, {
         method: 'DELETE',
       });
-      if (!response.ok) throw new Error('삭제 실패');
-      return response.json();
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('공지사항을 찾을 수 없습니다');
+        }
+        throw new Error('삭제 실패');
+      }
+      // DELETE 요청은 보통 204 No Content를 반환하므로 JSON 파싱 시도하지 않음
+      return true;
     },
     onSuccess: () => {
       toast({ title: "공지사항이 삭제되었습니다" });
@@ -88,8 +94,12 @@ function AdminNoticeManager() {
       setViewMode('list');
       setSelectedNotice(null);
     },
-    onError: () => {
-      toast({ title: "삭제 실패", variant: "destructive" });
+    onError: (error: Error) => {
+      toast({ 
+        title: "삭제 실패", 
+        description: error.message,
+        variant: "destructive" 
+      });
     },
   });
 
@@ -122,7 +132,7 @@ function AdminNoticeManager() {
   };
 
   const handleDelete = () => {
-    if (selectedNotice && confirm('정말 삭제하시겠습니까?')) {
+    if (selectedNotice && !deleteNotice.isPending && confirm('정말 삭제하시겠습니까?')) {
       deleteNotice.mutate(selectedNotice.id);
     }
   };
