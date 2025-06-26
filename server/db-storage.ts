@@ -112,12 +112,21 @@ export class DatabaseStorage implements IStorage {
 
   // Notice operations
   async getAllNotices(page: number = 1, limit: number = 10, category?: string, search?: string): Promise<{ notices: Notice[], total: number }> {
+    console.log(`DB: getAllNotices called with category: "${category}", page: ${page}, limit: ${limit}`);
+    
     const allNotices = await db.select().from(notices);
+    console.log(`DB: Total notices in database: ${allNotices.length}`);
     
     let filteredNotices = allNotices;
 
     if (category && category !== "전체") {
-      filteredNotices = filteredNotices.filter((notice: Notice) => notice.category === category);
+      console.log(`DB: Filtering by category: "${category}"`);
+      const beforeFilter = filteredNotices.length;
+      filteredNotices = filteredNotices.filter((notice: Notice) => {
+        console.log(`DB: Checking notice "${notice.title}" with category "${notice.category}"`);
+        return notice.category === category;
+      });
+      console.log(`DB: Filtered from ${beforeFilter} to ${filteredNotices.length} notices`);
     }
 
     if (search) {
