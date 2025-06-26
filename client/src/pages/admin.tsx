@@ -3,20 +3,24 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, FileText, Image, BarChart3, LogOut } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Plus, FileText, Image, BarChart3, LogOut, Edit2, Route } from "lucide-react";
 import AdminStats from "@/components/admin/admin-stats";
 import NoticeForm from "@/components/notices/notice-form";
 import NoticeList from "@/components/notices/notice-list";
 import ImageUpload from "@/components/gallery/image-upload";
 import GalleryGrid from "@/components/gallery/gallery-grid";
+import RoadmapForm from "@/components/roadmap/roadmap-form";
 import AdminLogin from "./admin-login";
-import type { Notice, GalleryItem } from "@shared/schema";
+import type { Notice, GalleryItem, Roadmap } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
 
 export default function Admin() {
   const [showNoticeForm, setShowNoticeForm] = useState(false);
   const [showImageUpload, setShowImageUpload] = useState(false);
+  const [showMiddleRoadmapForm, setShowMiddleRoadmapForm] = useState(false);
+  const [showHighRoadmapForm, setShowHighRoadmapForm] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const { toast } = useToast();
