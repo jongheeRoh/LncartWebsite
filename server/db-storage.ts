@@ -1,4 +1,4 @@
-import { eq, desc, like, and } from "drizzle-orm";
+import { eq, desc, like, and, or, sql } from "drizzle-orm";
 import { db } from "./db";
 import { users, notices, galleryItems, roadmaps, middleSchoolAdmission, highSchoolAdmission } from "@shared/schema";
 import type { 

@@ -66,35 +66,120 @@ export class DirectScraper {
       console.log(`Scraping article list from: ${this.targetUrl}`);
       const response = await axios.get(this.targetUrl, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+          'Accept-Language': 'ko-KR,ko;q=0.8,en-US;q=0.5,en;q=0.3',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Connection': 'keep-alive',
+          'Upgrade-Insecure-Requests': '1'
         }
       });
 
+      console.log('Page loaded successfully, analyzing content...');
       const $ = cheerio.load(response.data);
       const articles: { title: string; url: string }[] = [];
 
-      // Look for article links - adjust selectors based on actual HTML structure
-      $('a').each((i, element) => {
+      // Multiple selectors to find articles
+      const selectors = [
+        'a[href*="link"]',
+        '.article-item a',
+        '.post-item a', 
+        '.content-item a',
+        '.list-item a',
+        'ul li a',
+        'div[class*="item"] a',
+        'div[class*="post"] a',
+        'div[class*="article"] a'
+      ];
+
+      // Try each selector
+      for (const selector of selectors) {
+        $(selector).each((i, element) => {
+          const href = $(element).attr('href');
+          const title = $(element).text().trim();
+          
+          if (href && title && title.length > 3) {
+            let fullUrl = href;
+            if (href.startsWith('/')) {
+              fullUrl = this.baseUrl + href;
+            } else if (!href.startsWith('http')) {
+              fullUrl = this.baseUrl + '/' + href;
+            }
+            
+            // Filter for relevant article links
+            if (title.length > 3 && 
+                !title.includes('홈') && 
+                !title.includes('메뉴') &&
+                !title.includes('로그인') &&
+                !title.includes('회원가입') &&
+                !articles.some(article => article.title === title)) {
+              articles.push({ title, url: fullUrl });
+            }
+          }
+        });
+      }
+
+      // Also try to find pagination links to get more articles
+      const paginationLinks: string[] = [];
+      $('a[href*="page"]').each((i, element) => {
         const href = $(element).attr('href');
-        const title = $(element).text().trim();
-        
-        if (href && title && title.length > 0) {
+        if (href) {
           let fullUrl = href;
           if (href.startsWith('/')) {
             fullUrl = this.baseUrl + href;
           } else if (!href.startsWith('http')) {
             fullUrl = this.baseUrl + '/' + href;
           }
-          
-          // Filter for likely article links
-          if (title.length > 5 && !title.includes('홈') && !title.includes('메뉴')) {
-            articles.push({ title, url: fullUrl });
+          if (!paginationLinks.includes(fullUrl)) {
+            paginationLinks.push(fullUrl);
           }
         }
       });
 
-      console.log(`Found ${articles.length} potential articles`);
-      return articles.slice(0, 20); // Limit to first 20 articles
+      // Scrape additional pages if found
+      for (const pageUrl of paginationLinks.slice(0, 5)) { // Limit to 5 pages
+        try {
+          console.log(`Scraping additional page: ${pageUrl}`);
+          await this.sleep(this.delay);
+          const pageResponse = await axios.get(pageUrl, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+          });
+          
+          const page$ = cheerio.load(pageResponse.data);
+          
+          for (const selector of selectors) {
+            page$(selector).each((i, element) => {
+              const href = page$(element).attr('href');
+              const title = page$(element).text().trim();
+              
+              if (href && title && title.length > 3) {
+                let fullUrl = href;
+                if (href.startsWith('/')) {
+                  fullUrl = this.baseUrl + href;
+                } else if (!href.startsWith('http')) {
+                  fullUrl = this.baseUrl + '/' + href;
+                }
+                
+                if (title.length > 3 && 
+                    !title.includes('홈') && 
+                    !title.includes('메뉴') &&
+                    !title.includes('로그인') &&
+                    !title.includes('회원가입') &&
+                    !articles.some(article => article.title === title)) {
+                  articles.push({ title, url: fullUrl });
+                }
+              }
+            });
+          }
+        } catch (pageError) {
+          console.error(`Error scraping page ${pageUrl}:`, pageError);
+        }
+      }
+
+      console.log(`Found ${articles.length} articles across all pages`);
+      return articles; // Return all found articles
     } catch (error) {
       console.error('Error scraping article list:', error);
       return [];
