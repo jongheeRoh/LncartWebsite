@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
+// Removed Dialog imports since we're using Card instead
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { GALLERY_CATEGORIES } from "@/lib/types";
@@ -93,10 +93,7 @@ export default function ImageUpload({ onSuccess, item }: ImageUploadProps) {
   const imageUrl = form.watch("imageUrl");
 
   return (
-    <>
-      <DialogHeader>
-        <DialogTitle>{item ? "이미지 정보 수정" : "새 이미지 업로드"}</DialogTitle>
-      </DialogHeader>
+    <div className="space-y-6">
       
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -199,6 +196,6 @@ export default function ImageUpload({ onSuccess, item }: ImageUploadProps) {
           </div>
         </form>
       </Form>
-    </>
+    </div>
   );
 }

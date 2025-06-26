@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
+// Dialog components removed - using Card layout instead
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { NOTICE_CATEGORIES } from "@/lib/types";
@@ -91,10 +91,7 @@ export default function NoticeForm({ onSuccess, notice }: NoticeFormProps) {
   };
 
   return (
-    <>
-      <DialogHeader>
-        <DialogTitle>{notice ? "공지사항 수정" : "새 공지사항 작성"}</DialogTitle>
-      </DialogHeader>
+    <div className="space-y-6">
       
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -185,6 +182,6 @@ export default function NoticeForm({ onSuccess, notice }: NoticeFormProps) {
           </div>
         </form>
       </Form>
-    </>
+    </div>
   );
 }
