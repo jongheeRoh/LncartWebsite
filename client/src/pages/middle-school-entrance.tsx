@@ -100,7 +100,7 @@ export default function MiddleSchoolEntrance() {
                     <p className="text-sm text-gray-600 mb-4 line-clamp-3">
                       {notice.excerpt || notice.content.replace(/<[^>]*>/g, '').substring(0, 100) + '...'}
                     </p>
-                    <Link href={`/notice/${notice.id}`}>
+                    <Link href={`/notices/${notice.id}`}>
                       <Button variant="outline" size="sm" className="w-full">
                         자세히 보기
                       </Button>

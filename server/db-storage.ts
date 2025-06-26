@@ -147,6 +147,12 @@ export class DatabaseStorage implements IStorage {
     const paginatedNotices = filteredNotices.slice(startIndex, startIndex + limit);
 
     console.log(`Database: Returning ${paginatedNotices.length} notices out of ${total} total`);
+    console.log(`Database: Final result structure:`, { 
+      totalFiltered: total, 
+      returnedCount: paginatedNotices.length, 
+      firstNotice: paginatedNotices[0] ? paginatedNotices[0].title : 'none' 
+    });
+    
     return { notices: paginatedNotices, total };
   }
 
