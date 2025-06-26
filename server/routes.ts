@@ -183,9 +183,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const category = req.query.category as string;
       const search = req.query.search as string;
 
+      console.log(`\n=== API CALL ===`);
+      console.log(`URL: ${req.url}`);
+      console.log(`Raw category: "${req.query.category}"`);
+      console.log(`Decoded category: "${category}"`);
+      console.log(`Page: ${page}, Limit: ${limit}`);
+
       const result = await storage.getAllNotices(page, limit, category, search);
+      
+      console.log(`\n=== API RESPONSE ===`);
+      console.log(`Result structure:`, JSON.stringify(result, null, 2));
+      console.log(`==================\n`);
+
       res.json(result);
     } catch (error) {
+      console.error("API Error:", error);
       res.status(500).json({ error: "Failed to fetch notices" });
     }
   });

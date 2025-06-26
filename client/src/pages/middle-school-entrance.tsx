@@ -21,7 +21,14 @@ export default function MiddleSchoolEntrance() {
     queryKey: ['/api/notices', { category: '예중입시정보' }],
     queryFn: async () => {
       console.log('Fetching 예중입시정보 data...');
-      const response = await fetch(`/api/notices?category=${encodeURIComponent('예중입시정보')}`);
+      const url = `/api/notices?category=예중입시정보`;
+      console.log('Request URL:', url);
+      const response = await fetch(url, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
       console.log('Response status:', response.status);
       const data = await response.json();
       console.log('Response data:', data);
@@ -78,6 +85,12 @@ export default function MiddleSchoolEntrance() {
             <div className="text-center py-8">
               <p className="text-gray-600">아직 등록된 입시정보가 없습니다.</p>
               <p className="text-sm text-gray-500 mt-2">총 {noticesData?.total || 0}개의 데이터</p>
+              <details className="mt-4 text-left max-w-md mx-auto">
+                <summary className="cursor-pointer text-blue-600">디버그 정보</summary>
+                <pre className="mt-2 p-2 bg-gray-100 text-xs overflow-auto">
+                  {JSON.stringify(noticesData, null, 2)}
+                </pre>
+              </details>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

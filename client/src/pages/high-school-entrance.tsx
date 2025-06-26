@@ -20,7 +20,13 @@ export default function HighSchoolEntrance() {
   const { data: noticesData, isLoading } = useQuery({
     queryKey: ['/api/notices', { category: '예고입시정보' }],
     queryFn: async () => {
-      const response = await fetch(`/api/notices?category=${encodeURIComponent('예고입시정보')}`);
+      const url = `/api/notices?category=예고입시정보`;
+      const response = await fetch(url, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
       if (!response.ok) throw new Error('Failed to fetch notices');
       return response.json();
     },
