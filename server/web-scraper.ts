@@ -3,7 +3,7 @@ import * as cheerio from 'cheerio';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { storage } from './storage';
-import type { InsertMiddleSchoolAdmission } from '@shared/schema';
+import type { InsertMiddleSchoolAdmission, InsertHighSchoolAdmission } from '@shared/schema';
 
 interface ScrapedArticle {
   title: string;
@@ -16,6 +16,16 @@ interface ScrapedArticle {
 export class WebScraper {
   private baseUrl = 'https://lncart.modoo.at';
   private delay = 1000; // 1 second delay between requests
+  private targetCategory = '예중입시정보';
+  private baseUrls: string[] = [];
+
+  setTargetCategory(category: string): void {
+    this.targetCategory = category;
+  }
+
+  setBaseUrls(urls: string[]): void {
+    this.baseUrls = urls;
+  }
 
   private sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -156,7 +166,7 @@ export class WebScraper {
       return {
         title,
         content: htmlContent,
-        category: '예중입시정보',
+        category: this.targetCategory,
         imageUrls,
         originalUrl: articleUrl
       };
@@ -169,15 +179,28 @@ export class WebScraper {
 
   private async getAllPages(): Promise<string[]> {
     const pages: string[] = [];
-    const basePageUrl = 'https://lncart.modoo.at/?link=0stkad99';
     
-    // Start with the provided page
-    pages.push('https://lncart.modoo.at/?link=0stkad99&page=3');
-    
-    // Try to find other pages by checking common pagination patterns
-    for (let page = 1; page <= 10; page++) {
-      if (page !== 3) { // We already have page 3
-        pages.push(`${basePageUrl}&page=${page}`);
+    if (this.baseUrls.length === 0) {
+      // Default URLs for different categories
+      const basePageUrl = 'https://lncart.modoo.at/?link=0stkad99';
+      
+      // Start with the provided page
+      pages.push('https://lncart.modoo.at/?link=0stkad99&page=3');
+      
+      // Try to find other pages by checking common pagination patterns
+      for (let page = 1; page <= 10; page++) {
+        if (page !== 3) { // We already have page 3
+          pages.push(`${basePageUrl}&page=${page}`);
+        }
+      }
+    } else {
+      // Use configured base URLs
+      for (const baseUrl of this.baseUrls) {
+        pages.push(baseUrl);
+        // Try multiple pages for each base URL
+        for (let page = 1; page <= 10; page++) {
+          pages.push(`${baseUrl}&page=${page}`);
+        }
       }
     }
     
@@ -219,8 +242,8 @@ export class WebScraper {
     return allArticles;
   }
 
-  public async importToDatabase(articles: ScrapedArticle[]): Promise<void> {
-    console.log(`Importing ${articles.length} articles to database...`);
+  public async importToMiddleSchoolDatabase(articles: ScrapedArticle[]): Promise<void> {
+    console.log(`Importing ${articles.length} articles to middle school admission database...`);
     
     for (const article of articles) {
       try {
@@ -229,7 +252,7 @@ export class WebScraper {
         for (let i = 0; i < article.imageUrls.length; i++) {
           const imageUrl = article.imageUrls[i];
           const extension = path.extname(imageUrl).split('?')[0] || '.jpg';
-          const filename = `article_${Date.now()}_${i}${extension}`;
+          const filename = `middle_school_${Date.now()}_${i}${extension}`;
           const localUrl = await this.downloadImage(imageUrl, filename);
           localImageUrls.push(localUrl);
         }
@@ -252,20 +275,65 @@ export class WebScraper {
         };
         
         await storage.createMiddleSchoolAdmission(admissionData);
-        console.log(`Imported article: ${article.title}`);
+        console.log(`Imported middle school article: ${article.title}`);
         
       } catch (error) {
-        console.error(`Failed to import article "${article.title}":`, error);
+        console.error(`Failed to import middle school article "${article.title}":`, error);
       }
     }
     
-    console.log('Import process completed!');
+    console.log('Middle school import process completed!');
+  }
+
+  public async importToHighSchoolDatabase(articles: ScrapedArticle[]): Promise<void> {
+    console.log(`Importing ${articles.length} articles to high school admission database...`);
+    
+    for (const article of articles) {
+      try {
+        // Download images and update URLs
+        const localImageUrls: string[] = [];
+        for (let i = 0; i < article.imageUrls.length; i++) {
+          const imageUrl = article.imageUrls[i];
+          const extension = path.extname(imageUrl).split('?')[0] || '.jpg';
+          const filename = `high_school_${Date.now()}_${i}${extension}`;
+          const localUrl = await this.downloadImage(imageUrl, filename);
+          localImageUrls.push(localUrl);
+        }
+        
+        // Update content to use local image URLs
+        let updatedContent = article.content;
+        for (let i = 0; i < article.imageUrls.length; i++) {
+          updatedContent = updatedContent.replace(article.imageUrls[i], localImageUrls[i]);
+        }
+        
+        // Create database entry
+        const admissionData: InsertHighSchoolAdmission = {
+          title: article.title,
+          content: updatedContent,
+          category: article.category,
+          attachments: JSON.stringify({
+            images: localImageUrls,
+            originalUrl: article.originalUrl
+          })
+        };
+        
+        await storage.createHighSchoolAdmission(admissionData);
+        console.log(`Imported high school article: ${article.title}`);
+        
+      } catch (error) {
+        console.error(`Failed to import high school article "${article.title}":`, error);
+      }
+    }
+    
+    console.log('High school import process completed!');
   }
 }
 
 export async function scrapeAndImportMiddleSchoolData(): Promise<{ success: boolean; message: string; count: number }> {
   try {
     const scraper = new WebScraper();
+    scraper.setTargetCategory('예중입시정보');
+    scraper.setBaseUrls(['https://lncart.modoo.at/?link=0stkad99']);
     
     // Scrape all articles
     const articles = await scraper.scrapeAllArticles();
@@ -279,7 +347,7 @@ export async function scrapeAndImportMiddleSchoolData(): Promise<{ success: bool
     }
     
     // Import to database
-    await scraper.importToDatabase(articles);
+    await scraper.importToMiddleSchoolDatabase(articles);
     
     return {
       success: true,
@@ -288,7 +356,43 @@ export async function scrapeAndImportMiddleSchoolData(): Promise<{ success: bool
     };
     
   } catch (error) {
-    console.error('Scraping process failed:', error);
+    console.error('Middle school scraping process failed:', error);
+    return {
+      success: false,
+      message: `크롤링 중 오류가 발생했습니다: ${error instanceof Error ? error.message : '알 수 없는 오류'}`,
+      count: 0
+    };
+  }
+}
+
+export async function scrapeAndImportHighSchoolData(): Promise<{ success: boolean; message: string; count: number }> {
+  try {
+    const scraper = new WebScraper();
+    scraper.setTargetCategory('예고입시정보');
+    scraper.setBaseUrls(['https://lncart.modoo.at/?link=0stkad99']); // Need to find the correct high school URL
+    
+    // Scrape all articles
+    const articles = await scraper.scrapeAllArticles();
+    
+    if (articles.length === 0) {
+      return {
+        success: false,
+        message: '크롤링된 데이터가 없습니다. 웹사이트 구조가 변경되었을 수 있습니다.',
+        count: 0
+      };
+    }
+    
+    // Import to database
+    await scraper.importToHighSchoolDatabase(articles);
+    
+    return {
+      success: true,
+      message: `${articles.length}개의 예고 입시정보 글을 성공적으로 가져왔습니다.`,
+      count: articles.length
+    };
+    
+  } catch (error) {
+    console.error('High school scraping process failed:', error);
     return {
       success: false,
       message: `크롤링 중 오류가 발생했습니다: ${error instanceof Error ? error.message : '알 수 없는 오류'}`,

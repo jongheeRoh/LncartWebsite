@@ -4,7 +4,7 @@ import { storage, authStorage } from "./storage";
 import { insertNoticeSchema, updateNoticeSchema, insertGalleryItemSchema, updateGalleryItemSchema, insertRoadmapSchema, updateRoadmapSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { upload, createFileAttachment } from "./upload";
-import { scrapeAndImportMiddleSchoolData } from "./web-scraper";
+import { scrapeAndImportMiddleSchoolData, scrapeAndImportHighSchoolData } from "./web-scraper";
 import path from "path";
 import fs from "fs";
 
@@ -32,7 +32,8 @@ function createSessionId(): string {
 
 // Auth middleware
 function requireAuth(req: Request, res: Response, next: NextFunction) {
-  const sessionId = req.headers.authorization?.replace('Bearer ', '');
+  // Try to get session ID from cookie or authorization header
+  const sessionId = req.cookies?.adminSession || req.headers.authorization?.replace('Bearer ', '');
   
   if (!sessionId) {
     return res.status(401).json({ error: "Unauthorized" });
@@ -84,6 +85,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       console.log("Login successful, sessionId:", sessionId);
+      
+      // Set cookie for session
+      res.cookie('adminSession', sessionId, {
+        httpOnly: true,
+        secure: false, // Set to true in production with HTTPS
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        sameSite: 'lax'
+      });
+      
       res.json({ 
         message: "Login successful",
         sessionId,
@@ -96,10 +106,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post("/api/auth/logout", requireAuth, (req, res) => {
-    const sessionId = req.headers.authorization?.replace('Bearer ', '');
+    const sessionId = req.cookies?.adminSession || req.headers.authorization?.replace('Bearer ', '');
     if (sessionId) {
       adminSessions.delete(sessionId);
     }
+    
+    // Clear cookie
+    res.clearCookie('adminSession');
     res.json({ message: "Logged out successfully" });
   });
 
@@ -399,7 +412,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Web scraping endpoint
+  // Web scraping endpoints
   app.post("/api/admin/scrape-middle-school", requireAuth, async (req, res) => {
     try {
       console.log("Starting web scraping for middle school admission data...");
@@ -410,6 +423,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         success: false, 
         message: "웹 크롤링 중 오류가 발생했습니다.",
+        count: 0
+      });
+    }
+  });
+
+  app.post("/api/admin/scrape-high-school", requireAuth, async (req, res) => {
+    try {
+      console.log("Starting web scraping for high school admission data...");
+      const result = await scrapeAndImportHighSchoolData();
+      res.json(result);
+    } catch (error) {
+      console.error("High school web scraping error:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "예고 입시정보 크롤링 중 오류가 발생했습니다.",
         count: 0
       });
     }
