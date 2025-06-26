@@ -106,14 +106,80 @@ export default function NoticeList({ notices, isLoading, onNoticeUpdated, onNoti
                       {formatDate(notice.createdAt)}
                     </span>
                   </div>
-                  <a 
-                    href={`/notices/${notice.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <div 
+                    onClick={() => {
+                      // Create a simple popup to show notice content
+                      const popup = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
+                      if (popup) {
+                        popup.document.write(`
+                          <!DOCTYPE html>
+                          <html>
+                            <head>
+                              <title>${notice.title}</title>
+                              <meta charset="utf-8">
+                              <style>
+                                body { 
+                                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                                  max-width: 800px;
+                                  margin: 40px auto;
+                                  padding: 20px;
+                                  line-height: 1.6;
+                                }
+                                .header {
+                                  border-bottom: 2px solid #e5e7eb;
+                                  padding-bottom: 20px;
+                                  margin-bottom: 30px;
+                                }
+                                .title {
+                                  font-size: 28px;
+                                  font-weight: bold;
+                                  color: #1f2937;
+                                  margin-bottom: 10px;
+                                }
+                                .meta {
+                                  color: #6b7280;
+                                  font-size: 14px;
+                                }
+                                .category {
+                                  display: inline-block;
+                                  background: #f3f4f6;
+                                  padding: 4px 8px;
+                                  border-radius: 4px;
+                                  font-size: 12px;
+                                  margin-right: 10px;
+                                }
+                                .content {
+                                  font-size: 16px;
+                                  color: #374151;
+                                  line-height: 1.8;
+                                }
+                                .content p { margin-bottom: 16px; }
+                                .content ul, .content ol { margin: 16px 0; padding-left: 24px; }
+                                .content li { margin-bottom: 8px; }
+                                .content img { max-width: 100%; height: auto; margin: 20px 0; }
+                              </style>
+                            </head>
+                            <body>
+                              <div class="header">
+                                <div class="title">${notice.title}</div>
+                                <div class="meta">
+                                  <span class="category">${notice.category}</span>
+                                  ${new Date(notice.createdAt).toLocaleDateString('ko-KR')}
+                                </div>
+                              </div>
+                              <div class="content">
+                                ${notice.content || notice.excerpt || '내용이 없습니다.'}
+                              </div>
+                            </body>
+                          </html>
+                        `);
+                        popup.document.close();
+                      }
+                    }}
                     className="text-lg font-semibold text-slate-900 mb-2 hover:text-primary cursor-pointer block"
                   >
                     {notice.title}
-                  </a>
+                  </div>
                   <p className="text-slate-600 line-clamp-2">
                     {notice.excerpt}
                   </p>

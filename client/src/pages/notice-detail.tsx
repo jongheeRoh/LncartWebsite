@@ -6,7 +6,15 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Calendar, Download, FileText } from "lucide-react";
 import { Link } from "wouter";
 import type { Notice } from "@shared/schema";
-import type { FileAttachment } from "@server/upload";
+interface FileAttachment {
+  id: string;
+  originalName: string;
+  filename: string;
+  mimetype: string;
+  size: number;
+  url: string;
+  uploadedAt: Date;
+}
 
 export default function NoticeDetail() {
   const [match, params] = useRoute("/notices/:id");

@@ -59,31 +59,7 @@ export class MemStorage implements IStorage {
   }
 
   private async initializeSampleData() {
-    // Sample notices
-    const sampleNotices = [
-      {
-        title: "2024년 예중 입시 설명회 안내",
-        content: "2024년 예술중학교 입시를 준비하는 학생과 학부모님들을 위한 설명회를 개최합니다. 입시 전형 방법, 준비 과정, 포트폴리오 작성법 등에 대해 자세히 안내해드리겠습니다.",
-        excerpt: "예중 입시 설명회가 3월 15일 오후 2시에 개최됩니다.",
-        category: "긴급"
-      },
-      {
-        title: "신학기 수업 시간표 안내",
-        content: "새 학기가 시작됨에 따라 수업 시간표를 안내해드립니다. 기초소묘반, 수채화반, 디자인반 등 각 반별 시간표를 확인하시기 바랍니다.",
-        excerpt: "신학기 수업 시간표가 업데이트되었습니다.",
-        category: "일반"
-      },
-      {
-        title: "학생 작품 전시회 개최",
-        content: "우리 학원 학생들의 우수한 작품들을 선보이는 전시회를 개최합니다. 한 학기 동안 열심히 작업한 학생들의 성과를 확인하실 수 있습니다.",
-        excerpt: "학생 작품 전시회가 4월 중 개최될 예정입니다.",
-        category: "이벤트"
-      }
-    ];
-
-    for (const notice of sampleNotices) {
-      await this.createNotice(notice);
-    }
+    // No sample notices - they will be created through admin panel
 
     // Sample gallery items
     const sampleGalleryItems = [
