@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import NoticeForm from "./notice-form";
+import NoticeModal from "./notice-modal";
 import { Edit, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -17,12 +18,20 @@ interface NoticeListProps {
   isLoading: boolean;
   onNoticeUpdated?: () => void;
   onNoticeDeleted?: () => void;
+  showActions?: boolean; // for admin mode
 }
 
-export default function NoticeList({ notices, isLoading, onNoticeUpdated, onNoticeDeleted }: NoticeListProps) {
+export default function NoticeList({ notices, isLoading, onNoticeUpdated, onNoticeDeleted, showActions = false }: NoticeListProps) {
   const [editingNotice, setEditingNotice] = useState<Notice | null>(null);
+  const [selectedNotice, setSelectedNotice] = useState<Notice | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  const handleNoticeClick = (notice: Notice) => {
+    setSelectedNotice(notice);
+    setIsModalOpen(true);
+  };
 
   const deleteNoticeMutation = useMutation({
     mutationFn: async (id: number) => {
@@ -168,6 +177,15 @@ export default function NoticeList({ notices, isLoading, onNoticeUpdated, onNoti
           )}
         </DialogContent>
       </Dialog>
+
+      <NoticeModal 
+        notice={selectedNotice}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedNotice(null);
+        }}
+      />
     </>
   );
 }
