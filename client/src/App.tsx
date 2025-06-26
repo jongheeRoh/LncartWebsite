@@ -8,6 +8,7 @@ import Home from "@/pages/home";
 import About from "@/pages/about";
 import Schedule from "@/pages/schedule";
 import Notices from "@/pages/notices";
+import NoticeDetail from "@/pages/notice-detail";
 import Gallery from "@/pages/gallery";
 import Entrance from "@/pages/entrance";
 import MiddleSchool from "@/pages/middle-school";
@@ -31,6 +32,7 @@ function Router() {
         <Route path="/about" component={About} />
         <Route path="/schedule" component={Schedule} />
         <Route path="/notices" component={Notices} />
+        <Route path="/notices/:id" component={NoticeDetail} />
         <Route path="/gallery" component={Gallery} />
         <Route path="/gallery/:id" component={GalleryDetail} />
         <Route path="/entrance" component={Entrance} />
