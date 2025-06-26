@@ -24,9 +24,52 @@ import { useToast } from "@/hooks/use-toast";
 import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
 
 // Admin Notice Manager Component
+// 입시정보 리스트 컴포넌트
+function EntranceInfoList({ category, onNoticeClick }: { category: string, onNoticeClick: (notice: Notice) => void }) {
+  const { data: notices, isLoading } = useQuery({
+    queryKey: ['/api/notices', { category }],
+    queryFn: () => getQueryFn<{ notices: Notice[], total: number }>({ on401: "throw" })(`/api/notices?category=${category}`),
+  });
+
+  if (isLoading) {
+    return <div className="text-center py-8">로딩 중...</div>;
+  }
+
+  if (!notices?.notices?.length) {
+    return (
+      <Card>
+        <CardContent className="text-center py-8">
+          <p className="text-muted-foreground">등록된 {category === '예중입시정보' ? '예중' : '예고'} 입시정보가 없습니다.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {notices.notices.map((notice: Notice) => (
+        <Card key={notice.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onNoticeClick(notice)}>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle>{notice.title}</CardTitle>
+              <Badge variant={notice.category === '긴급' ? 'destructive' : 'secondary'}>
+                {notice.category}
+              </Badge>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              작성일: {format(new Date(notice.createdAt), 'yyyy년 MM월 dd일', { locale: ko })}
+            </p>
+          </CardHeader>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
 function AdminNoticeManager() {
-  const [viewMode, setViewMode] = useState<'list' | 'view' | 'edit' | 'create'>('list');
+  const [viewMode, setViewMode] = useState<'list' | 'view' | 'edit' | 'create' | 'middle_entrance' | 'high_entrance'>('list');
   const [selectedNotice, setSelectedNotice] = useState<Notice | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [editContent, setEditContent] = useState("");
   const [editTitle, setEditTitle] = useState("");
   const [editCategory, setEditCategory] = useState("");

@@ -13,7 +13,7 @@ export interface GalleryFilters {
   category?: string;
 }
 
-export const NOTICE_CATEGORIES = ["전체", "일반", "긴급", "이벤트"] as const;
+export const NOTICE_CATEGORIES = ["전체", "일반", "긴급", "이벤트", "예중입시정보", "예고입시정보"] as const;
 export const GALLERY_CATEGORIES = ["전체", "소묘", "수채화", "디자인", "조소", "입시작품"] as const;
 
 export type NoticeCategory = typeof NOTICE_CATEGORIES[number];
