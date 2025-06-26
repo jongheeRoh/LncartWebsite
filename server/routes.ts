@@ -1,7 +1,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage, authStorage } from "./storage";
-import { insertNoticeSchema, updateNoticeSchema, insertGalleryItemSchema, updateGalleryItemSchema, insertRoadmapSchema, updateRoadmapSchema } from "@shared/schema";
+import { insertNoticeSchema, updateNoticeSchema, insertGalleryItemSchema, updateGalleryItemSchema, insertRoadmapSchema, updateRoadmapSchema, insertMiddleSchoolAdmissionSchema, updateMiddleSchoolAdmissionSchema, insertHighSchoolAdmissionSchema, updateHighSchoolAdmissionSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { upload, createFileAttachment } from "./upload";
 import { scrapeAndImportMiddleSchoolData, scrapeAndImportHighSchoolData } from "./web-scraper";
@@ -66,6 +66,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Health check
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok" });
+  });
+
+  // Middle School Admission routes (moved to top priority)
+  app.get("/api/middle-school-admission", async (req, res) => {
+    try {
+      console.log("Middle school admission API called");
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const category = req.query.category as string;
+      const search = req.query.search as string;
+
+      const result = await storage.getAllMiddleSchoolAdmission(page, limit, category, search);
+      console.log(`Returning ${result.items.length} middle school admission items`);
+      res.json(result);
+    } catch (error) {
+      console.error("Middle school admission API Error:", error);
+      res.status(500).json({ error: "Failed to fetch middle school admission data" });
+    }
+  });
+
+  app.get("/api/middle-school-admission/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const admission = await storage.getMiddleSchoolAdmission(id);
+      
+      if (!admission) {
+        return res.status(404).json({ error: "Middle school admission not found" });
+      }
+      
+      res.json(admission);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch middle school admission" });
+    }
+  });
+
+  // High School Admission routes 
+  app.get("/api/high-school-admission", async (req, res) => {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const category = req.query.category as string;
+      const search = req.query.search as string;
+
+      const result = await storage.getAllHighSchoolAdmission(page, limit, category, search);
+      res.json(result);
+    } catch (error) {
+      console.error("High school admission API Error:", error);
+      res.status(500).json({ error: "Failed to fetch high school admission data" });
+    }
+  });
+
+  app.get("/api/high-school-admission/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const admission = await storage.getHighSchoolAdmission(id);
+      
+      if (!admission) {
+        return res.status(404).json({ error: "High school admission not found" });
+      }
+      
+      res.json(admission);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch high school admission" });
+    }
   });
 
   // Auth routes
@@ -465,6 +529,146 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: `직접 크롤링 중 오류: ${error instanceof Error ? error.message : String(error)}`,
         count: 0
       });
+    }
+  });
+
+  // Middle School Admission routes
+  app.get("/api/middle-school-admission", async (req, res) => {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const category = req.query.category as string;
+      const search = req.query.search as string;
+
+      const result = await storage.getAllMiddleSchoolAdmission(page, limit, category, search);
+      res.json(result);
+    } catch (error) {
+      console.error("API Error:", error);
+      res.status(500).json({ error: "Failed to fetch middle school admission data" });
+    }
+  });
+
+  app.get("/api/middle-school-admission/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const admission = await storage.getMiddleSchoolAdmission(id);
+      
+      if (!admission) {
+        return res.status(404).json({ error: "Middle school admission not found" });
+      }
+      
+      res.json(admission);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch middle school admission" });
+    }
+  });
+
+  app.post("/api/middle-school-admission", requireAuth, async (req, res) => {
+    try {
+      const admission = await storage.createMiddleSchoolAdmission(req.body);
+      res.status(201).json(admission);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create middle school admission" });
+    }
+  });
+
+  app.patch("/api/middle-school-admission/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const admission = await storage.updateMiddleSchoolAdmission(id, req.body);
+      
+      if (!admission) {
+        return res.status(404).json({ error: "Middle school admission not found" });
+      }
+      
+      res.json(admission);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update middle school admission" });
+    }
+  });
+
+  app.delete("/api/middle-school-admission/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteMiddleSchoolAdmission(id);
+      
+      if (!success) {
+        return res.status(404).json({ error: "Middle school admission not found" });
+      }
+      
+      res.json({ message: "Middle school admission deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete middle school admission" });
+    }
+  });
+
+  // High School Admission routes
+  app.get("/api/high-school-admission", async (req, res) => {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const category = req.query.category as string;
+      const search = req.query.search as string;
+
+      const result = await storage.getAllHighSchoolAdmission(page, limit, category, search);
+      res.json(result);
+    } catch (error) {
+      console.error("API Error:", error);
+      res.status(500).json({ error: "Failed to fetch high school admission data" });
+    }
+  });
+
+  app.get("/api/high-school-admission/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const admission = await storage.getHighSchoolAdmission(id);
+      
+      if (!admission) {
+        return res.status(404).json({ error: "High school admission not found" });
+      }
+      
+      res.json(admission);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch high school admission" });
+    }
+  });
+
+  app.post("/api/high-school-admission", requireAuth, async (req, res) => {
+    try {
+      const admission = await storage.createHighSchoolAdmission(req.body);
+      res.status(201).json(admission);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create high school admission" });
+    }
+  });
+
+  app.patch("/api/high-school-admission/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const admission = await storage.updateHighSchoolAdmission(id, req.body);
+      
+      if (!admission) {
+        return res.status(404).json({ error: "High school admission not found" });
+      }
+      
+      res.json(admission);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update high school admission" });
+    }
+  });
+
+  app.delete("/api/high-school-admission/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteHighSchoolAdmission(id);
+      
+      if (!success) {
+        return res.status(404).json({ error: "High school admission not found" });
+      }
+      
+      res.json({ message: "High school admission deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete high school admission" });
     }
   });
 
