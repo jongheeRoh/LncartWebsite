@@ -311,7 +311,7 @@ function AdminNoticeManager() {
             queryClient.invalidateQueries({ queryKey: ['/api/notices'] });
             setSelectedCategory('');
           }}
-          notice={{ category: selectedCategory || '일반' }}
+          notice={selectedCategory ? { category: selectedCategory } : undefined}
         />
       </div>
     );

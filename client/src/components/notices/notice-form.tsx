@@ -74,6 +74,10 @@ export default function NoticeForm({ onSuccess, notice }: NoticeFormProps) {
 
   const updateNoticeMutation = useMutation({
     mutationFn: async (data: InsertNotice) => {
+      if (!notice?.id) {
+        throw new Error('Notice ID is required for update');
+      }
+      
       const sessionId = localStorage.getItem('adminSessionId');
       const response = await fetch(`/api/notices/${notice.id}`, {
         method: "PATCH",
@@ -116,7 +120,7 @@ export default function NoticeForm({ onSuccess, notice }: NoticeFormProps) {
         attachments
       };
       
-      if (notice) {
+      if (notice?.id && typeof notice.id === 'number') {
         await updateNoticeMutation.mutateAsync(noticeData);
       } else {
         await createNoticeMutation.mutateAsync(noticeData);
