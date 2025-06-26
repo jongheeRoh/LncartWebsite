@@ -353,6 +353,53 @@ function AdminNoticeManager() {
           ))}
         </div>
       )}
+
+        {viewMode === 'middle_entrance' && (
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold">예중 입시정보 관리</h2>
+              <Button onClick={() => {
+                setViewMode('create');
+                setSelectedCategory('예중입시정보');
+              }}>
+                새 입시정보 추가
+              </Button>
+            </div>
+            <EntranceInfoList category="예중입시정보" onNoticeClick={handleNoticeClick} />
+          </div>
+        )}
+
+        {viewMode === 'high_entrance' && (
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold">예고 입시정보 관리</h2>
+              <Button onClick={() => {
+                setViewMode('create');
+                setSelectedCategory('예고입시정보');
+              }}>
+                새 입시정보 추가
+              </Button>
+            </div>
+            <EntranceInfoList category="예고입시정보" onNoticeClick={handleNoticeClick} />
+          </div>
+        )}
+
+        {viewMode === 'create' && (
+          <NoticeForm 
+            onSuccess={() => {
+              if (selectedCategory === '예중입시정보') {
+                setViewMode('middle_entrance');
+              } else if (selectedCategory === '예고입시정보') {
+                setViewMode('high_entrance');
+              } else {
+                setViewMode('list');
+              }
+              queryClient.invalidateQueries({ queryKey: ['/api/notices'] });
+              setSelectedCategory('');
+            }}
+            notice={{ category: selectedCategory || '일반' }}
+          />
+        )}
     </div>
   );
 }
