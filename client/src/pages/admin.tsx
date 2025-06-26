@@ -21,7 +21,11 @@ import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png"
 function EntranceInfoList({ category, onNoticeClick }: { category: string, onNoticeClick: (notice: Notice) => void }) {
   const { data: notices, isLoading } = useQuery({
     queryKey: ['/api/notices', { category }],
-    queryFn: () => getQueryFn<{ notices: Notice[], total: number }>({ on401: "throw" })(`/api/notices?category=${category}`),
+    queryFn: async () => {
+      const response = await fetch(`/api/notices?category=${encodeURIComponent(category)}`);
+      if (!response.ok) throw new Error('Failed to fetch notices');
+      return response.json();
+    },
   });
 
   if (isLoading) {
