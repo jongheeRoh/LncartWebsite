@@ -4,6 +4,7 @@ import { storage, authStorage } from "./storage";
 import { insertNoticeSchema, updateNoticeSchema, insertGalleryItemSchema, updateGalleryItemSchema, insertRoadmapSchema, updateRoadmapSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { upload, createFileAttachment } from "./upload";
+import { scrapeAndImportMiddleSchoolData } from "./web-scraper";
 import path from "path";
 import fs from "fs";
 
@@ -395,6 +396,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(stats);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch stats" });
+    }
+  });
+
+  // Web scraping endpoint
+  app.post("/api/admin/scrape-middle-school", requireAuth, async (req, res) => {
+    try {
+      console.log("Starting web scraping for middle school admission data...");
+      const result = await scrapeAndImportMiddleSchoolData();
+      res.json(result);
+    } catch (error) {
+      console.error("Web scraping error:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "웹 크롤링 중 오류가 발생했습니다.",
+        count: 0
+      });
     }
   });
 
