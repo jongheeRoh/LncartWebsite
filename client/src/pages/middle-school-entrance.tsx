@@ -79,43 +79,13 @@ export default function MiddleSchoolEntrance() {
               <p className="text-red-600">데이터를 불러오는 중 오류가 발생했습니다.</p>
               <p className="text-sm text-gray-500 mt-2">{error.message}</p>
             </div>
-          ) : notices.length === 0 ? (
+          ) : (
             <div className="text-center py-8">
               <p className="text-gray-600">아직 등록된 입시정보가 없습니다.</p>
-              <p className="text-sm text-gray-500 mt-2">총 {noticesData?.total || 0}개의 데이터</p>
-
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {notices.map((notice: Notice) => (
-                <Card key={notice.id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <CardTitle className="text-lg line-clamp-2">{notice.title}</CardTitle>
-                    <CardDescription className="flex items-center justify-between text-sm">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="h-4 w-4" />
-                        {new Date(notice.createdAt).toLocaleDateString('ko-KR')}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Eye className="h-4 w-4" />
-                        {notice.viewCount || 0}
-                      </span>
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-3">
-                      {notice.excerpt || notice.content.replace(/<[^>]*>/g, '').substring(0, 100) + '...'}
-                    </p>
-                    <Link href={`/notices/${notice.id}`}>
-                      <Button variant="outline" size="sm" className="w-full">
-                        자세히 보기
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ))}
+              <p className="text-sm text-gray-500 mt-2">관리자 패널에서 입시정보를 추가해주세요.</p>
             </div>
           )}
+
         </div>
       </div>
     </div>
