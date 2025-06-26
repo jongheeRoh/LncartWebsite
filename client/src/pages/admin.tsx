@@ -97,10 +97,7 @@ export default function Admin() {
     });
   };
 
-  if (!isLoggedIn) {
-    return <AdminLogin onLoginSuccess={handleLoginSuccess} />;
-  }
-
+  // Always call hooks before any early returns
   const { data: noticesData, isLoading: noticesLoading, refetch: refetchNotices } = useQuery<{
     notices: Notice[];
     total: number;
@@ -126,6 +123,10 @@ export default function Admin() {
     },
     enabled: isLoggedIn,
   });
+
+  if (!isLoggedIn) {
+    return <AdminLogin onLoginSuccess={handleLoginSuccess} />;
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
