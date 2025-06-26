@@ -106,9 +106,14 @@ export default function NoticeList({ notices, isLoading, onNoticeUpdated, onNoti
                       {formatDate(notice.createdAt)}
                     </span>
                   </div>
-                  <h4 className="text-lg font-semibold text-slate-900 mb-2 hover:text-primary cursor-pointer">
+                  <a 
+                    href={`/notices/${notice.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-lg font-semibold text-slate-900 mb-2 hover:text-primary cursor-pointer block"
+                  >
                     {notice.title}
-                  </h4>
+                  </a>
                   <p className="text-slate-600 line-clamp-2">
                     {notice.excerpt}
                   </p>
