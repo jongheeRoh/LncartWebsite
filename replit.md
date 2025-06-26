@@ -91,6 +91,7 @@ This is a full-stack web application for an art academy (선과색미술학원) 
 
 ## Recent Changes
 
+- **June 26, 2025**: **FRONTEND DISPLAY COMPLETED** - Fixed frontend to display all 30 예중입시정보 articles with proper card layout and detailed view functionality
 - **June 26, 2025**: **DATA POPULATION COMPLETED** - Successfully populated 예중입시정보 (30 articles) and 예고입시정보 (6 articles) with comprehensive entrance exam information
 - **June 26, 2025**: Created direct data population scripts to bypass authentication issues and ensure immediate data availability
 - **June 26, 2025**: Updated directions page with accurate Naver Map integration for 선과색미술학원 location
