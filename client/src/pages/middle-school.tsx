@@ -5,16 +5,7 @@ import { Calendar, BookOpen, Users, Target, CheckCircle, Clock, Award, Palette, 
 import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
 
 export default function MiddleSchool() {
-  const announcements = [
-    { id: 23, title: "[실기대회] 2025선화미술실기대회 수상자", author: "관리자" },
-    { id: 22, title: "[재현작] 2025 선화예중 재현작", author: "관리자" },
-    { id: 21, title: "[합격자] 2025선화예중 합격자", author: "관리자" },
-    { id: 20, title: "[출제문제] 2025 선화예중 출제문제", author: "관리자" },
-    { id: 19, title: "[방학특강] 예중대비 여름방학특강 선과색미술학원", author: "관리자" },
-    { id: 18, title: "[입시요강]2025 선화예술중학교 입시요강", author: "관리자" },
-    { id: 17, title: "[방학특강] 2024 선화예중 입시 안내", author: "관리자" },
-    { id: 16, title: "[실기대회] 2023 선화 미술대회 시상식", author: "관리자" }
-  ];
+  // Removed static data
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -46,25 +37,9 @@ export default function MiddleSchool() {
           <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">예중 입시정보</h3>
           <Card className="bg-white shadow-lg">
             <CardContent className="p-8">
-              <div className="space-y-3">
-                {announcements.map((announcement) => (
-                  <div key={announcement.id} className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg cursor-pointer">
-                    <div className="flex items-center">
-                      <Badge variant="outline" className="mr-3 text-xs">{announcement.id}</Badge>
-                      <span className="text-slate-900 hover:text-primary transition-colors">
-                        {announcement.title}
-                      </span>
-                    </div>
-                    <span className="text-sm text-slate-500">{announcement.author}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-6 text-center">
-                <div className="flex justify-center space-x-2">
-                  <Button variant="outline" size="sm">1</Button>
-                  <Button variant="outline" size="sm">2</Button>
-                  <Button variant="outline" size="sm">3</Button>
-                </div>
+              <div className="text-center py-8">
+                <p className="text-gray-600">아직 등록된 입시정보가 없습니다.</p>
+                <p className="text-sm text-gray-500 mt-2">관리자 패널에서 입시정보를 추가해주세요.</p>
               </div>
             </CardContent>
           </Card>
