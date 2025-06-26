@@ -35,21 +35,29 @@ function requireAuth(req: Request, res: Response, next: NextFunction) {
   // Try to get session ID from cookie or authorization header
   const sessionId = req.cookies?.adminSession || req.headers.authorization?.replace('Bearer ', '');
   
+  console.log('Auth middleware - sessionId:', sessionId);
+  console.log('Auth middleware - cookies:', req.cookies);
+  console.log('Auth middleware - available sessions:', Array.from(adminSessions.keys()));
+  
   if (!sessionId) {
+    console.log('Auth middleware - No session ID found');
     return res.status(401).json({ error: "Unauthorized" });
   }
 
   const session = adminSessions.get(sessionId);
   if (!session || !session.isLoggedIn) {
+    console.log('Auth middleware - Session not found or not logged in');
     return res.status(401).json({ error: "Unauthorized" });
   }
 
   // Check if session is expired (24 hours)
   if (Date.now() - session.loginTime > 24 * 60 * 60 * 1000) {
     adminSessions.delete(sessionId);
+    console.log('Auth middleware - Session expired');
     return res.status(401).json({ error: "Session expired" });
   }
 
+  console.log('Auth middleware - Success');
   req.adminSession = session;
   next();
 }
@@ -438,6 +446,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         success: false, 
         message: "예고 입시정보 크롤링 중 오류가 발생했습니다.",
+        count: 0
+      });
+    }
+  });
+
+  // Direct scraping endpoint (immediate execution)
+  app.post("/api/direct-scrape", async (req, res) => {
+    try {
+      console.log("Starting direct scraping for 예중입시정보...");
+      const { runDirectScraping } = await import('./direct-scraper');
+      const result = await runDirectScraping();
+      res.json(result);
+    } catch (error) {
+      console.error("Direct scraping error:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: `직접 크롤링 중 오류: ${error instanceof Error ? error.message : String(error)}`,
         count: 0
       });
     }
