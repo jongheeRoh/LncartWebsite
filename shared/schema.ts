@@ -41,13 +41,23 @@ export const roadmaps = pgTable("roadmaps", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const admissionInfo = pgTable("admission_info", {
+export const middleSchoolAdmission = pgTable("middle_school_admission", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   content: text("content").notNull(),
   excerpt: text("excerpt"),
-  type: varchar("type", { length: 50 }).notNull(), // "middle" or "high"
-  category: text("category").notNull().default("입시정보"),
+  category: text("category").notNull().default("예중입시정보"),
+  attachments: jsonb("attachments").default([]),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const highSchoolAdmission = pgTable("high_school_admission", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  excerpt: text("excerpt"),
+  category: text("category").notNull().default("예고입시정보"),
   attachments: jsonb("attachments").default([]),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
@@ -68,16 +78,25 @@ export const insertNoticeSchema = createInsertSchema(notices).pick({
 
 export const updateNoticeSchema = insertNoticeSchema.partial();
 
-export const insertAdmissionInfoSchema = createInsertSchema(admissionInfo).pick({
+export const insertMiddleSchoolAdmissionSchema = createInsertSchema(middleSchoolAdmission).pick({
   title: true,
   content: true,
   excerpt: true,
-  type: true,
   category: true,
   attachments: true,
 });
 
-export const updateAdmissionInfoSchema = insertAdmissionInfoSchema.partial();
+export const updateMiddleSchoolAdmissionSchema = insertMiddleSchoolAdmissionSchema.partial();
+
+export const insertHighSchoolAdmissionSchema = createInsertSchema(highSchoolAdmission).pick({
+  title: true,
+  content: true,
+  excerpt: true,
+  category: true,
+  attachments: true,
+});
+
+export const updateHighSchoolAdmissionSchema = insertHighSchoolAdmissionSchema.partial();
 
 export const insertGalleryItemSchema = createInsertSchema(galleryItems).pick({
   title: true,
@@ -103,9 +122,12 @@ export type User = typeof users.$inferSelect;
 export type InsertNotice = z.infer<typeof insertNoticeSchema>;
 export type UpdateNotice = z.infer<typeof updateNoticeSchema>;
 export type Notice = typeof notices.$inferSelect;
-export type InsertAdmissionInfo = z.infer<typeof insertAdmissionInfoSchema>;
-export type UpdateAdmissionInfo = z.infer<typeof updateAdmissionInfoSchema>;
-export type AdmissionInfo = typeof admissionInfo.$inferSelect;
+export type InsertMiddleSchoolAdmission = z.infer<typeof insertMiddleSchoolAdmissionSchema>;
+export type UpdateMiddleSchoolAdmission = z.infer<typeof updateMiddleSchoolAdmissionSchema>;
+export type MiddleSchoolAdmission = typeof middleSchoolAdmission.$inferSelect;
+export type InsertHighSchoolAdmission = z.infer<typeof insertHighSchoolAdmissionSchema>;
+export type UpdateHighSchoolAdmission = z.infer<typeof updateHighSchoolAdmissionSchema>;
+export type HighSchoolAdmission = typeof highSchoolAdmission.$inferSelect;
 export type InsertGalleryItem = z.infer<typeof insertGalleryItemSchema>;
 export type UpdateGalleryItem = z.infer<typeof updateGalleryItemSchema>;
 export type GalleryItem = typeof galleryItems.$inferSelect;

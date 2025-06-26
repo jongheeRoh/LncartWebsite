@@ -1,12 +1,13 @@
 import { eq, desc, like, and } from "drizzle-orm";
 import { db } from "./db";
-import { users, notices, galleryItems, roadmaps, admissionInfo } from "@shared/schema";
+import { users, notices, galleryItems, roadmaps, middleSchoolAdmission, highSchoolAdmission } from "@shared/schema";
 import type { 
   User, InsertUser, 
   Notice, InsertNotice, UpdateNotice,
   GalleryItem, InsertGalleryItem, UpdateGalleryItem,
   Roadmap, InsertRoadmap, UpdateRoadmap,
-  AdmissionInfo, InsertAdmissionInfo, UpdateAdmissionInfo
+  MiddleSchoolAdmission, InsertMiddleSchoolAdmission, UpdateMiddleSchoolAdmission,
+  HighSchoolAdmission, InsertHighSchoolAdmission, UpdateHighSchoolAdmission
 } from "@shared/schema";
 import type { IStorage } from "./storage";
 

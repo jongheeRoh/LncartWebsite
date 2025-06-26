@@ -1,4 +1,4 @@
-import { users, notices, galleryItems, roadmaps, admissionInfo, type User, type InsertUser, type InsertNotice, type UpdateNotice, type Notice, type InsertGalleryItem, type UpdateGalleryItem, type GalleryItem, type Roadmap, type InsertRoadmap, type UpdateRoadmap, type AdmissionInfo, type InsertAdmissionInfo, type UpdateAdmissionInfo } from "@shared/schema";
+import { users, notices, galleryItems, roadmaps, middleSchoolAdmission, highSchoolAdmission, type User, type InsertUser, type InsertNotice, type UpdateNotice, type Notice, type InsertGalleryItem, type UpdateGalleryItem, type GalleryItem, type Roadmap, type InsertRoadmap, type UpdateRoadmap, type MiddleSchoolAdmission, type InsertMiddleSchoolAdmission, type UpdateMiddleSchoolAdmission, type HighSchoolAdmission, type InsertHighSchoolAdmission, type UpdateHighSchoolAdmission } from "@shared/schema";
 
 export interface IStorage {
   // User methods
@@ -13,12 +13,19 @@ export interface IStorage {
   updateNotice(id: number, updates: UpdateNotice): Promise<Notice | undefined>;
   deleteNotice(id: number): Promise<boolean>;
 
-  // Admission Info methods
-  getAllAdmissionInfo(page?: number, limit?: number, type?: string, category?: string, search?: string): Promise<{ items: AdmissionInfo[], total: number }>;
-  getAdmissionInfo(id: number): Promise<AdmissionInfo | undefined>;
-  createAdmissionInfo(info: InsertAdmissionInfo): Promise<AdmissionInfo>;
-  updateAdmissionInfo(id: number, updates: UpdateAdmissionInfo): Promise<AdmissionInfo | undefined>;
-  deleteAdmissionInfo(id: number): Promise<boolean>;
+  // Middle School Admission methods
+  getAllMiddleSchoolAdmission(page?: number, limit?: number, category?: string, search?: string): Promise<{ items: MiddleSchoolAdmission[], total: number }>;
+  getMiddleSchoolAdmission(id: number): Promise<MiddleSchoolAdmission | undefined>;
+  createMiddleSchoolAdmission(info: InsertMiddleSchoolAdmission): Promise<MiddleSchoolAdmission>;
+  updateMiddleSchoolAdmission(id: number, updates: UpdateMiddleSchoolAdmission): Promise<MiddleSchoolAdmission | undefined>;
+  deleteMiddleSchoolAdmission(id: number): Promise<boolean>;
+
+  // High School Admission methods
+  getAllHighSchoolAdmission(page?: number, limit?: number, category?: string, search?: string): Promise<{ items: HighSchoolAdmission[], total: number }>;
+  getHighSchoolAdmission(id: number): Promise<HighSchoolAdmission | undefined>;
+  createHighSchoolAdmission(info: InsertHighSchoolAdmission): Promise<HighSchoolAdmission>;
+  updateHighSchoolAdmission(id: number, updates: UpdateHighSchoolAdmission): Promise<HighSchoolAdmission | undefined>;
+  deleteHighSchoolAdmission(id: number): Promise<boolean>;
 
   // Gallery methods
   getAllGalleryItems(page?: number, limit?: number, category?: string): Promise<{ items: GalleryItem[], total: number }>;
