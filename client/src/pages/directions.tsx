@@ -42,7 +42,7 @@ export default function Directions() {
             <CardContent className="p-0">
               <div className="w-full h-96 lg:h-[500px] rounded-lg overflow-hidden">
                 <iframe
-                  src="https://map.naver.com/p/directions/-/-/-/transit?c=16.21,0,0,0,dh"
+                  src="https://map.naver.com/p/directions/-/14147665.3182593,4516168.6953908,%EC%84%A0%EA%B3%BC%EC%83%89%EB%AF%B8%EC%88%A0%ED%95%99%EC%9B%90,18020989,PLACE_POI/-/transit?c=16.78,0,0,0,dh"
                   width="100%"
                   height="100%"
                   style={{ border: 0, minHeight: '400px' }}
@@ -60,7 +60,7 @@ export default function Directions() {
                   </div>
                   <Button 
                     className="bg-primary hover:bg-primary/90"
-                    onClick={() => window.open('https://map.naver.com/p/directions/-/-/-/transit?c=16.21,0,0,0,dh', '_blank')}
+                    onClick={() => window.open('https://map.naver.com/p/directions/-/14147665.3182593,4516168.6953908,%EC%84%A0%EA%B3%BC%EC%83%89%EB%AF%B8%EC%88%A0%ED%95%99%EC%9B%90,18020989,PLACE_POI/-/transit?c=16.78,0,0,0,dh', '_blank')}
                   >
                     <Navigation className="mr-2 h-4 w-4" />
                     네이버 지도에서 보기
