@@ -50,6 +50,58 @@ function requireAuth(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check
+  app.get("/api/health", (req, res) => {
+    res.json({ status: "ok" });
+  });
+
+  // Auth routes
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      
+      if (!username || !password) {
+        return res.status(400).json({ error: "Username and password required" });
+      }
+
+      const isValid = await authStorage.validateAdmin(username, password);
+      
+      if (!isValid) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      const sessionId = createSessionId();
+      adminSessions.set(sessionId, {
+        isLoggedIn: true,
+        loginTime: Date.now()
+      });
+
+      res.json({ 
+        message: "Login successful",
+        sessionId,
+        username: "관리자"
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).json({ error: "Login failed" });
+    }
+  });
+
+  app.post("/api/auth/logout", requireAuth, (req, res) => {
+    const sessionId = req.headers.authorization?.replace('Bearer ', '');
+    if (sessionId) {
+      adminSessions.delete(sessionId);
+    }
+    res.json({ message: "Logged out successfully" });
+  });
+
+  app.get("/api/auth/verify", requireAuth, (req, res) => {
+    res.json({ 
+      isLoggedIn: true,
+      username: "관리자"
+    });
+  });
+
   // Notices routes
   app.get("/api/notices", async (req, res) => {
     try {
@@ -80,7 +132,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/notices", async (req, res) => {
+  app.post("/api/notices", requireAuth, async (req, res) => {
     try {
       const validatedData = insertNoticeSchema.parse(req.body);
       const notice = await storage.createNotice(validatedData);
@@ -93,7 +145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/notices/:id", async (req, res) => {
+  app.put("/api/notices/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const validatedData = updateNoticeSchema.parse(req.body);
@@ -112,7 +164,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/notices/:id", async (req, res) => {
+  app.delete("/api/notices/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const success = await storage.deleteNotice(id);
@@ -156,7 +208,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/gallery", async (req, res) => {
+  app.post("/api/gallery", requireAuth, async (req, res) => {
     try {
       const validatedData = insertGalleryItemSchema.parse(req.body);
       const item = await storage.createGalleryItem(validatedData);
@@ -169,7 +221,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/gallery/:id", async (req, res) => {
+  app.put("/api/gallery/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const validatedData = updateGalleryItemSchema.parse(req.body);
@@ -188,7 +240,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/gallery/:id", async (req, res) => {
+  app.delete("/api/gallery/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const success = await storage.deleteGalleryItem(id);
@@ -203,8 +255,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Stats route
-  app.get("/api/stats", async (req, res) => {
+  // Stats route (admin only)
+  app.get("/api/stats", requireAuth, async (req, res) => {
     try {
       const stats = await storage.getStats();
       res.json(stats);
