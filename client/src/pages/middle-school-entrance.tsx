@@ -18,13 +18,15 @@ interface Notice {
 
 export default function MiddleSchoolEntrance() {
   const { data: noticesData, isLoading, error } = useQuery({
-    queryKey: ['/api/notices', { category: '예중입시정보' }],
+    queryKey: ['/api/notices', { category: '예중입시정보', timestamp: Date.now() }],
     queryFn: async () => {
       const url = `/api/notices?category=${encodeURIComponent('예중입시정보')}`;
       const response = await fetch(url, {
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
         }
       });
       const data = await response.json();
