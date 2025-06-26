@@ -248,6 +248,115 @@ export default function Admin() {
               />
             </div>
           </TabsContent>
+
+          {/* Roadmaps Tab */}
+          <TabsContent value="roadmaps">
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold">로드맵 관리</h2>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Middle School Roadmap */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      예중 입시로드맵
+                      <Dialog open={showMiddleRoadmapForm} onOpenChange={setShowMiddleRoadmapForm}>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            <Edit2 className="h-4 w-4 mr-2" />
+                            {middleRoadmap ? "수정" : "작성"}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                          <DialogHeader>
+                            <DialogTitle>
+                              {middleRoadmap ? "예중 로드맵 수정" : "예중 로드맵 작성"}
+                            </DialogTitle>
+                          </DialogHeader>
+                          <RoadmapForm
+                            type="middle_school"
+                            roadmap={middleRoadmap}
+                            onSuccess={() => setShowMiddleRoadmapForm(false)}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {middleRoadmapLoading ? (
+                      <div className="text-slate-500">로딩 중...</div>
+                    ) : middleRoadmap ? (
+                      <div>
+                        <h3 className="font-semibold mb-2">{middleRoadmap.title}</h3>
+                        <div 
+                          className="text-slate-600 text-sm line-clamp-3"
+                          dangerouslySetInnerHTML={{ 
+                            __html: middleRoadmap.content.replace(/<[^>]*>/g, '').substring(0, 100) + '...' 
+                          }}
+                        />
+                        <div className="mt-4 text-xs text-slate-500">
+                          마지막 수정: {new Date(middleRoadmap.updatedAt).toLocaleDateString()}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-slate-500">로드맵이 아직 작성되지 않았습니다.</div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* High School Roadmap */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      예고 입시로드맵
+                      <Dialog open={showHighRoadmapForm} onOpenChange={setShowHighRoadmapForm}>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            <Edit2 className="h-4 w-4 mr-2" />
+                            {highRoadmap ? "수정" : "작성"}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                          <DialogHeader>
+                            <DialogTitle>
+                              {highRoadmap ? "예고 로드맵 수정" : "예고 로드맵 작성"}
+                            </DialogTitle>
+                          </DialogHeader>
+                          <RoadmapForm
+                            type="high_school"
+                            roadmap={highRoadmap}
+                            onSuccess={() => setShowHighRoadmapForm(false)}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {highRoadmapLoading ? (
+                      <div className="text-slate-500">로딩 중...</div>
+                    ) : highRoadmap ? (
+                      <div>
+                        <h3 className="font-semibold mb-2">{highRoadmap.title}</h3>
+                        <div 
+                          className="text-slate-600 text-sm line-clamp-3"
+                          dangerouslySetInnerHTML={{ 
+                            __html: highRoadmap.content.replace(/<[^>]*>/g, '').substring(0, 100) + '...' 
+                          }}
+                        />
+                        <div className="mt-4 text-xs text-slate-500">
+                          마지막 수정: {new Date(highRoadmap.updatedAt).toLocaleDateString()}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-slate-500">로드맵이 아직 작성되지 않았습니다.</div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
         </Tabs>
       </div>
     </div>

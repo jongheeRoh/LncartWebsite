@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, jsonb, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -31,6 +31,16 @@ export const galleryItems = pgTable("gallery_items", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const roadmaps = pgTable("roadmaps", {
+  id: serial("id").primaryKey(),
+  type: varchar("type", { length: 50 }).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  content: text("content").notNull(),
+  attachments: jsonb("attachments").default([]),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -56,6 +66,15 @@ export const insertGalleryItemSchema = createInsertSchema(galleryItems).pick({
 
 export const updateGalleryItemSchema = insertGalleryItemSchema.partial();
 
+export const insertRoadmapSchema = createInsertSchema(roadmaps).pick({
+  type: true,
+  title: true,
+  content: true,
+  attachments: true,
+});
+
+export const updateRoadmapSchema = insertRoadmapSchema.partial();
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type InsertNotice = z.infer<typeof insertNoticeSchema>;
@@ -64,3 +83,6 @@ export type Notice = typeof notices.$inferSelect;
 export type InsertGalleryItem = z.infer<typeof insertGalleryItemSchema>;
 export type UpdateGalleryItem = z.infer<typeof updateGalleryItemSchema>;
 export type GalleryItem = typeof galleryItems.$inferSelect;
+export type InsertRoadmap = z.infer<typeof insertRoadmapSchema>;
+export type UpdateRoadmap = z.infer<typeof updateRoadmapSchema>;
+export type Roadmap = typeof roadmaps.$inferSelect;

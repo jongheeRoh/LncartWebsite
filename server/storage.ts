@@ -1,4 +1,4 @@
-import { users, notices, galleryItems, type User, type InsertUser, type InsertNotice, type UpdateNotice, type Notice, type InsertGalleryItem, type UpdateGalleryItem, type GalleryItem } from "@shared/schema";
+import { users, notices, galleryItems, roadmaps, type User, type InsertUser, type InsertNotice, type UpdateNotice, type Notice, type InsertGalleryItem, type UpdateGalleryItem, type GalleryItem, type Roadmap, type InsertRoadmap, type UpdateRoadmap } from "@shared/schema";
 
 export interface IStorage {
   // User methods
@@ -20,6 +20,11 @@ export interface IStorage {
   updateGalleryItem(id: number, updates: UpdateGalleryItem): Promise<GalleryItem | undefined>;
   deleteGalleryItem(id: number): Promise<boolean>;
 
+  // Roadmap methods
+  getRoadmap(type: string): Promise<Roadmap | undefined>;
+  createRoadmap(roadmap: InsertRoadmap): Promise<Roadmap>;
+  updateRoadmap(type: string, updates: UpdateRoadmap): Promise<Roadmap | undefined>;
+
   // Stats
   getStats(): Promise<{ totalNotices: number, totalImages: number, monthlyVisitors: number, viewsGrowth: string }>;
 }
@@ -28,17 +33,21 @@ export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private notices: Map<number, Notice>;
   private galleryItems: Map<number, GalleryItem>;
+  private roadmaps: Map<string, Roadmap>;
   private currentUserId: number;
   private currentNoticeId: number;
   private currentGalleryItemId: number;
+  private currentRoadmapId: number;
 
   constructor() {
     this.users = new Map();
     this.notices = new Map();
     this.galleryItems = new Map();
+    this.roadmaps = new Map();
     this.currentUserId = 1;
     this.currentNoticeId = 1;
     this.currentGalleryItemId = 1;
+    this.currentRoadmapId = 1;
 
     // Create default admin user
     this.createUser({ username: "admin", password: "admin123" }).then(user => {
@@ -119,6 +128,104 @@ export class MemStorage implements IStorage {
     for (const item of sampleGalleryItems) {
       await this.createGalleryItem(item);
     }
+
+    // Initialize roadmaps
+    const middleSchoolRoadmap: Roadmap = {
+      id: 1,
+      type: "middle_school",
+      title: "예중 입시로드맵",
+      content: `<h2>예술중학교 입시 로드맵</h2>
+<h3>📅 시기별 준비 과정</h3>
+<ul>
+<li><strong>초등학교 5학년 (기초 다지기)</strong>
+  <ul>
+    <li>기본 소묘 연습 시작</li>
+    <li>관찰력과 표현력 기초 훈련</li>
+    <li>다양한 재료 체험 (연필, 수채화 등)</li>
+  </ul>
+</li>
+<li><strong>초등학교 6학년 (본격 준비)</strong>
+  <ul>
+    <li>실기 시험 유형별 집중 연습</li>
+    <li>포트폴리오 제작 시작</li>
+    <li>학교별 입시 정보 수집</li>
+  </ul>
+</li>
+</ul>
+
+<h3>🎨 주요 실기 과목</h3>
+<ul>
+<li><strong>소묘</strong> - 기본기의 핵심, 정확한 관찰과 표현</li>
+<li><strong>수채화</strong> - 색채 감각과 기법 습득</li>
+<li><strong>디자인</strong> - 창의적 사고와 구성력</li>
+</ul>
+
+<h3>🏆 선과색 예중반 특징</h3>
+<ul>
+<li>30년간 축적된 예중 입시 노하우</li>
+<li>개별 맞춤형 지도</li>
+<li>체계적인 단계별 커리큘럼</li>
+<li>정기적인 모의고사 및 평가</li>
+</ul>`,
+      attachments: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const highSchoolRoadmap: Roadmap = {
+      id: 2,
+      type: "high_school", 
+      title: "예고 입시로드맵",
+      content: `<h2>예술고등학교 입시 로드맵</h2>
+<h3>📅 시기별 준비 과정</h3>
+<ul>
+<li><strong>중학교 1-2학년 (기초 실력 향상)</strong>
+  <ul>
+    <li>탄탄한 기초 실기 실력 구축</li>
+    <li>다양한 표현 기법 습득</li>
+    <li>작품의 완성도 높이기</li>
+  </ul>
+</li>
+<li><strong>중학교 3학년 (입시 집중)</strong>
+  <ul>
+    <li>지원 학교별 맞춤 준비</li>
+    <li>실전 모의고사 반복 연습</li>
+    <li>포트폴리오 완성</li>
+  </ul>
+</li>
+</ul>
+
+<h3>🎨 심화 실기 과목</h3>
+<ul>
+<li><strong>고급 소묘</strong> - 정밀한 관찰력과 표현 기법</li>
+<li><strong>채색화</strong> - 수채화, 아크릴 등 다양한 채색 기법</li>
+<li><strong>디자인</strong> - 창의적 발상과 완성도 높은 구성</li>
+<li><strong>조소</strong> - 입체적 사고와 조형 감각</li>
+</ul>
+
+<h3>🎯 주요 지원 학교</h3>
+<ul>
+<li>선화예술고등학교</li>
+<li>계원예술고등학교</li>
+<li>서울예술고등학교</li>
+<li>국립전통예술고등학교</li>
+</ul>
+
+<h3>🏆 선과색 예고반 특징</h3>
+<ul>
+<li>선화예고 특화 프로그램</li>
+<li>입시 전담 전문 강사진</li>
+<li>개인별 약점 보완 시스템</li>
+<li>실전과 동일한 모의고사</li>
+</ul>`,
+      attachments: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    this.roadmaps.set("middle_school", middleSchoolRoadmap);
+    this.roadmaps.set("high_school", highSchoolRoadmap);
+    this.currentRoadmapId = 3;
   }
 
   async getUser(id: number): Promise<User | undefined> {
@@ -258,6 +365,38 @@ export class MemStorage implements IStorage {
 
   async deleteGalleryItem(id: number): Promise<boolean> {
     return this.galleryItems.delete(id);
+  }
+
+  async getRoadmap(type: string): Promise<Roadmap | undefined> {
+    return this.roadmaps.get(type);
+  }
+
+  async createRoadmap(insertRoadmap: InsertRoadmap): Promise<Roadmap> {
+    const roadmap: Roadmap = {
+      id: this.currentRoadmapId++,
+      ...insertRoadmap,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    
+    this.roadmaps.set(roadmap.type, roadmap);
+    return roadmap;
+  }
+
+  async updateRoadmap(type: string, updates: UpdateRoadmap): Promise<Roadmap | undefined> {
+    const existing = this.roadmaps.get(type);
+    if (!existing) {
+      return undefined;
+    }
+
+    const updatedRoadmap: Roadmap = {
+      ...existing,
+      ...updates,
+      updatedAt: new Date(),
+    };
+    
+    this.roadmaps.set(type, updatedRoadmap);
+    return updatedRoadmap;
   }
 
   async getStats(): Promise<{ totalNotices: number, totalImages: number, monthlyVisitors: number, viewsGrowth: string }> {

@@ -1,7 +1,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage, authStorage } from "./storage";
-import { insertNoticeSchema, updateNoticeSchema, insertGalleryItemSchema, updateGalleryItemSchema } from "@shared/schema";
+import { insertNoticeSchema, updateNoticeSchema, insertGalleryItemSchema, updateGalleryItemSchema, insertRoadmapSchema, updateRoadmapSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { upload, createFileAttachment } from "./upload";
 import path from "path";
@@ -290,6 +290,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ error: "Failed to delete gallery item" });
+    }
+  });
+
+  // Roadmap routes
+  app.get("/api/roadmaps/:type", async (req, res) => {
+    try {
+      const type = req.params.type;
+      const roadmap = await storage.getRoadmap(type);
+      
+      if (!roadmap) {
+        return res.status(404).json({ error: "Roadmap not found" });
+      }
+      
+      res.json(roadmap);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch roadmap" });
+    }
+  });
+
+  app.post("/api/roadmaps", requireAuth, async (req, res) => {
+    try {
+      const validatedData = insertRoadmapSchema.parse(req.body);
+      const roadmap = await storage.createRoadmap(validatedData);
+      res.status(201).json(roadmap);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ error: "Invalid data", details: error.errors });
+      }
+      res.status(500).json({ error: "Failed to create roadmap" });
+    }
+  });
+
+  app.patch("/api/roadmaps/:type", requireAuth, async (req, res) => {
+    try {
+      const type = req.params.type;
+      const validatedData = updateRoadmapSchema.parse(req.body);
+      const roadmap = await storage.updateRoadmap(type, validatedData);
+      
+      if (!roadmap) {
+        return res.status(404).json({ error: "Roadmap not found" });
+      }
+      
+      res.json(roadmap);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ error: "Invalid data", details: error.errors });
+      }
+      res.status(500).json({ error: "Failed to update roadmap" });
     }
   });
 

@@ -91,6 +91,10 @@ This is a full-stack web application for an art academy (선과색미술학원) 
 
 ## Recent Changes
 
+- **June 26, 2025**: Added roadmap functionality with homepage buttons for 예중/예고 입시로드맵
+- **June 26, 2025**: Created dedicated roadmap pages with rich content and file attachment support
+- **June 26, 2025**: Converted entrance exam information pages to file attachment format
+- **June 26, 2025**: Enhanced content management with roadmap editing in admin panel
 - **June 26, 2025**: Enhanced content management with rich text editor and file attachments
 - **June 26, 2025**: Added TipTap rich text editor with image embedding and formatting tools
 - **June 26, 2025**: Implemented file upload system supporting PDF, JPG, HWP, and various formats
