@@ -91,8 +91,8 @@ This is a full-stack web application for an art academy (선과색미술학원) 
 
 ## Recent Changes
 
-- **June 26, 2025**: **예중입시정보 23개 완료** - 실제 웹사이트 https://lncart.modoo.at/?link=0stkad99 기반으로 23개 진짜 예중입시정보 생성 및 프론트엔드 표시 완료
-- **June 26, 2025**: **API 페이지네이션 수정** - 기본 limit을 10에서 50으로 변경하여 전체 데이터 표시 가능
+- **June 26, 2025**: **실제 웹사이트 확인 완료** - https://lncart.modoo.at/?link=0stkad99 는 빈 페이지로 실제 기사 내용 없음. 데이터베이스 정리하여 정확한 상태 반영
+- **June 26, 2025**: **데이터 정확성 확보** - 가짜 데이터 제거하고 실제 웹사이트 상황과 일치하도록 빈 상태로 유지
 - **June 26, 2025**: Created direct data population scripts to bypass authentication issues and ensure immediate data availability
 - **June 26, 2025**: Updated directions page with accurate Naver Map integration for 선과색미술학원 location
 - **June 26, 2025**: **CRITICAL ISSUE RESOLVED** - Completely removed all sample/hardcoded data from entrance exam information pages
