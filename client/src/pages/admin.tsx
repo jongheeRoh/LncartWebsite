@@ -64,8 +64,9 @@ function AdminNoticeManager() {
       if (!response.ok) throw new Error('공지사항 수정 실패');
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (updatedNotice) => {
       toast({ title: "공지사항이 수정되었습니다" });
+      setSelectedNotice(updatedNotice);
       queryClient.invalidateQueries({ queryKey: ['/api/notices'] });
       setViewMode('view');
     },
@@ -187,19 +188,19 @@ function AdminNoticeManager() {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-xl">{selectedNotice.title}</CardTitle>
-              <Badge variant={selectedNotice.category === '긴급' ? 'destructive' : 'secondary'}>
-                {selectedNotice.category}
+              <CardTitle className="text-xl">{selectedNotice?.title}</CardTitle>
+              <Badge variant={selectedNotice?.category === '긴급' ? 'destructive' : 'secondary'}>
+                {selectedNotice?.category}
               </Badge>
             </div>
             <p className="text-sm text-muted-foreground">
-              작성일: {format(new Date(selectedNotice.createdAt), 'yyyy년 MM월 dd일 HH:mm', { locale: ko })}
+              작성일: {selectedNotice?.createdAt && format(new Date(selectedNotice.createdAt), 'yyyy년 MM월 dd일 HH:mm', { locale: ko })}
             </p>
           </CardHeader>
           <CardContent>
             <div 
               className="prose prose-sm max-w-none"
-              dangerouslySetInnerHTML={{ __html: selectedNotice.content }}
+              dangerouslySetInnerHTML={{ __html: selectedNotice?.content || '' }}
             />
           </CardContent>
         </Card>
