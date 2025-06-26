@@ -17,12 +17,16 @@ interface Notice {
 }
 
 export default function MiddleSchoolEntrance() {
-  const { data: noticesData, isLoading } = useQuery({
+  const { data: noticesData, isLoading, error } = useQuery({
     queryKey: ['/api/notices', { category: '예중입시정보' }],
     queryFn: async () => {
+      console.log('Fetching 예중입시정보 data...');
       const response = await fetch(`/api/notices?category=${encodeURIComponent('예중입시정보')}`);
+      console.log('Response status:', response.status);
+      const data = await response.json();
+      console.log('Response data:', data);
       if (!response.ok) throw new Error('Failed to fetch notices');
-      return response.json();
+      return data;
     },
   });
 
@@ -65,9 +69,15 @@ export default function MiddleSchoolEntrance() {
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
               <p className="mt-4 text-gray-600">로딩 중...</p>
             </div>
+          ) : error ? (
+            <div className="text-center py-8">
+              <p className="text-red-600">데이터를 불러오는 중 오류가 발생했습니다.</p>
+              <p className="text-sm text-gray-500 mt-2">{error.message}</p>
+            </div>
           ) : notices.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-gray-600">아직 등록된 입시정보가 없습니다.</p>
+              <p className="text-sm text-gray-500 mt-2">총 {noticesData?.total || 0}개의 데이터</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
