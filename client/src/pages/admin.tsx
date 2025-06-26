@@ -483,36 +483,7 @@ export default function Admin() {
           </TabsContent>
 
           <TabsContent value="notices">
-            <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-slate-900">공지사항 관리</h2>
-                <Button onClick={() => setShowNoticeForm(!showNoticeForm)}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  새 공지사항
-                </Button>
-              </div>
-              
-              {showNoticeForm && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>새 공지사항 작성</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <NoticeForm onSuccess={() => {
-                      setShowNoticeForm(false);
-                      refetchNotices();
-                    }} />
-                  </CardContent>
-                </Card>
-              )}
-
-              <NoticeList 
-                notices={noticesData?.notices || []} 
-                isLoading={noticesLoading}
-                onNoticeUpdated={refetchNotices}
-                onNoticeDeleted={refetchNotices}
-              />
-            </div>
+            <AdminNoticeManager />
           </TabsContent>
 
           <TabsContent value="gallery">
