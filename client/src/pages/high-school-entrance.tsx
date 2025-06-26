@@ -20,7 +20,7 @@ export default function HighSchoolEntrance() {
   const { data: noticesData, isLoading } = useQuery({
     queryKey: ['/api/notices', { category: '예고입시정보' }],
     queryFn: async () => {
-      const url = `/api/notices?category=예고입시정보`;
+      const url = `/api/notices?category=${encodeURIComponent('예고입시정보')}`;
       const response = await fetch(url, {
         headers: {
           'Accept': 'application/json',

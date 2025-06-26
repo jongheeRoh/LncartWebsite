@@ -183,7 +183,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const category = req.query.category as string;
       const search = req.query.search as string;
 
-      const result = await storage.getAllNotices(page, limit, category, search);
+      // Fix URL encoding issue for Korean characters
+      let decodedCategory = category;
+      if (category) {
+        try {
+          decodedCategory = decodeURIComponent(category);
+        } catch (e) {
+          decodedCategory = category;
+        }
+      }
+      
+      const result = await storage.getAllNotices(page, limit, decodedCategory, search);
 
       res.json(result);
     } catch (error) {
