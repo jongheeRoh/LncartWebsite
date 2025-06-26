@@ -109,11 +109,15 @@ export default function NoticeList({ notices, isLoading, onNoticeUpdated, onNoti
                   <div 
                     onClick={async () => {
                       try {
+                        console.log('Notice clicked:', notice.id);
                         const response = await fetch(`/api/notices/${notice.id}`);
+                        console.log('Response status:', response.status);
                         if (!response.ok) throw new Error('Failed to fetch notice');
                         const fullNotice = await response.json();
+                        console.log('Full notice data:', fullNotice);
                         
                         const popup = window.open('', '_blank', 'width=900,height=700,scrollbars=yes,resizable=yes');
+                        console.log('Popup created:', !!popup);
                         if (popup) {
                           const content = fullNotice.content || '내용이 없습니다.';
                           const title = fullNotice.title || '제목 없음';
@@ -161,13 +165,15 @@ export default function NoticeList({ notices, isLoading, onNoticeUpdated, onNoti
                             '</html>'
                           ].join('\n');
                           
+                          console.log('HTML content length:', htmlContent.length);
                           popup.document.write(htmlContent);
                           popup.document.close();
                           popup.focus();
+                          console.log('Popup content written successfully');
                         }
                       } catch (error) {
                         console.error('Error loading notice:', error);
-                        alert('공지사항을 불러오는데 실패했습니다.');
+                        alert('공지사항을 불러오는데 실패했습니다: ' + error.message);
                       }
                     }}
                     className="text-lg font-semibold text-slate-900 mb-2 hover:text-primary cursor-pointer block transition-colors"
