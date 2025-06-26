@@ -42,7 +42,7 @@ export default function Directions() {
             <CardContent className="p-0">
               <div className="w-full h-96 lg:h-[500px] rounded-lg overflow-hidden">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3163.828!2d127.0895!3d37.5458!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca1064baf17e9%3A0x49f96a17cd936b0a!2z7ISg6rOA7IKJ66-4IOuvuOyKoO2VmOybkA!5e0!3m2!1sko!2skr!4v1735115461542!5m2!1sko!2skr"
+                  src="https://map.naver.com/p/search/%EC%84%A0%EA%B3%BC%EC%83%89%EB%AF%B8%EC%88%A0%ED%95%99%EC%9B%90?c=16.21,0,0,0,dh"
                   width="100%"
                   height="100%"
                   style={{ border: 0, minHeight: '400px' }}
@@ -60,10 +60,10 @@ export default function Directions() {
                   </div>
                   <Button 
                     className="bg-primary hover:bg-primary/90"
-                    onClick={() => window.open('https://maps.google.com/maps?q=서울특별시+광진구+천호대로+677+선과색미술학원', '_blank')}
+                    onClick={() => window.open('https://map.naver.com/p/search/%EC%84%A0%EA%B3%BC%EC%83%89%EB%AF%B8%EC%88%A0%ED%95%99%EC%9B%90?c=16.21,0,0,0,dh', '_blank')}
                   >
                     <Navigation className="mr-2 h-4 w-4" />
-                    구글 지도에서 보기
+                    네이버 지도에서 보기
                   </Button>
                 </div>
               </div>
