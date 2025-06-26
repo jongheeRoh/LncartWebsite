@@ -89,8 +89,12 @@ export default function EnhancedRichTextEditor({
     formData.append('file', file);
 
     try {
+      const sessionId = localStorage.getItem('adminSessionId');
       const response = await fetch('/api/upload', {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${sessionId}`,
+        },
         body: formData,
       });
 
