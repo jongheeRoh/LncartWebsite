@@ -106,80 +106,12 @@ export default function NoticeList({ notices, isLoading, onNoticeUpdated, onNoti
                       {formatDate(notice.createdAt)}
                     </span>
                   </div>
-                  <div 
-                    onClick={async () => {
-                      try {
-                        console.log('Notice clicked:', notice.id);
-                        const response = await fetch(`/api/notices/${notice.id}`);
-                        console.log('Response status:', response.status);
-                        if (!response.ok) throw new Error('Failed to fetch notice');
-                        const fullNotice = await response.json();
-                        console.log('Full notice data:', fullNotice);
-                        
-                        const popup = window.open('', '_blank', 'width=900,height=700,scrollbars=yes,resizable=yes');
-                        console.log('Popup created:', !!popup);
-                        if (popup) {
-                          const content = fullNotice.content || '내용이 없습니다.';
-                          const title = fullNotice.title || '제목 없음';
-                          const category = fullNotice.category || '일반';
-                          const date = new Date(fullNotice.createdAt).toLocaleDateString('ko-KR');
-                          
-                          const htmlContent = [
-                            '<!DOCTYPE html>',
-                            '<html lang="ko">',
-                            '<head>',
-                            '<meta charset="utf-8">',
-                            '<meta name="viewport" content="width=device-width, initial-scale=1">',
-                            '<title>' + title + ' - 선과색미술학원</title>',
-                            '<style>',
-                            'body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; color: #333; background: #f9f9f9; }',
-                            '.container { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }',
-                            '.header { background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; padding: 30px; text-align: center; }',
-                            '.title { font-size: 24px; font-weight: bold; margin-bottom: 10px; }',
-                            '.meta { font-size: 14px; opacity: 0.9; }',
-                            '.category { background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 12px; margin-right: 10px; }',
-                            '.content { padding: 30px; font-size: 16px; line-height: 1.7; }',
-                            '.content p { margin-bottom: 16px; }',
-                            '.content h1, .content h2, .content h3 { color: #2d3748; margin: 20px 0 10px 0; }',
-                            '.content img { max-width: 100%; height: auto; margin: 20px 0; border-radius: 4px; }',
-                            '.footer { padding: 20px; background: #f8f9fa; text-align: center; color: #666; font-size: 14px; border-top: 1px solid #eee; }',
-                            '</style>',
-                            '</head>',
-                            '<body>',
-                            '<div class="container">',
-                            '<div class="header">',
-                            '<div class="title">' + title + '</div>',
-                            '<div class="meta">',
-                            '<span class="category">' + category + '</span>',
-                            date,
-                            '</div>',
-                            '</div>',
-                            '<div class="content">',
-                            content,
-                            '</div>',
-                            '<div class="footer">',
-                            '선과색미술학원 | 서울특별시 광진구 천호대로 677 | 02-453-2379',
-                            '</div>',
-                            '</div>',
-                            '</body>',
-                            '</html>'
-                          ].join('\n');
-                          
-                          console.log('HTML content length:', htmlContent.length);
-                          popup.document.write(htmlContent);
-                          popup.document.close();
-                          popup.focus();
-                          console.log('Popup content written successfully');
-                        }
-                      } catch (error) {
-                        console.error('Error loading notice:', error);
-                        alert('공지사항을 불러오는데 실패했습니다: ' + error.message);
-                      }
-                    }}
-                    className="text-lg font-semibold text-slate-900 mb-2 hover:text-primary cursor-pointer block transition-colors"
+                  <button 
+                    onClick={() => handleNoticeClick(notice)}
+                    className="text-lg font-semibold text-slate-900 mb-2 hover:text-primary cursor-pointer block transition-colors text-left w-full bg-transparent border-none p-0"
                   >
                     {notice.title}
-                  </div>
+                  </button>
                   <p className="text-slate-600 line-clamp-2">
                     {notice.content ? notice.content.replace(/<[^>]*>/g, '').substring(0, 100) + '...' : '내용 없음'}
                   </p>
