@@ -196,10 +196,11 @@ export default function NoticeForm({ onSuccess, notice }: NoticeFormProps) {
               <FormItem>
                 <FormLabel>내용</FormLabel>
                 <FormControl>
-                  <RichTextEditor
-                    content={field.value}
+                  <EnhancedRichTextEditor
+                    value={field.value}
                     onChange={field.onChange}
                     placeholder="공지사항 내용을 입력하세요. 이미지와 링크를 추가할 수 있습니다."
+                    minHeight="400px"
                   />
                 </FormControl>
                 <FormMessage />

@@ -210,10 +210,11 @@ export default function ImageUpload({ onSuccess, item }: ImageUploadProps) {
               <FormItem>
                 <FormLabel>설명</FormLabel>
                 <FormControl>
-                  <RichTextEditor
-                    content={field.value || ""}
+                  <EnhancedRichTextEditor
+                    value={field.value || ""}
                     onChange={field.onChange}
                     placeholder="작품에 대한 설명을 입력하세요. 이미지와 링크를 추가할 수 있습니다."
+                    minHeight="300px"
                   />
                 </FormControl>
                 <FormMessage />
