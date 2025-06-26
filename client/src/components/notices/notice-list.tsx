@@ -168,7 +168,7 @@ export default function NoticeList({ notices, isLoading, onNoticeUpdated, onNoti
                                 </div>
                               </div>
                               <div class="content">
-                                ${notice.content || notice.excerpt || '내용이 없습니다.'}
+                                ${notice.content || '내용이 없습니다.'}
                               </div>
                             </body>
                           </html>
@@ -181,7 +181,7 @@ export default function NoticeList({ notices, isLoading, onNoticeUpdated, onNoti
                     {notice.title}
                   </div>
                   <p className="text-slate-600 line-clamp-2">
-                    {notice.excerpt}
+                    {notice.content ? notice.content.replace(/<[^>]*>/g, '').substring(0, 100) + '...' : '내용 없음'}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 ml-4">
