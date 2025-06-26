@@ -9,6 +9,7 @@ import { Trash2, Edit, Plus, Calendar, BarChart3, Bell, Image, School, Graduatio
 import { apiRequest } from "@/lib/queryClient";
 import { DataImportDialog } from "@/components/data-import";
 import NoticeForm from "@/components/notices/notice-form";
+import GalleryForm from "@/components/gallery/gallery-form";
 import RoadmapForm from "@/components/roadmap/roadmap-form";
 import { MiddleSchoolAdmissionForm } from "@/components/admission/middle-school-form";
 import { HighSchoolAdmissionForm } from "@/components/admission/high-school-form";
@@ -18,11 +19,13 @@ import AdminLogin from "./admin-login";
 function AdminDashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [activeSection, setActiveSection] = useState<"dashboard" | "notices" | "middle-admission" | "high-admission">("dashboard");
+  const [activeSection, setActiveSection] = useState<"dashboard" | "notices" | "gallery" | "middle-admission" | "high-admission">("dashboard");
   const [showNoticeForm, setShowNoticeForm] = useState(false);
+  const [showGalleryForm, setShowGalleryForm] = useState(false);
   const [showMiddleAdmissionForm, setShowMiddleAdmissionForm] = useState(false);
   const [showHighAdmissionForm, setShowHighAdmissionForm] = useState(false);
   const [editingNotice, setEditingNotice] = useState<Notice | null>(null);
+  const [editingGallery, setEditingGallery] = useState<GalleryItem | null>(null);
   const [editingMiddleAdmission, setEditingMiddleAdmission] = useState<MiddleSchoolAdmission | null>(null);
   const [editingHighAdmission, setEditingHighAdmission] = useState<HighSchoolAdmission | null>(null);
 
@@ -45,12 +48,18 @@ function AdminDashboard() {
     enabled: activeSection === "middle-admission",
   });
 
+  const { data: galleryData } = useQuery({
+    queryKey: ["/api/gallery", { limit: 100 }],
+    enabled: activeSection === "gallery",
+  });
+
   const { data: highAdmissionsData } = useQuery({
     queryKey: ["/api/high-school-admission", { limit: 100 }],
     enabled: activeSection === "high-admission",
   });
 
   const notices = noticesData?.notices || [];
+  const galleryItems = galleryData?.items || [];
   const middleAdmissions = middleAdmissionsData?.items || [];
   const highAdmissions = highAdmissionsData?.items || [];
 
@@ -81,6 +90,19 @@ function AdminDashboard() {
     },
   });
 
+  const deleteGalleryMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest(`/api/gallery/${id}`, "DELETE");
+    },
+    onSuccess: () => {
+      toast({ title: "성공", description: "갤러리 항목이 삭제되었습니다." });
+      queryClient.invalidateQueries({ queryKey: ["/api/gallery"] });
+    },
+    onError: () => {
+      toast({ title: "오류", description: "삭제에 실패했습니다.", variant: "destructive" });
+    },
+  });
+
   const deleteHighAdmissionMutation = useMutation({
     mutationFn: async (id: number) => {
       await apiRequest(`/api/high-school-admission/${id}`, "DELETE");
@@ -103,7 +125,7 @@ function AdminDashboard() {
         </div>
 
         {/* Dashboard Navigation */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           <Card 
             className={`cursor-pointer transition-all ${activeSection === "dashboard" ? "ring-2 ring-blue-500" : ""}`}
             onClick={() => setActiveSection("dashboard")}
@@ -121,6 +143,16 @@ function AdminDashboard() {
             <CardContent className="flex flex-col items-center justify-center p-6">
               <Bell className="h-8 w-8 mb-2 text-green-600" />
               <span className="text-sm font-medium">공지사항</span>
+            </CardContent>
+          </Card>
+          
+          <Card 
+            className={`cursor-pointer transition-all ${activeSection === "gallery" ? "ring-2 ring-blue-500" : ""}`}
+            onClick={() => setActiveSection("gallery")}
+          >
+            <CardContent className="flex flex-col items-center justify-center p-6">
+              <Image className="h-8 w-8 mb-2 text-purple-600" />
+              <span className="text-sm font-medium">갤러리</span>
             </CardContent>
           </Card>
           
@@ -404,6 +436,23 @@ function AdminDashboard() {
               onSuccess={() => {
                 setShowNoticeForm(false);
                 setEditingNotice(null);
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={showGalleryForm} onOpenChange={setShowGalleryForm}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>
+                {editingGallery ? "갤러리 수정" : "새 갤러리 항목"}
+              </DialogTitle>
+            </DialogHeader>
+            <GalleryForm
+              item={editingGallery}
+              onSuccess={() => {
+                setShowGalleryForm(false);
+                setEditingGallery(null);
               }}
             />
           </DialogContent>
