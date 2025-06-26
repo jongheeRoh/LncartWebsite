@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Download, Award, BookOpen, Users, CalendarDays, Clock, MapPin } from "lucide-react";
+import { Link } from "wouter";
 import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
 
 export default function MiddleSchoolEntrance() {

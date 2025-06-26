@@ -374,7 +374,10 @@ export class MemStorage implements IStorage {
   async createRoadmap(insertRoadmap: InsertRoadmap): Promise<Roadmap> {
     const roadmap: Roadmap = {
       id: this.currentRoadmapId++,
-      ...insertRoadmap,
+      type: insertRoadmap.type,
+      title: insertRoadmap.title,
+      content: insertRoadmap.content,
+      attachments: insertRoadmap.attachments || [],
       createdAt: new Date(),
       updatedAt: new Date(),
     };

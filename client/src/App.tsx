@@ -14,6 +14,8 @@ import MiddleSchool from "@/pages/middle-school";
 import HighSchool from "@/pages/high-school";
 import MiddleSchoolEntrance from "@/pages/middle-school-entrance";
 import HighSchoolEntrance from "@/pages/high-school-entrance";
+import MiddleSchoolRoadmap from "@/pages/middle-school-roadmap";
+import HighSchoolRoadmap from "@/pages/high-school-roadmap";
 import Directions from "@/pages/directions";
 import GalleryDetail from "@/pages/gallery-detail";
 import Admin from "@/pages/admin";
@@ -32,8 +34,12 @@ function Router() {
         <Route path="/gallery" component={Gallery} />
         <Route path="/gallery/:id" component={GalleryDetail} />
         <Route path="/entrance" component={Entrance} />
-        <Route path="/middle-school" component={MiddleSchoolEntrance} />
-        <Route path="/high-school" component={HighSchoolEntrance} />
+        <Route path="/entrance/middle-school" component={MiddleSchoolEntrance} />
+        <Route path="/entrance/high-school" component={HighSchoolEntrance} />
+        <Route path="/roadmap/middle-school" component={MiddleSchoolRoadmap} />
+        <Route path="/roadmap/high-school" component={HighSchoolRoadmap} />
+        <Route path="/middle-school" component={MiddleSchool} />
+        <Route path="/high-school" component={HighSchool} />
         <Route path="/directions" component={Directions} />
         <Route path="/admin" component={Admin} />
         <Route component={NotFound} />
