@@ -1,4 +1,4 @@
-import { users, notices, galleryItems, roadmaps, type User, type InsertUser, type InsertNotice, type UpdateNotice, type Notice, type InsertGalleryItem, type UpdateGalleryItem, type GalleryItem, type Roadmap, type InsertRoadmap, type UpdateRoadmap } from "@shared/schema";
+import { users, notices, galleryItems, roadmaps, admissionInfo, type User, type InsertUser, type InsertNotice, type UpdateNotice, type Notice, type InsertGalleryItem, type UpdateGalleryItem, type GalleryItem, type Roadmap, type InsertRoadmap, type UpdateRoadmap, type AdmissionInfo, type InsertAdmissionInfo, type UpdateAdmissionInfo } from "@shared/schema";
 
 export interface IStorage {
   // User methods
@@ -12,6 +12,13 @@ export interface IStorage {
   createNotice(notice: InsertNotice): Promise<Notice>;
   updateNotice(id: number, updates: UpdateNotice): Promise<Notice | undefined>;
   deleteNotice(id: number): Promise<boolean>;
+
+  // Admission Info methods
+  getAllAdmissionInfo(page?: number, limit?: number, type?: string, category?: string, search?: string): Promise<{ items: AdmissionInfo[], total: number }>;
+  getAdmissionInfo(id: number): Promise<AdmissionInfo | undefined>;
+  createAdmissionInfo(info: InsertAdmissionInfo): Promise<AdmissionInfo>;
+  updateAdmissionInfo(id: number, updates: UpdateAdmissionInfo): Promise<AdmissionInfo | undefined>;
+  deleteAdmissionInfo(id: number): Promise<boolean>;
 
   // Gallery methods
   getAllGalleryItems(page?: number, limit?: number, category?: string): Promise<{ items: GalleryItem[], total: number }>;
