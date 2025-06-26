@@ -120,96 +120,48 @@ export default function NoticeList({ notices, isLoading, onNoticeUpdated, onNoti
                           const category = fullNotice.category || '일반';
                           const date = new Date(fullNotice.createdAt).toLocaleDateString('ko-KR');
                           
-                          popup.document.write(`
-                            <!DOCTYPE html>
-                            <html lang="ko">
-                              <head>
-                                <meta charset="utf-8">
-                                <meta name="viewport" content="width=device-width, initial-scale=1">
-                                <title>${title} - 선과색미술학원</title>
-                                <style>
-                                  body { 
-                                    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-                                    max-width: 800px;
-                                    margin: 0 auto;
-                                    padding: 20px;
-                                    line-height: 1.6;
-                                    color: #333;
-                                    background: #f9f9f9;
-                                  }
-                                  .container {
-                                    background: white;
-                                    border-radius: 8px;
-                                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                                    overflow: hidden;
-                                  }
-                                  .header {
-                                    background: linear-gradient(135deg, #ff6b35, #f7931e);
-                                    color: white;
-                                    padding: 30px;
-                                    text-align: center;
-                                  }
-                                  .title {
-                                    font-size: 24px;
-                                    font-weight: bold;
-                                    margin-bottom: 10px;
-                                  }
-                                  .meta {
-                                    font-size: 14px;
-                                    opacity: 0.9;
-                                  }
-                                  .category {
-                                    background: rgba(255,255,255,0.2);
-                                    padding: 4px 8px;
-                                    border-radius: 12px;
-                                    font-size: 12px;
-                                    margin-right: 10px;
-                                  }
-                                  .content {
-                                    padding: 30px;
-                                    font-size: 16px;
-                                    line-height: 1.7;
-                                  }
-                                  .content p { margin-bottom: 16px; }
-                                  .content h1, .content h2, .content h3 { 
-                                    color: #2d3748; 
-                                    margin: 20px 0 10px 0;
-                                  }
-                                  .content img { 
-                                    max-width: 100%; 
-                                    height: auto; 
-                                    margin: 20px 0;
-                                    border-radius: 4px;
-                                  }
-                                  .footer {
-                                    padding: 20px;
-                                    background: #f8f9fa;
-                                    text-align: center;
-                                    color: #666;
-                                    font-size: 14px;
-                                    border-top: 1px solid #eee;
-                                  }
-                                </style>
-                              </head>
-                              <body>
-                                <div class="container">
-                                  <div class="header">
-                                    <div class="title">${title}</div>
-                                    <div class="meta">
-                                      <span class="category">${category}</span>
-                                      ${date}
-                                    </div>
-                                  </div>
-                                  <div class="content">
-                                    ${content}
-                                  </div>
-                                  <div class="footer">
-                                    선과색미술학원 | 서울특별시 광진구 천호대로 677 | 02-453-2379
-                                  </div>
-                                </div>
-                              </body>
-                            </html>
-                          `);
+                          const htmlContent = [
+                            '<!DOCTYPE html>',
+                            '<html lang="ko">',
+                            '<head>',
+                            '<meta charset="utf-8">',
+                            '<meta name="viewport" content="width=device-width, initial-scale=1">',
+                            '<title>' + title + ' - 선과색미술학원</title>',
+                            '<style>',
+                            'body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; color: #333; background: #f9f9f9; }',
+                            '.container { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }',
+                            '.header { background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; padding: 30px; text-align: center; }',
+                            '.title { font-size: 24px; font-weight: bold; margin-bottom: 10px; }',
+                            '.meta { font-size: 14px; opacity: 0.9; }',
+                            '.category { background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 12px; margin-right: 10px; }',
+                            '.content { padding: 30px; font-size: 16px; line-height: 1.7; }',
+                            '.content p { margin-bottom: 16px; }',
+                            '.content h1, .content h2, .content h3 { color: #2d3748; margin: 20px 0 10px 0; }',
+                            '.content img { max-width: 100%; height: auto; margin: 20px 0; border-radius: 4px; }',
+                            '.footer { padding: 20px; background: #f8f9fa; text-align: center; color: #666; font-size: 14px; border-top: 1px solid #eee; }',
+                            '</style>',
+                            '</head>',
+                            '<body>',
+                            '<div class="container">',
+                            '<div class="header">',
+                            '<div class="title">' + title + '</div>',
+                            '<div class="meta">',
+                            '<span class="category">' + category + '</span>',
+                            date,
+                            '</div>',
+                            '</div>',
+                            '<div class="content">',
+                            content,
+                            '</div>',
+                            '<div class="footer">',
+                            '선과색미술학원 | 서울특별시 광진구 천호대로 677 | 02-453-2379',
+                            '</div>',
+                            '</div>',
+                            '</body>',
+                            '</html>'
+                          ].join('\n');
+                          
+                          popup.document.write(htmlContent);
                           popup.document.close();
                           popup.focus();
                         }
