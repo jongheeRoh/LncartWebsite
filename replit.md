@@ -91,6 +91,7 @@ This is a full-stack web application for an art academy (선과색미술학원) 
 
 ## Recent Changes
 
+- **June 26, 2025**: Enhanced rich text editor with font size controls, line spacing options, and video embedding capabilities for notices, gallery, and roadmap content
 - **June 26, 2025**: **CRITICAL FIX** - Switched from in-memory storage to PostgreSQL database for persistent data storage
 - **June 26, 2025**: Fixed notice popup functionality with proper template literal syntax  
 - **June 26, 2025**: Added comprehensive database storage layer with automatic sample data initialization
