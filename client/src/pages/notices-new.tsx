@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, ChevronLeft, ChevronRight, Calendar } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { NOTICE_CATEGORIES } from "@/lib/types";
 import type { Notice } from "@shared/schema";
 import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
@@ -15,8 +15,7 @@ export default function Notices() {
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState<string>("전체");
   const [search, setSearch] = useState("");
-  const [selectedNotice, setSelectedNotice] = useState<Notice | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [, setLocation] = useLocation();
 
   const { data, isLoading } = useQuery({
     queryKey: ["/api/notices", page, category, search],
@@ -33,18 +32,7 @@ export default function Notices() {
     },
   });
 
-  const handleNoticeClick = async (noticeId: number) => {
-    try {
-      const response = await fetch(`/api/notices/${noticeId}`);
-      if (!response.ok) throw new Error('Failed to fetch notice');
-      const fullNotice = await response.json();
-      setSelectedNotice(fullNotice);
-      setIsModalOpen(true);
-    } catch (error) {
-      console.error('Error loading notice:', error);
-      alert('공지사항을 불러오는데 실패했습니다.');
-    }
-  };
+
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -148,7 +136,7 @@ export default function Notices() {
             <div className="space-y-4">
               {data?.notices.map((notice: Notice) => (
                 <Card key={notice.id} className="hover:shadow-lg transition-shadow cursor-pointer">
-                  <CardContent className="p-6" onClick={() => handleNoticeClick(notice.id)}>
+                  <CardContent className="p-6" onClick={() => setLocation(`/notices/${notice.id}`)}>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
@@ -224,52 +212,7 @@ export default function Notices() {
         </div>
       </section>
 
-      {/* Notice Detail Modal */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-          {selectedNotice && (
-            <>
-              <DialogHeader>
-                <div className="flex items-center justify-between mb-4">
-                  <DialogTitle className="text-2xl font-bold text-slate-900">
-                    {selectedNotice.title}
-                  </DialogTitle>
-                  <Badge 
-                    variant="secondary" 
-                    className={`ml-2 ${
-                      selectedNotice.category === '긴급' ? 'bg-red-100 text-red-800' :
-                      selectedNotice.category === '이벤트' ? 'bg-blue-100 text-blue-800' :
-                      'bg-slate-100 text-slate-800'
-                    }`}
-                  >
-                    {selectedNotice.category}
-                  </Badge>
-                </div>
-                <div className="flex items-center text-sm text-slate-600 mb-4">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  {new Date(selectedNotice.createdAt).toLocaleDateString('ko-KR', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    weekday: 'short'
-                  })}
-                </div>
-              </DialogHeader>
-              
-              <div className="prose max-w-none">
-                <div 
-                  className="notice-content"
-                  dangerouslySetInnerHTML={{ __html: selectedNotice.content }}
-                  style={{
-                    lineHeight: '1.8',
-                    fontSize: '16px'
-                  }}
-                />
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+
     </div>
   );
 }
