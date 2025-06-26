@@ -211,8 +211,6 @@ export default function Notices() {
           )}
         </div>
       </section>
-
-
     </div>
   );
 }
