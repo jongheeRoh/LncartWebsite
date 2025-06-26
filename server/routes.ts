@@ -73,7 +73,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       console.log("Middle school admission API called");
       const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
+      const limit = parseInt(req.query.limit as string) || 50; // 기본값을 50으로 증가
       const category = req.query.category as string;
       const search = req.query.search as string;
 
