@@ -38,7 +38,21 @@ export default function NoticeForm({ onSuccess, notice }: NoticeFormProps) {
 
   const createNoticeMutation = useMutation({
     mutationFn: async (data: InsertNotice) => {
-      const response = await apiRequest("POST", "/api/notices", data);
+      const sessionId = localStorage.getItem('adminSessionId');
+      const response = await fetch("/api/notices", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${sessionId}`
+        },
+        body: JSON.stringify({ ...data, attachments }),
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`${response.status}: ${errorText}`);
+      }
+      
       return response.json();
     },
     onSuccess: () => {
@@ -60,7 +74,21 @@ export default function NoticeForm({ onSuccess, notice }: NoticeFormProps) {
 
   const updateNoticeMutation = useMutation({
     mutationFn: async (data: InsertNotice) => {
-      const response = await apiRequest("PUT", `/api/notices/${notice.id}`, data);
+      const sessionId = localStorage.getItem('adminSessionId');
+      const response = await fetch(`/api/notices/${notice.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${sessionId}`
+        },
+        body: JSON.stringify({ ...data, attachments }),
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`${response.status}: ${errorText}`);
+      }
+      
       return response.json();
     },
     onSuccess: () => {
@@ -195,7 +223,7 @@ export default function NoticeForm({ onSuccess, notice }: NoticeFormProps) {
               취소
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "처리 중..." : notice ? "수정" : "작성"}
+              {isSubmitting ? "저장 중..." : "저장"}
             </Button>
           </div>
         </form>

@@ -183,7 +183,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/notices/:id", requireAuth, async (req, res) => {
+  app.patch("/api/notices/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const validatedData = updateNoticeSchema.parse(req.body);
@@ -259,7 +259,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/gallery/:id", requireAuth, async (req, res) => {
+  app.patch("/api/gallery/:id", requireAuth, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const validatedData = updateGalleryItemSchema.parse(req.body);
