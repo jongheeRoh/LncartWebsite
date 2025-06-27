@@ -29,17 +29,63 @@ export function MiddleSchoolAdmissionForm({ admission, onSuccess }: MiddleSchool
     }
   });
 
-  const mutation = useMutation({
+  const createMutation = useMutation({
     mutationFn: async (data: InsertMiddleSchoolAdmission) => {
-      const url = admission
-        ? `/api/middle-school-admission/${admission.id}`
-        : "/api/middle-school-admission";
-      const method = admission ? "PUT" : "POST";
+      const sessionId = localStorage.getItem('adminSessionId');
+      const response = await fetch("/api/middle-school-admission", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${sessionId}`
+        },
+        body: JSON.stringify({ ...data, content }),
+      });
       
-      console.log("Submitting data:", { ...data, content });
-      console.log("URL:", url, "Method:", method);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to create admission info");
+      }
       
-      return await apiRequest(url, method, { ...data, content });
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "성공",
+        description: "예중 입시정보가 생성되었습니다.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/middle-school-admission"] });
+      reset();
+      setContent("");
+      onSuccess?.();
+    },
+    onError: (error) => {
+      console.error("Middle school admission error:", error);
+      toast({
+        title: "오류",
+        description: `예중 입시정보 생성에 실패했습니다: ${error.message}`,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async (data: InsertMiddleSchoolAdmission) => {
+      const sessionId = localStorage.getItem('adminSessionId');
+      const response = await fetch(`/api/middle-school-admission/${admission!.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${sessionId}`
+        },
+        body: JSON.stringify({ ...data, content }),
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to update admission info");
+      }
+      
+      return response.json();
     },
     onSuccess: () => {
       toast({
@@ -72,7 +118,12 @@ export function MiddleSchoolAdmissionForm({ admission, onSuccess }: MiddleSchool
       });
       return;
     }
-    mutation.mutate(data);
+    
+    if (admission) {
+      updateMutation.mutate(data);
+    } else {
+      createMutation.mutate(data);
+    }
   };
 
   return (
@@ -108,8 +159,8 @@ export function MiddleSchoolAdmissionForm({ admission, onSuccess }: MiddleSchool
       </div>
 
       <div className="flex justify-end space-x-2">
-        <Button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending
+        <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
+          {(createMutation.isPending || updateMutation.isPending)
             ? admission
               ? "수정 중..."
               : "생성 중..."

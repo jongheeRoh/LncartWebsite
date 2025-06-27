@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { errorMonitor } from "./error-monitor";
 
 const app = express();
 app.use(cookieParser());
@@ -41,9 +42,12 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
+
+    // 에러 모니터에 보고
+    errorMonitor.reportAPIError(req.path, req.method, status, message);
 
     res.status(status).json({ message });
     throw err;

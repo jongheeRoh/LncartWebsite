@@ -5,6 +5,7 @@ import { insertNoticeSchema, updateNoticeSchema, insertGalleryItemSchema, update
 import { ZodError } from "zod";
 import { upload, createFileAttachment } from "./upload";
 import { scrapeAndImportMiddleSchoolData, scrapeAndImportHighSchoolData } from "./web-scraper";
+import { errorMonitor } from "./error-monitor";
 import path from "path";
 import fs from "fs";
 
@@ -66,6 +67,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Health check
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok" });
+  });
+
+  // Error monitoring API
+  app.get("/api/errors", requireAuth, (req, res) => {
+    const stats = errorMonitor.getErrorStats();
+    const recent = errorMonitor.getRecentErrors(20);
+    res.json({ stats, recent });
   });
 
   // Middle School Admission routes (moved to top priority)
