@@ -554,6 +554,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const admission = await storage.getMiddleSchoolAdmission(id);
       
       if (!admission) {
+        return res.status(404).json({ error: "Admission info not found" });
+      }
+      
+      res.json(admission);
+    } catch (error) {
+      console.error("API Error:", error);
+      res.status(500).json({ error: "Failed to fetch middle school admission" });
+    }
+  });
+
+  app.get("/api/middle-school-admission/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const admission = await storage.getMiddleSchoolAdmission(id);
+      
+      if (!admission) {
         return res.status(404).json({ error: "Middle school admission not found" });
       }
       
