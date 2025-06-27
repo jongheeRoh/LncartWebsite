@@ -99,3 +99,50 @@
   transform: translateY(-2px);
   box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
 }
+
+/* 동영상 임베드 스타일 */
+.prose iframe,
+iframe {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 315px;
+  border-radius: 8px;
+  margin: 24px 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: none;
+  display: block;
+}
+
+.prose div[style*="position: relative"],
+div[style*="position: relative"] {
+  margin: 24px 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 0 !important;
+  padding-bottom: 56.25% !important;
+}
+
+.prose div[style*="position: relative"] iframe,
+div[style*="position: relative"] iframe {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+
+/* HTML이 텍스트로 표시되는 것을 방지 */
+.prose pre,
+.prose code {
+  white-space: pre-wrap;
+}
+
+.prose [data-youtube-video] {
+  margin: 24px 0;
+}

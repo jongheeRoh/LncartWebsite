@@ -122,9 +122,11 @@ export default function MiddleSchoolDetail() {
             </div>
             
             <div 
-              className="prose prose-slate max-w-none"
-              dangerouslySetInnerHTML={{ __html: admission?.content || '' }}
-            />
+              className="prose prose-slate max-w-none prose-img:max-w-full prose-img:h-auto prose-img:rounded-lg prose-img:shadow-sm prose-img:my-4"
+              style={{ wordBreak: 'break-word' }}
+            >
+              <div dangerouslySetInnerHTML={{ __html: admission?.content || '' }} />
+            </div>
 
             {/* 네비게이션 영역 */}
             <div className="mt-12 pt-8 border-t border-gray-200">
