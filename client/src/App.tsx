@@ -22,6 +22,7 @@ import HighSchoolRoadmap from "@/pages/high-school-roadmap";
 import Directions from "@/pages/directions";
 import GalleryDetail from "@/pages/gallery-detail";
 import Admin from "@/pages/admin";
+import AdminRoadmap from "@/pages/admin-roadmap";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 
@@ -49,6 +50,7 @@ function Router() {
         <Route path="/high-school/:id" component={HighSchoolDetail} />
         <Route path="/directions" component={Directions} />
         <Route path="/admin" component={Admin} />
+        <Route path="/admin/roadmap" component={AdminRoadmap} />
         <Route component={NotFound} />
       </Switch>
       <Footer />

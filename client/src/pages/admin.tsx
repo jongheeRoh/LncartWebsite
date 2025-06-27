@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Edit, Plus, Calendar, BarChart3, Bell, Image, School, GraduationCap, Download } from "lucide-react";
+import { Trash2, Edit, Plus, Calendar, BarChart3, Bell, Image, School, GraduationCap, Download, Map } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { DataImportDialog } from "@/components/data-import";
 import NoticeForm from "@/components/notices/notice-form";
@@ -175,6 +175,21 @@ function AdminDashboard() {
               <span className="text-sm font-medium">예고입시</span>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold mb-4">빠른 작업</h3>
+          <div className="flex gap-4">
+            <Button
+              onClick={() => window.location.href = '/admin/roadmap'}
+              className="flex items-center"
+              variant="outline"
+            >
+              <Map className="h-4 w-4 mr-2" />
+              로드맵 관리
+            </Button>
+          </div>
         </div>
 
         {/* Dashboard Overview */}
