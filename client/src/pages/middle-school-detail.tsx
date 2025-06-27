@@ -7,10 +7,12 @@ import { ArrowLeft, ChevronLeft, ChevronRight, Share2, X } from "lucide-react";
 import { Link } from "wouter";
 import type { MiddleSchoolAdmission } from "@shared/schema";
 import CommentSection from "@/components/comments/comment-section";
+import { useEffect, useRef } from "react";
 
 export default function MiddleSchoolDetail() {
   const { id } = useParams();
   const [, setLocation] = useLocation();
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const { data: admission, isLoading, error } = useQuery<MiddleSchoolAdmission>({
     queryKey: [`/api/middle-school-admission/${id}`],
@@ -21,6 +23,26 @@ export default function MiddleSchoolDetail() {
     queryKey: ["/api/middle-school-admission"],
     queryFn: () => fetch("/api/middle-school-admission?limit=100").then(res => res.json()),
   });
+
+  // Process video HTML after content loads
+  const processedContent = admission?.content ? 
+    admission.content.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"') : '';
+
+  useEffect(() => {
+    if (contentRef.current) {
+      // Force re-render of video embeds
+      const iframes = contentRef.current.querySelectorAll('iframe[src*="youtube.com"]');
+      iframes.forEach(iframe => {
+        const src = iframe.getAttribute('src');
+        if (src) {
+          iframe.setAttribute('src', '');
+          setTimeout(() => {
+            iframe.setAttribute('src', src);
+          }, 100);
+        }
+      });
+    }
+  }, [processedContent]);
 
   const currentIndex = allAdmissions?.items?.findIndex((item: any) => item.id === parseInt(id || "0")) ?? -1;
   const prevAdmission = currentIndex > 0 && allAdmissions?.items ? allAdmissions.items[currentIndex - 1] : null;
@@ -122,11 +144,13 @@ export default function MiddleSchoolDetail() {
             </div>
             
             <div 
-              className="prose prose-slate max-w-none prose-img:max-w-full prose-img:h-auto prose-img:rounded-lg prose-img:shadow-sm prose-img:my-4"
-              style={{ wordBreak: 'break-word' }}
-            >
-              <div dangerouslySetInnerHTML={{ __html: admission?.content || '' }} />
-            </div>
+              ref={contentRef}
+              className="prose prose-slate max-w-none prose-img:max-w-full prose-img:h-auto prose-img:rounded-lg prose-img:shadow-sm prose-img:my-4 prose-iframe:w-full prose-iframe:h-auto prose-iframe:rounded-lg video-content"
+              style={{ 
+                wordBreak: 'break-word',
+              }}
+              dangerouslySetInnerHTML={{ __html: processedContent }}
+            />
 
             {/* 네비게이션 영역 */}
             <div className="mt-12 pt-8 border-t border-gray-200">

@@ -175,3 +175,39 @@ div[style*="position: relative"] iframe {
   max-height: 50px !important;
   object-fit: cover !important;
 }
+
+/* Enhanced video content styles for detail pages */
+.video-content iframe {
+  width: 100% !important;
+  height: 315px !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin: 24px 0;
+}
+
+.video-content div[style*="position: relative"] {
+  position: relative !important;
+  width: 100% !important;
+  height: 0 !important;
+  padding-bottom: 56.25% !important;
+  margin: 24px 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.video-content div[style*="position: relative"] iframe {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+}
+
+/* Fix for video embeds showing as HTML */
+.prose iframe {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin: 24px 0;
+}
