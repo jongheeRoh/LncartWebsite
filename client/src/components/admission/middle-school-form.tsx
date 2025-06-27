@@ -36,11 +36,7 @@ export function MiddleSchoolAdmissionForm({ admission, onSuccess }: MiddleSchool
         : "/api/middle-school-admission";
       const method = admission ? "PUT" : "POST";
       
-      return await apiRequest(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, content }),
-      });
+      return await apiRequest(url, method, { ...data, content });
     },
     onSuccess: () => {
       toast({
