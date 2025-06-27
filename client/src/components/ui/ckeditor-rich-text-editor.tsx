@@ -35,17 +35,16 @@ export default function CKEditorRichTextEditor({
             'bold',
             'italic',
             '|',
+            'link',
+            'blockQuote',
+            'insertTable',
+            'mediaEmbed',
+            '|',
             'bulletedList',
             'numberedList',
             '|',
             'outdent',
             'indent',
-            '|',
-            'link',
-            'insertTable',
-            'mediaEmbed',
-            '|',
-            'blockQuote',
             '|',
             'undo',
             'redo'
@@ -58,6 +57,7 @@ export default function CKEditorRichTextEditor({
               { model: 'heading3', view: 'h3', title: '제목 3', class: 'ck-heading_heading3' }
             ]
           },
+
           table: {
             contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
           },
@@ -119,12 +119,19 @@ export default function CKEditorRichTextEditor({
       <style dangerouslySetInnerHTML={{
         __html: `
           .ckeditor-container .ck-editor__editable {
-            min-height: 200px !important;
+            min-height: 300px !important;
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif !important;
           }
           .ckeditor-container .ck-content {
             font-family: 'Pretendard', 'Noto Sans KR', sans-serif !important;
+            padding: 16px !important;
           }
           .ckeditor-container .ck-toolbar {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 10 !important;
+            background: white !important;
+            border-bottom: 1px solid #eee !important;
             border-top: 1px solid #e2e8f0 !important;
             border-left: 1px solid #e2e8f0 !important;
             border-right: 1px solid #e2e8f0 !important;
@@ -137,6 +144,20 @@ export default function CKEditorRichTextEditor({
           .ckeditor-container .ck-focused {
             border-color: #3b82f6 !important;
             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
+          }
+          .ckeditor-container .ck-content img,
+          .ckeditor-container .ck-content iframe {
+            max-width: 800px !important;
+            width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            margin: 0 auto !important;
+          }
+          .ckeditor-container .ck-content .media {
+            margin: 16px 0 !important;
+          }
+          .ckeditor-container .ck-content .media iframe {
+            border-radius: 8px !important;
           }
         `
       }} />
