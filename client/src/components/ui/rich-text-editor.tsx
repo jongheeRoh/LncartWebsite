@@ -135,10 +135,18 @@ export default function RichTextEditor({ content, onChange, placeholder, maxImag
       const formData = new FormData();
       formData.append('file', file);
 
-      // Use session-based authentication instead of Authorization header
+      // Get session ID from localStorage as fallback
+      const sessionId = localStorage.getItem('adminSessionId');
+      
+      const headers: HeadersInit = {};
+      if (sessionId) {
+        headers['Authorization'] = `Bearer ${sessionId}`;
+      }
+
       const response = await fetch('/api/upload', {
         method: 'POST',
         credentials: 'include', // Important for session cookies
+        headers,
         body: formData,
       });
 
