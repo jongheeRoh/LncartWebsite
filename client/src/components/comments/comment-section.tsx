@@ -15,7 +15,6 @@ interface CommentSectionProps {
 }
 
 export default function CommentSection({ type, postId, isAdmin = false }: CommentSectionProps) {
-  const [author, setAuthor] = useState("");
   const [content, setContent] = useState("");
   const queryClient = useQueryClient();
 
@@ -35,7 +34,6 @@ export default function CommentSection({ type, postId, isAdmin = false }: Commen
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/comments/${type}/${postId}`] });
-      setAuthor("");
       setContent("");
     },
   });
@@ -55,12 +53,12 @@ export default function CommentSection({ type, postId, isAdmin = false }: Commen
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!author.trim() || !content.trim()) return;
+    if (!content.trim()) return;
 
     createCommentMutation.mutate({
       type,
       postId,
-      author: author.trim(),
+      author: "익명",
       content: content.trim(),
     });
   };
@@ -82,14 +80,6 @@ export default function CommentSection({ type, postId, isAdmin = false }: Commen
       <CardContent className="space-y-6">
         {/* 댓글 작성 폼 */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              placeholder="작성자명"
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
-              required
-            />
-          </div>
           <Textarea
             placeholder="댓글을 입력하세요..."
             value={content}
@@ -99,7 +89,7 @@ export default function CommentSection({ type, postId, isAdmin = false }: Commen
           />
           <Button 
             type="submit" 
-            disabled={createCommentMutation.isPending || !author.trim() || !content.trim()}
+            disabled={createCommentMutation.isPending || !content.trim()}
             className="w-full md:w-auto"
           >
             {createCommentMutation.isPending ? "등록 중..." : "댓글 등록"}
@@ -121,8 +111,7 @@ export default function CommentSection({ type, postId, isAdmin = false }: Commen
               <div key={comment.id} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2 mb-2">
-                    <User className="h-4 w-4 text-gray-500" />
-                    <span className="font-medium text-gray-900">{comment.author}</span>
+                    <MessageCircle className="h-4 w-4 text-gray-500" />
                     <span className="text-sm text-gray-500">
                       {new Date(comment.createdAt).toLocaleDateString('ko-KR', {
                         year: 'numeric',
