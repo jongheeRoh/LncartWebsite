@@ -614,20 +614,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/middle-school-admission/:id", async (req, res) => {
+  // Handle both PATCH and PUT for compatibility
+  const updateMiddleSchoolHandler = async (req: Request, res: Response) => {
     try {
+      console.log("Updating middle school admission with data:", JSON.stringify(req.body, null, 2));
+      
       const id = parseInt(req.params.id);
-      const admission = await storage.updateMiddleSchoolAdmission(id, req.body);
+      
+      // Validate data - allow partial updates for PATCH, full updates for PUT
+      const validatedData = updateMiddleSchoolAdmissionSchema.partial().parse(req.body);
+      console.log("Validated update data:", JSON.stringify(validatedData, null, 2));
+      
+      const admission = await storage.updateMiddleSchoolAdmission(id, validatedData);
       
       if (!admission) {
         return res.status(404).json({ error: "Middle school admission not found" });
       }
       
+      console.log("Updated admission:", JSON.stringify(admission, null, 2));
       res.json(admission);
     } catch (error) {
+      console.error("Middle school admission update error:", error);
+      if (error instanceof ZodError) {
+        return res.status(400).json({ error: "Invalid data", details: error.errors });
+      }
       res.status(500).json({ error: "Failed to update middle school admission" });
     }
-  });
+  };
+
+  app.patch("/api/middle-school-admission/:id", updateMiddleSchoolHandler);
+  app.put("/api/middle-school-admission/:id", updateMiddleSchoolHandler);
 
   app.delete("/api/middle-school-admission/:id", async (req, res) => {
     try {

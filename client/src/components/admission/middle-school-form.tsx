@@ -70,12 +70,10 @@ export function MiddleSchoolAdmissionForm({ admission, onSuccess }: MiddleSchool
 
   const updateMutation = useMutation({
     mutationFn: async (data: InsertMiddleSchoolAdmission) => {
-      const sessionId = localStorage.getItem('adminSessionId');
       const response = await fetch(`/api/middle-school-admission/${admission!.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${sessionId}`
         },
         body: JSON.stringify({ ...data, content }),
       });
