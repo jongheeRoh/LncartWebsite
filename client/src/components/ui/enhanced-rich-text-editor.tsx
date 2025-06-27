@@ -59,6 +59,8 @@ export default function EnhancedRichTextEditor({
         HTMLAttributes: {
           class: 'max-w-full h-auto rounded-lg shadow-sm my-4',
         },
+        allowBase64: true,
+        inline: false,
       }),
       Link.configure({
         openOnClick: false,
@@ -71,78 +73,136 @@ export default function EnhancedRichTextEditor({
     ],
     content: value,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
+      const html = editor.getHTML();
+      onChange(html);
     },
     editorProps: {
       attributes: {
-        class: `prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none p-6 video-content`,
+        class: `prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none p-6 video-content rich-editor`,
         style: `min-height: ${minHeight}; font-size: ${fontSize}px; line-height: ${lineHeight};`,
       },
+      handleDOMEvents: {
+        paste: (view, event) => {
+          // Handle video URL paste for immediate rendering
+          const clipboardData = event.clipboardData;
+          if (clipboardData) {
+            const pastedText = clipboardData.getData('text');
+            if (pastedText.includes('youtube.com') || pastedText.includes('youtu.be')) {
+              event.preventDefault();
+              setTimeout(() => {
+                processVideoUrls(pastedText);
+              }, 100);
+              return true;
+            }
+          }
+          return false;
+        }
+      }
     },
   });
 
-  // Process content for real-time video rendering
-  useEffect(() => {
-    if (editor) {
-      const editorElement = editor.view.dom;
+  // Function to process pasted video URLs
+  const processVideoUrls = (text: string) => {
+    if (!editor) return;
+    
+    const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
+    let match;
+    
+    while ((match = youtubeRegex.exec(text)) !== null) {
+      const videoId = match[1];
+      const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+      const iframe = `<div style="position: relative; width: 100%; height: 0; padding-bottom: 56.25%; margin: 24px 0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);"><iframe src="${embedUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe></div>`;
       
-      const processContent = () => {
-        // Find all text nodes that contain HTML entities for video iframes
-        const walker = document.createTreeWalker(
-          editorElement,
-          NodeFilter.SHOW_TEXT,
-          null
-        );
-
-        const textNodes: Text[] = [];
-        let node;
-        while (node = walker.nextNode()) {
-          const textContent = node.textContent || '';
-          if (textContent.includes('&lt;div style="position: relative') && 
-              textContent.includes('iframe') && 
-              textContent.includes('youtube.com/embed')) {
-            textNodes.push(node as Text);
-          }
-        }
-
-        // Replace HTML entities with actual rendered content
-        textNodes.forEach(textNode => {
-          if (textNode.nodeValue && textNode.parentNode) {
-            const decoded = textNode.nodeValue
-              .replace(/&lt;/g, '<')
-              .replace(/&gt;/g, '>')
-              .replace(/&quot;/g, '"')
-              .replace(/&amp;/g, '&');
-            
-            if (decoded !== textNode.nodeValue && decoded.includes('<iframe')) {
-              const wrapper = document.createElement('div');
-              wrapper.innerHTML = decoded;
-              
-              // Replace the text node with the rendered content
-              const parent = textNode.parentNode;
-              parent.replaceChild(wrapper, textNode);
-            }
-          }
+      editor.commands.insertContent(iframe);
+      
+      // Force immediate rendering
+      setTimeout(() => {
+        const editorElement = editor.view.dom;
+        const newIframes = editorElement.querySelectorAll('iframe:not([data-video-rendered])');
+        newIframes.forEach(iframe => {
+          const htmlIframe = iframe as HTMLIFrameElement;
+          htmlIframe.style.display = 'block';
+          htmlIframe.style.visibility = 'visible';
+          htmlIframe.setAttribute('data-video-rendered', 'true');
         });
-      };
-
-      // Initial processing
-      processContent();
-
-      // Set up mutation observer for real-time processing
-      const observer = new MutationObserver(() => {
-        setTimeout(processContent, 100); // Small delay to ensure content is rendered
-      });
-
-      observer.observe(editorElement, {
-        childList: true,
-        subtree: true,
-        characterData: true
-      });
-
-      return () => observer.disconnect();
+      }, 50);
     }
-  }, [editor, value]);
+  };
+
+  // Add real-time video rendering with CSS styling
+  useEffect(() => {
+    if (!editor) return;
+
+    // Add comprehensive CSS for real-time video rendering
+    const style = document.createElement('style');
+    style.textContent = `
+      .ProseMirror iframe[src*="youtube.com/embed"],
+      .ProseMirror iframe[src*="player.vimeo.com"] {
+        max-width: 100% !important;
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 16/9 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+        margin: 12px 0 !important;
+        display: block !important;
+        border: 0 !important;
+      }
+      .ProseMirror div[style*="position: relative"] {
+        position: relative !important;
+        width: 100% !important;
+        height: 0 !important;
+        padding-bottom: 56.25% !important;
+        margin: 24px 0 !important;
+        border-radius: 8px !important;
+        overflow: hidden !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+      }
+      .ProseMirror div[style*="position: relative"] iframe {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        border: 0 !important;
+      }
+      .video-content iframe {
+        pointer-events: auto !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Set up mutation observer to ensure videos render immediately
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              const element = node as Element;
+              // Find any newly added iframes and ensure they render
+              const iframes = element.querySelectorAll('iframe[src*="youtube.com/embed"], iframe[src*="player.vimeo.com"]');
+              iframes.forEach((iframe) => {
+                iframe.setAttribute('loading', 'eager');
+                iframe.setAttribute('data-rendered', 'true');
+              });
+            }
+          });
+        }
+      });
+    });
+
+    observer.observe(editor.view.dom, {
+      childList: true,
+      subtree: true
+    });
+
+    return () => {
+      document.head.removeChild(style);
+      observer.disconnect();
+    };
+  }, [editor]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -202,8 +262,33 @@ export default function EnhancedRichTextEditor({
         embedUrl = `https://player.vimeo.com/video/${videoId}`;
       }
       
+      // Create iframe with proper HTML structure for immediate rendering
       const iframe = `<div style="position: relative; width: 100%; height: 0; padding-bottom: 56.25%; margin: 24px 0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);"><iframe src="${embedUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe></div>`;
-      editor?.chain().focus().insertContent(iframe).run();
+      
+      // Simple direct insertion with forced rendering
+      editor?.commands.insertContent(iframe);
+      
+      // Immediate video rendering trigger
+      setTimeout(() => {
+        if (editor) {
+          const editorElement = editor.view.dom;
+          // Force all iframes to be visible and interactive
+          const allIframes = editorElement.querySelectorAll('iframe');
+          allIframes.forEach(iframe => {
+            const htmlIframe = iframe as HTMLIFrameElement;
+            htmlIframe.style.display = 'block';
+            htmlIframe.style.visibility = 'visible';
+            htmlIframe.style.opacity = '1';
+            htmlIframe.style.pointerEvents = 'auto';
+            htmlIframe.setAttribute('data-video-rendered', 'true');
+          });
+          
+          // Trigger a content refresh
+          const currentContent = editor.getHTML();
+          editor.commands.setContent(currentContent, false);
+        }
+      }, 100);
+      
       setVideoUrl("");
     }
   };

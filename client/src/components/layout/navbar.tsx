@@ -79,15 +79,15 @@ export default function Navbar() {
                   
                   return (
                     <Link key={item.id} href={item.href}>
-                      <a
-                        className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      <span
+                        className={`px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${
                           isActive(item.href)
                             ? "text-primary border-b-2 border-primary"
                             : "text-slate-600 hover:text-primary"
                         }`}
                       >
                         {item.label}
-                      </a>
+                      </span>
                     </Link>
                   );
                 })}
@@ -113,15 +113,15 @@ export default function Navbar() {
                           </div>
                           {item.subItems.map((subItem) => (
                             <Link key={subItem.href} href={subItem.href}>
-                              <a
-                                className={`block px-6 py-2 rounded-md text-sm transition-colors ${
+                              <span
+                                className={`block px-6 py-2 rounded-md text-sm transition-colors cursor-pointer ${
                                   isActive(subItem.href)
                                     ? "text-primary bg-primary/10"
                                     : "text-slate-600 hover:text-primary hover:bg-slate-100"
                                 }`}
                               >
                                 {subItem.label}
-                              </a>
+                              </span>
                             </Link>
                           ))}
                         </div>
@@ -130,15 +130,15 @@ export default function Navbar() {
                     
                     return (
                       <Link key={item.id} href={item.href}>
-                        <a
-                          className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                        <span
+                          className={`block px-3 py-2 rounded-md text-base font-medium transition-colors cursor-pointer ${
                             isActive(item.href)
                               ? "text-primary bg-primary/10"
                               : "text-slate-600 hover:text-primary hover:bg-slate-100"
                           }`}
                         >
                           {item.label}
-                        </a>
+                        </span>
                       </Link>
                     );
                   })}
