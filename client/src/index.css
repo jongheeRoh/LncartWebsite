@@ -146,3 +146,32 @@ div[style*="position: relative"] iframe {
 .prose [data-youtube-video] {
   margin: 24px 0;
 }
+
+/* 카드 내 이미지 오버플로우 방지 */
+.line-clamp-4 img,
+.line-clamp-3 img {
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 60px !important;
+  object-fit: cover !important;
+  border-radius: 4px !important;
+  margin: 2px 0 !important;
+  display: inline-block !important;
+}
+
+/* 카드 컨텐츠 영역 오버플로우 숨김 */
+.card-content-area {
+  overflow: hidden !important;
+  word-break: break-word !important;
+}
+
+.card-content-area * {
+  max-width: 100% !important;
+}
+
+.card-content-area img {
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 50px !important;
+  object-fit: cover !important;
+}

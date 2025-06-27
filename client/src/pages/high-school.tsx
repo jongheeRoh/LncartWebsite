@@ -89,7 +89,7 @@ export default function HighSchool() {
                   </CardHeader>
                   <CardContent className="flex-1 flex flex-col justify-between">
                     <div 
-                      className="text-sm text-gray-600 line-clamp-4 mb-4 flex-1 h-[80px] overflow-hidden"
+                      className="text-sm text-gray-600 line-clamp-4 mb-4 flex-1 h-[80px] overflow-hidden card-content-area"
                       dangerouslySetInnerHTML={{ 
                         __html: admission.excerpt || admission.content.substring(0, 120) + '...' 
                       }}
