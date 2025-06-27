@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { MessageCircle, Trash2, User } from "lucide-react";
+import { MessageCircle, Trash2, User, Share2 } from "lucide-react";
 
 import type { Comment, InsertComment } from "@shared/schema";
 
@@ -63,6 +63,32 @@ export default function CommentSection({ type, postId, isAdmin = false }: Commen
     });
   };
 
+  const handleShare = async () => {
+    const url = window.location.href;
+    const title = document.title;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: title,
+          url: url,
+        });
+      } catch (err) {
+        // Fallback to clipboard
+        await navigator.clipboard.writeText(url);
+        alert('링크가 클립보드에 복사되었습니다.');
+      }
+    } else {
+      // Fallback to clipboard
+      try {
+        await navigator.clipboard.writeText(url);
+        alert('링크가 클립보드에 복사되었습니다.');
+      } catch (err) {
+        console.error('Failed to copy link:', err);
+      }
+    }
+  };
+
   const handleDelete = (commentId: number) => {
     if (confirm("댓글을 삭제하시겠습니까?")) {
       deleteCommentMutation.mutate(commentId);
@@ -90,7 +116,8 @@ export default function CommentSection({ type, postId, isAdmin = false }: Commen
           <Button 
             type="submit" 
             disabled={createCommentMutation.isPending || !content.trim()}
-            className="w-full md:w-auto"
+            className="w-full md:w-auto bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300"
+            variant="outline"
           >
             {createCommentMutation.isPending ? "등록 중..." : "댓글 등록"}
           </Button>
@@ -110,17 +137,23 @@ export default function CommentSection({ type, postId, isAdmin = false }: Commen
             comments.map((comment) => (
               <div key={comment.id} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
                 <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-2 mb-2">
-                    <MessageCircle className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm text-gray-500">
-                      {new Date(comment.createdAt).toLocaleDateString('ko-KR', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </span>
+                  <div className="flex items-center justify-between w-full mb-2">
+                    <div className="flex items-center gap-2">
+                      <MessageCircle className="h-4 w-4 text-gray-500" />
+                      <span className="text-sm text-gray-500">
+                        {new Date(comment.createdAt).toLocaleDateString('ko-KR', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
+                    </div>
+                    <Share2 
+                      className="h-4 w-4 text-gray-500 cursor-pointer hover:text-gray-700" 
+                      onClick={handleShare}
+                    />
                   </div>
                   {isAdmin && (
                     <Button
