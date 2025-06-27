@@ -73,8 +73,8 @@ export default function HighSchool() {
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {admissions.map((admission: any) => (
-                <Card key={admission.id} className="bg-white shadow-lg hover:shadow-xl transition-shadow">
-                  <CardHeader>
+                <Card key={admission.id} className="bg-white shadow-lg hover:shadow-xl transition-shadow h-[320px] flex flex-col">
+                  <CardHeader className="flex-shrink-0">
                     <div className="flex justify-between items-start mb-2">
                       <Badge variant="secondary" className="text-xs">
                         {admission.category}
@@ -83,18 +83,18 @@ export default function HighSchool() {
                         {new Date(admission.createdAt).toLocaleDateString('ko-KR')}
                       </span>
                     </div>
-                    <CardTitle className="text-lg font-bold text-slate-900 line-clamp-2">
+                    <CardTitle className="text-lg font-bold text-slate-900 line-clamp-2 h-[56px]">
                       {admission.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="flex-1 flex flex-col justify-between">
                     <div 
-                      className="text-sm text-gray-600 line-clamp-3 mb-4"
+                      className="text-sm text-gray-600 line-clamp-4 mb-4 flex-1 h-[80px] overflow-hidden"
                       dangerouslySetInnerHTML={{ 
-                        __html: admission.excerpt || admission.content.substring(0, 100) + '...' 
+                        __html: admission.excerpt || admission.content.substring(0, 120) + '...' 
                       }}
                     />
-                    <Link href={`/high-school/${admission.id}`}>
+                    <Link href={`/high-school/${admission.id}`} className="mt-auto">
                       <Button 
                         variant="outline" 
                         size="sm" 
