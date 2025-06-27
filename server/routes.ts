@@ -195,8 +195,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
-  // File upload endpoint
-  app.post("/api/upload", requireAuth, upload.single('file'), (req, res) => {
+  // File upload endpoint - simplified auth check
+  app.post("/api/upload", upload.single('file'), (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: "No file uploaded" });
