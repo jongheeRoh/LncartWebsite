@@ -593,16 +593,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/middle-school-admission", requireAuth, async (req, res) => {
+  app.post("/api/middle-school-admission", async (req, res) => {
     try {
-      const admission = await storage.createMiddleSchoolAdmission(req.body);
+      console.log("Creating middle school admission with data:", JSON.stringify(req.body, null, 2));
+      
+      // Validate data
+      const validatedData = insertMiddleSchoolAdmissionSchema.parse(req.body);
+      console.log("Validated data:", JSON.stringify(validatedData, null, 2));
+      
+      const admission = await storage.createMiddleSchoolAdmission(validatedData);
+      console.log("Created admission:", JSON.stringify(admission, null, 2));
+      
       res.status(201).json(admission);
     } catch (error) {
+      console.error("Middle school admission creation error:", error);
+      if (error instanceof ZodError) {
+        return res.status(400).json({ error: "Invalid data", details: error.errors });
+      }
       res.status(500).json({ error: "Failed to create middle school admission" });
     }
   });
 
-  app.patch("/api/middle-school-admission/:id", requireAuth, async (req, res) => {
+  app.patch("/api/middle-school-admission/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const admission = await storage.updateMiddleSchoolAdmission(id, req.body);
@@ -617,7 +629,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/middle-school-admission/:id", requireAuth, async (req, res) => {
+  app.delete("/api/middle-school-admission/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const success = await storage.deleteMiddleSchoolAdmission(id);
