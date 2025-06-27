@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 
 export default function MiddleSchoolDetail() {
@@ -101,15 +101,13 @@ export default function MiddleSchoolDetail() {
                 <div className="text-left">
                   {prevAdmission ? (
                     <Link href={`/middle-school/${prevAdmission.id}`}>
-                      <Button variant="outline" className="w-full text-left justify-start">
-                        <div>
-                          <div className="text-xs text-gray-500 mb-1">이전글</div>
-                          <div className="text-sm truncate">{prevAdmission.title}</div>
-                        </div>
+                      <Button variant="outline" className="w-full flex items-center justify-start">
+                        <ChevronLeft className="h-4 w-4 mr-2" />
+                        이전글
                       </Button>
                     </Link>
                   ) : (
-                    <div className="h-16"></div>
+                    <div className="h-10"></div>
                   )}
                 </div>
 
@@ -126,15 +124,13 @@ export default function MiddleSchoolDetail() {
                 <div className="text-right">
                   {nextAdmission ? (
                     <Link href={`/middle-school/${nextAdmission.id}`}>
-                      <Button variant="outline" className="w-full text-right justify-end">
-                        <div>
-                          <div className="text-xs text-gray-500 mb-1">다음글</div>
-                          <div className="text-sm truncate">{nextAdmission.title}</div>
-                        </div>
+                      <Button variant="outline" className="w-full flex items-center justify-end">
+                        다음글
+                        <ChevronRight className="h-4 w-4 ml-2" />
                       </Button>
                     </Link>
                   ) : (
-                    <div className="h-16"></div>
+                    <div className="h-10"></div>
                   )}
                 </div>
               </div>
