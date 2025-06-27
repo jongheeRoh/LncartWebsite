@@ -349,7 +349,13 @@ function AdminDashboard() {
                             <h3 className="text-lg font-semibold">{admission.title}</h3>
                             <Badge variant="outline">{admission.category}</Badge>
                           </div>
-                          <p className="text-gray-600 mb-2">{admission.excerpt}</p>
+                          <div 
+                            className="text-gray-600 mb-2 prose prose-sm max-w-none video-content"
+                            dangerouslySetInnerHTML={{ 
+                              __html: admission.content?.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"') || '' 
+                            }}
+                            style={{ maxHeight: '100px', overflow: 'hidden' }}
+                          />
                           <div className="flex items-center text-sm text-gray-500">
                             <Calendar className="w-4 h-4 mr-1" />
                             {new Date(admission.createdAt).toLocaleDateString('ko-KR')}
@@ -412,7 +418,13 @@ function AdminDashboard() {
                             <h3 className="text-lg font-semibold">{admission.title}</h3>
                             <Badge variant="outline">{admission.category}</Badge>
                           </div>
-                          <p className="text-gray-600 mb-2">{admission.excerpt}</p>
+                          <div 
+                            className="text-gray-600 mb-2 prose prose-sm max-w-none video-content"
+                            dangerouslySetInnerHTML={{ 
+                              __html: admission.content?.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"') || '' 
+                            }}
+                            style={{ maxHeight: '100px', overflow: 'hidden' }}
+                          />
                           <div className="flex items-center text-sm text-gray-500">
                             <Calendar className="w-4 h-4 mr-1" />
                             {new Date(admission.createdAt).toLocaleDateString('ko-KR')}

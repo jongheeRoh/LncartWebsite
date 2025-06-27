@@ -7,6 +7,30 @@ import { Link } from "wouter";
 import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
 import type { MiddleSchoolAdmission } from "@shared/schema";
 
+// HTML 태그와 이미지를 제거하고 순수 텍스트만 추출하는 함수
+function extractPlainText(html: string): string {
+  if (!html) return '';
+  
+  // HTML 엔티티 디코딩
+  const decoded = html.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+  
+  // 임시 div 생성해서 HTML 파싱
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = decoded;
+  
+  // 이미지, 동영상 등 미디어 태그 제거
+  const mediaElements = tempDiv.querySelectorAll('img, iframe, video, audio, div[style*="position: relative"]');
+  mediaElements.forEach(el => el.remove());
+  
+  // 텍스트만 추출
+  let text = tempDiv.textContent || tempDiv.innerText || '';
+  
+  // 여러 공백을 하나로 통합하고 줄바꿈 정리
+  text = text.replace(/\s+/g, ' ').trim();
+  
+  return text;
+}
+
 export default function MiddleSchool() {
   const { data: admissionData, isLoading, error } = useQuery<{ items: MiddleSchoolAdmission[], total: number }>({
     queryKey: ["/api/middle-school-admission"],
@@ -87,12 +111,10 @@ export default function MiddleSchool() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="flex-1 flex flex-col justify-between">
-                    <div 
-                      className="text-sm text-gray-600 line-clamp-4 mb-4 flex-1 h-[80px] overflow-hidden card-content-area"
-                      dangerouslySetInnerHTML={{ 
-                        __html: admission.excerpt || admission.content.substring(0, 120) + '...' 
-                      }}
-                    />
+                    <div className="text-sm text-gray-600 line-clamp-4 mb-4 flex-1 h-[80px] overflow-hidden">
+                      {extractPlainText(admission.content || '').substring(0, 120)}
+                      {extractPlainText(admission.content || '').length > 120 ? '...' : ''}
+                    </div>
                     <Link href={`/middle-school/${admission.id}`} className="mt-auto">
                       <Button 
                         variant="outline" 
