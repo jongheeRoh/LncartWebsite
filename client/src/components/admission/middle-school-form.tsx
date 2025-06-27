@@ -36,6 +36,9 @@ export function MiddleSchoolAdmissionForm({ admission, onSuccess }: MiddleSchool
         : "/api/middle-school-admission";
       const method = admission ? "PUT" : "POST";
       
+      console.log("Submitting data:", { ...data, content });
+      console.log("URL:", url, "Method:", method);
+      
       return await apiRequest(url, method, { ...data, content });
     },
     onSuccess: () => {
@@ -51,9 +54,10 @@ export function MiddleSchoolAdmissionForm({ admission, onSuccess }: MiddleSchool
       onSuccess?.();
     },
     onError: (error) => {
+      console.error("Middle school admission error:", error);
       toast({
         title: "오류",
-        description: `예중 입시정보 ${admission ? "수정" : "생성"}에 실패했습니다.`,
+        description: `예중 입시정보 ${admission ? "수정" : "생성"}에 실패했습니다: ${error.message}`,
         variant: "destructive",
       });
     },
