@@ -7,6 +7,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight, Share2, X } from "lucide-react";
 import { Link } from "wouter";
 import type { HighSchoolAdmission } from "@shared/schema";
 import CommentSection from "@/components/comments/comment-section";
+import { convertYouTubeUrlsToIframes } from "@/lib/video-converter";
 
 export default function HighSchoolDetail() {
   const { id } = useParams();
@@ -122,8 +123,10 @@ export default function HighSchoolDetail() {
             </div>
             
             <div 
-              className="prose prose-slate max-w-none"
-              dangerouslySetInnerHTML={{ __html: admission?.content || '' }}
+              className="prose prose-slate max-w-none video-content"
+              dangerouslySetInnerHTML={{ 
+                __html: admission?.content ? convertYouTubeUrlsToIframes(admission.content) : '' 
+              }}
             />
 
             {/* 네비게이션 영역 */}

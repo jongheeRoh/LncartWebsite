@@ -4,6 +4,7 @@ import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import TextStyle from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
+import { convertYouTubeUrlsToIframes } from "@/lib/video-converter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -54,6 +55,11 @@ export default function EnhancedRichTextEditor({
         heading: {
           levels: [1, 2, 3],
         },
+        codeBlock: {
+          HTMLAttributes: {
+            class: 'rounded-lg bg-gray-100 p-4',
+          },
+        },
       }),
       Image.configure({
         HTMLAttributes: {
@@ -70,34 +76,27 @@ export default function EnhancedRichTextEditor({
       }),
       TextStyle,
       Color,
+
     ],
     content: value,
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
       onChange(html);
     },
+    parseOptions: {
+      preserveWhitespace: 'full',
+    },
+    enableInputRules: true,
+    enablePasteRules: true,
     editorProps: {
       attributes: {
         class: `prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none p-6 video-content rich-editor`,
         style: `min-height: ${minHeight}; font-size: ${fontSize}px; line-height: ${lineHeight};`,
       },
-      handleDOMEvents: {
-        paste: (view, event) => {
-          // Handle video URL paste for immediate rendering
-          const clipboardData = event.clipboardData;
-          if (clipboardData) {
-            const pastedText = clipboardData.getData('text');
-            if (pastedText.includes('youtube.com') || pastedText.includes('youtu.be')) {
-              event.preventDefault();
-              setTimeout(() => {
-                processVideoUrls(pastedText);
-              }, 100);
-              return true;
-            }
-          }
-          return false;
-        }
-      }
+      transformPastedHTML: (html) => {
+        // iframe이 제거되지 않도록 보호
+        return html;
+      },
     },
   });
 
@@ -249,71 +248,22 @@ export default function EnhancedRichTextEditor({
   const addVideo = () => {
     if (!videoUrl || !editor) return;
     
-    let embedUrl = videoUrl;
-    
-    // YouTube URL 변환
+    // YouTube 비디오 ID 추출
+    let videoId = '';
     if (videoUrl.includes('youtube.com/watch?v=')) {
-      const videoId = videoUrl.split('v=')[1]?.split('&')[0];
-      embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`;
+      videoId = videoUrl.split('v=')[1]?.split('&')[0] || '';
     } else if (videoUrl.includes('youtu.be/')) {
-      const videoId = videoUrl.split('youtu.be/')[1]?.split('?')[0];
-      embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`;
-    } else if (videoUrl.includes('vimeo.com/')) {
-      const videoId = videoUrl.split('vimeo.com/')[1];
-      embedUrl = `https://player.vimeo.com/video/${videoId}`;
+      videoId = videoUrl.split('youtu.be/')[1]?.split('?')[0] || '';
     }
     
-    // 단순하고 확실한 iframe HTML 생성
-    const videoHTML = `
-      <div style="position: relative; width: 100%; height: 0; padding-bottom: 56.25%; margin: 24px 0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); background: #000;">
-        <iframe src="${embedUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen frameborder="0"></iframe>
-      </div>
-    `;
-    
-    // 에디터에 직접 삽입
-    editor.commands.insertContent(videoHTML);
-    
-    // 강제 렌더링을 위한 여러 단계 접근
-    const forceVideoRender = () => {
-      setTimeout(() => {
-        const editorElement = editor.view.dom;
-        const iframes = editorElement.querySelectorAll('iframe[src*="youtube.com"], iframe[src*="vimeo.com"]');
-        
-        iframes.forEach((iframe) => {
-          const iframeEl = iframe as HTMLIFrameElement;
-          const parent = iframeEl.parentElement;
-          
-          if (parent) {
-            // 부모 컨테이너 강제 표시
-            parent.style.display = 'block';
-            parent.style.visibility = 'visible';
-            parent.style.position = 'relative';
-            parent.style.width = '100%';
-            parent.style.height = '0';
-            parent.style.paddingBottom = '56.25%';
-            
-            // iframe 강제 표시
-            iframeEl.style.position = 'absolute';
-            iframeEl.style.top = '0';
-            iframeEl.style.left = '0';
-            iframeEl.style.width = '100%';
-            iframeEl.style.height = '100%';
-            iframeEl.style.border = '0';
-            iframeEl.style.display = 'block';
-            iframeEl.style.visibility = 'visible';
-            iframeEl.style.opacity = '1';
-            
-            // DOM 강제 리플로우
-            iframeEl.offsetHeight;
-          }
-        });
-      }, 0);
-    };
-    
-    // 여러 번 시도하여 확실히 렌더링
-    forceVideoRender();
-    setTimeout(forceVideoRender, 100);
-    setTimeout(forceVideoRender, 500);
+    if (videoId) {
+      // 특수 마커 형태로 삽입하여 나중에 변환 가능하도록 함
+      const videoMarker = `[YOUTUBE_VIDEO:${videoId}]`;
+      editor.commands.insertContent(`<p>${videoMarker}</p>`);
+    } else {
+      // 일반 URL
+      editor.commands.insertContent(`<p>${videoUrl}</p>`);
+    }
     
     setVideoUrl("");
   };

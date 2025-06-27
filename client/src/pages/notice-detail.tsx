@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Calendar, Download, FileText } from "lucide-react";
 import { Link } from "wouter";
 import type { Notice } from "@shared/schema";
+import { convertYouTubeUrlsToIframes } from "@/lib/video-converter";
 interface FileAttachment {
   id: string;
   originalName: string;
@@ -104,8 +105,10 @@ export default function NoticeDetail() {
           <CardContent>
             {notice.content && (
               <div 
-                className="prose max-w-none"
-                dangerouslySetInnerHTML={{ __html: notice.content }}
+                className="prose max-w-none video-content"
+                dangerouslySetInnerHTML={{ 
+                  __html: convertYouTubeUrlsToIframes(notice.content) 
+                }}
               />
             )}
             

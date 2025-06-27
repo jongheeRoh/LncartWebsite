@@ -8,6 +8,7 @@ import { Link } from "wouter";
 import type { MiddleSchoolAdmission } from "@shared/schema";
 import CommentSection from "@/components/comments/comment-section";
 import { useEffect, useRef } from "react";
+import { convertYouTubeUrlsToIframes } from "@/lib/video-converter";
 
 export default function MiddleSchoolDetail() {
   const { id } = useParams();
@@ -24,9 +25,11 @@ export default function MiddleSchoolDetail() {
     queryFn: () => fetch("/api/middle-school-admission?limit=100").then(res => res.json()),
   });
 
-  // Process video HTML after content loads
+  // Process video HTML and convert YouTube URLs to iframes
   const processedContent = admission?.content ? 
-    admission.content.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"') : '';
+    convertYouTubeUrlsToIframes(
+      admission.content.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
+    ) : '';
 
   useEffect(() => {
     if (contentRef.current) {

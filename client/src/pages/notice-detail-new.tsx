@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ChevronLeft, ChevronRight, List, Calendar } from "lucide-react";
 import type { Notice } from "@shared/schema";
 import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
+import { convertYouTubeUrlsToIframes } from "@/lib/video-converter";
 
 export default function NoticeDetail() {
   const { id } = useParams();
@@ -186,8 +187,10 @@ export default function NoticeDetail() {
             {/* Content */}
             <CardContent className="p-8">
               <div 
-                className="prose prose-lg max-w-none"
-                dangerouslySetInnerHTML={{ __html: notice.content }}
+                className="prose prose-lg max-w-none video-content"
+                dangerouslySetInnerHTML={{ 
+                  __html: notice.content ? convertYouTubeUrlsToIframes(notice.content) : '' 
+                }}
                 style={{
                   lineHeight: '1.8',
                   fontSize: '16px',
