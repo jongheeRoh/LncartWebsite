@@ -24,9 +24,10 @@ interface RichTextEditorProps {
   content: string;
   onChange: (content: string) => void;
   placeholder?: string;
+  maxImages?: number;
 }
 
-export default function RichTextEditor({ content, onChange, placeholder }: RichTextEditorProps) {
+export default function RichTextEditor({ content, onChange, placeholder, maxImages = 5 }: RichTextEditorProps) {
   const [showImageDialog, setShowImageDialog] = useState(false);
   const [showLinkDialog, setShowLinkDialog] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
@@ -68,14 +69,48 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
   }
 
   const addImage = () => {
+    // Check image count limit
+    const currentImageCount = getImageCount();
+    if (currentImageCount >= maxImages) {
+      toast({
+        title: "이미지 개수 초과",
+        description: `최대 ${maxImages}개의 이미지만 추가할 수 있습니다.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (imageUrl) {
       editor.chain().focus().setImage({ src: imageUrl }).run();
       setImageUrl('');
-      setShowImageDialog(false);
+      setShowImageDialog(false); // Auto-close dialog
+      
+      toast({
+        title: "이미지 추가 완료",
+        description: "이미지가 성공적으로 추가되었습니다.",
+      });
     }
   };
 
+  // Count images in current editor content
+  const getImageCount = () => {
+    const html = editor.getHTML();
+    const imageMatches = html.match(/<img[^>]*>/g);
+    return imageMatches ? imageMatches.length : 0;
+  };
+
   const handleImageUpload = async (file: File) => {
+    // Check image count limit
+    const currentImageCount = getImageCount();
+    if (currentImageCount >= maxImages) {
+      toast({
+        title: "이미지 개수 초과",
+        description: `최대 ${maxImages}개의 이미지만 추가할 수 있습니다.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!file.type.startsWith('image/')) {
       toast({
         title: "오류",
@@ -100,12 +135,10 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
       const formData = new FormData();
       formData.append('file', file);
 
-      const sessionId = localStorage.getItem('adminSessionId');
+      // Use session-based authentication instead of Authorization header
       const response = await fetch('/api/upload', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${sessionId}`
-        },
+        credentials: 'include', // Important for session cookies
         body: formData,
       });
 
@@ -117,6 +150,9 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
       
       // Insert the uploaded image into the editor
       editor.chain().focus().setImage({ src: uploadedFile.url }).run();
+      
+      // Auto-close the image dialog
+      setShowImageDialog(false);
       
       toast({
         title: "업로드 완료",
@@ -285,15 +321,26 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
       {showImageDialog && (
         <div className="p-4 border-b border-gray-300 bg-gray-50">
           <div className="space-y-3">
-            <div className="text-sm font-medium">이미지 추가</div>
+            <div className="flex justify-between items-center">
+              <div className="text-sm font-medium">이미지 추가</div>
+              <div className="text-xs text-gray-500">
+                {getImageCount()}/{maxImages} 이미지 사용중
+              </div>
+            </div>
             <div className="flex gap-2">
               <Input
                 placeholder="이미지 URL을 입력하세요"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 className="flex-1"
+                disabled={getImageCount() >= maxImages}
               />
-              <Button type="button" onClick={addImage} size="sm">
+              <Button 
+                type="button" 
+                onClick={addImage} 
+                size="sm"
+                disabled={getImageCount() >= maxImages || !imageUrl}
+              >
                 URL 추가
               </Button>
             </div>
@@ -302,12 +349,12 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
               <Button 
                 type="button" 
                 onClick={() => fileInputRef.current?.click()}
-                disabled={uploadingImage}
+                disabled={uploadingImage || getImageCount() >= maxImages}
                 size="sm"
                 className="flex items-center gap-2"
               >
                 <Upload className="h-4 w-4" />
-                {uploadingImage ? '업로드 중...' : '파일 업로드'}
+                {uploadingImage ? '업로드 중...' : getImageCount() >= maxImages ? '이미지 제한 초과' : '파일 업로드'}
               </Button>
               <Button 
                 type="button" 
@@ -318,6 +365,11 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
                 취소
               </Button>
             </div>
+            {getImageCount() >= maxImages && (
+              <div className="text-xs text-amber-600 bg-amber-50 p-2 rounded">
+                최대 {maxImages}개의 이미지까지만 추가할 수 있습니다.
+              </div>
+            )}
           </div>
         </div>
       )}
