@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import CKEditorRichTextEditor from "@/components/ui/ckeditor-rich-text-editor";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
@@ -153,10 +153,10 @@ export default function AdminRoadmap() {
                     <FormItem>
                       <FormLabel>내용</FormLabel>
                       <FormControl>
-                        <Textarea 
+                        <CKEditorRichTextEditor
+                          value={field.value}
+                          onChange={field.onChange}
                           placeholder="로드맵 상세 내용을 입력하세요"
-                          rows={10}
-                          {...field}
                         />
                       </FormControl>
                       <FormMessage />

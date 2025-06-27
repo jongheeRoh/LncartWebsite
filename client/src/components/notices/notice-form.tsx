@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import EnhancedRichTextEditor from "@/components/ui/enhanced-rich-text-editor";
+import CKEditorRichTextEditor from "@/components/ui/ckeditor-rich-text-editor";
 import FileUpload, { type FileAttachment } from "@/components/ui/file-upload";
 // Dialog components removed - using Card layout instead
 import { useToast } from "@/hooks/use-toast";
@@ -200,11 +200,10 @@ export default function NoticeForm({ onSuccess, notice }: NoticeFormProps) {
               <FormItem>
                 <FormLabel>내용</FormLabel>
                 <FormControl>
-                  <EnhancedRichTextEditor
+                  <CKEditorRichTextEditor
                     value={field.value}
                     onChange={field.onChange}
                     placeholder="공지사항 내용을 입력하세요. 이미지와 링크를 추가할 수 있습니다."
-                    minHeight="400px"
                   />
                 </FormControl>
                 <FormMessage />

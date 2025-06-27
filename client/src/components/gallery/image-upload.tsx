@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import EnhancedRichTextEditor from "@/components/ui/enhanced-rich-text-editor";
+import CKEditorRichTextEditor from "@/components/ui/ckeditor-rich-text-editor";
 import FileUpload, { type FileAttachment } from "@/components/ui/file-upload";
 // Removed Dialog imports since we're using Card instead
 import { useToast } from "@/hooks/use-toast";
@@ -210,11 +210,10 @@ export default function ImageUpload({ onSuccess, item }: ImageUploadProps) {
               <FormItem>
                 <FormLabel>설명</FormLabel>
                 <FormControl>
-                  <EnhancedRichTextEditor
+                  <CKEditorRichTextEditor
                     value={field.value || ""}
                     onChange={field.onChange}
                     placeholder="작품에 대한 설명을 입력하세요. 이미지와 링크를 추가할 수 있습니다."
-                    minHeight="300px"
                   />
                 </FormControl>
                 <FormMessage />

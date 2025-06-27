@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import EnhancedRichTextEditor from "@/components/ui/enhanced-rich-text-editor";
+import CKEditorRichTextEditor from "@/components/ui/ckeditor-rich-text-editor";
 import type { GalleryItem, InsertGalleryItem } from "@shared/schema";
 
 interface GalleryFormProps {
@@ -118,7 +118,7 @@ export default function GalleryForm({ item, onSuccess }: GalleryFormProps) {
 
       <div className="space-y-2">
         <Label htmlFor="description">설명</Label>
-        <EnhancedRichTextEditor
+        <CKEditorRichTextEditor
           value={description}
           onChange={setDescription}
           placeholder="작품에 대한 설명을 작성하세요..."
