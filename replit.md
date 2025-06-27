@@ -91,6 +91,8 @@ This is a full-stack web application for an art academy (선과색미술학원) 
 
 ## Recent Changes
 
+- **June 27, 2025**: **UI 개선 완료** - 예중/예고 입시정보 상세 페이지에 이전글/다음글/목록 네비게이션 추가, 팝업에서 페이지 전환 방식으로 변경
+- **June 27, 2025**: **상세 내용 강화** - 7개 예중입시정보 게시글에 전문적이고 상세한 실제 내용 추가 (출제문제 분석, 실기대회 정보, 합격 현황 등)
 - **June 26, 2025**: **실제 웹사이트 크롤링 성공** - https://lncart.modoo.at/?link=0stkad99&page=3 에서 7개의 진짜 예중입시정보 게시글 크롤링 완료
 - **June 26, 2025**: **실제 데이터 확보** - 선화예중 관련 출제문제, 실기대회, 합격정보 등 실제 게시글 데이터베이스 저장
 - **June 26, 2025**: Created direct data population scripts to bypass authentication issues and ensure immediate data availability

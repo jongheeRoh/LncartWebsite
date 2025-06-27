@@ -116,7 +116,7 @@ export default function MiddleSchoolDetail() {
                 {/* 목록으로 */}
                 <div className="text-center">
                   <Link href="/middle-school">
-                    <Button variant="default" className="w-full">
+                    <Button variant="outline" className="w-full bg-black/10 hover:bg-black/20 border-black/20">
                       목록으로
                     </Button>
                   </Link>
