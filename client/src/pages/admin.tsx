@@ -5,9 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Edit, Plus, Calendar, BarChart3, Bell, Image, School, GraduationCap, Download, Map } from "lucide-react";
+import { Trash2, Edit, Plus, Calendar, BarChart3, Bell, Image, School, GraduationCap, Map } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
-import { DataImportDialog } from "@/components/data-import";
+
 import NoticeForm from "@/components/notices/notice-form";
 import GalleryForm from "@/components/gallery/gallery-form";
 import RoadmapForm from "@/components/roadmap/roadmap-form";
@@ -121,7 +121,7 @@ function AdminDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">관리자 패널</h1>
-          <DataImportDialog />
+
         </div>
 
         {/* Dashboard Navigation */}
@@ -317,51 +317,10 @@ function AdminDashboard() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">예중 입시정보 관리</h2>
-              <div className="flex gap-2">
-                <Button
-                  onClick={async () => {
-                    try {
-                      const response = await fetch('/api/admin/scrape-middle-school', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                        },
-                      });
-                      
-                      const result = await response.json();
-                      if (result.success) {
-                        toast({
-                          title: "크롤링 완료",
-                          description: result.message,
-                        });
-                        // Refresh the middle school admission data
-                        queryClient.invalidateQueries({ queryKey: ["/api/middle-school-admission"] });
-                      } else {
-                        toast({
-                          title: "크롤링 실패",
-                          description: result.message,
-                          variant: "destructive",
-                        });
-                      }
-                    } catch (error) {
-                      toast({
-                        title: "오류",
-                        description: "크롤링 중 오류가 발생했습니다.",
-                        variant: "destructive",
-                      });
-                    }
-                  }}
-                  variant="outline"
-                  className="bg-blue-50 hover:bg-blue-100"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  웹사이트에서 데이터 가져오기
-                </Button>
-                <Button onClick={() => setShowMiddleAdmissionForm(true)}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  새 예중 입시정보
-                </Button>
-              </div>
+              <Button onClick={() => setShowMiddleAdmissionForm(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                새 예중 입시정보
+              </Button>
             </div>
 
             <div className="grid gap-4">
@@ -421,51 +380,10 @@ function AdminDashboard() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">예고 입시정보 관리</h2>
-              <div className="flex gap-2">
-                <Button
-                  onClick={async () => {
-                    try {
-                      const response = await fetch('/api/admin/scrape-high-school', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                        },
-                      });
-                      
-                      const result = await response.json();
-                      if (result.success) {
-                        toast({
-                          title: "크롤링 완료",
-                          description: result.message,
-                        });
-                        // Refresh the high school admission data
-                        queryClient.invalidateQueries({ queryKey: ["/api/high-school-admission"] });
-                      } else {
-                        toast({
-                          title: "크롤링 실패",
-                          description: result.message,
-                          variant: "destructive",
-                        });
-                      }
-                    } catch (error) {
-                      toast({
-                        title: "오류",
-                        description: "예고 입시정보 크롤링 중 오류가 발생했습니다.",
-                        variant: "destructive",
-                      });
-                    }
-                  }}
-                  variant="outline"
-                  className="bg-green-50 hover:bg-green-100"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  웹사이트에서 예고 데이터 가져오기
-                </Button>
-                <Button onClick={() => setShowHighAdmissionForm(true)}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  새 예고 입시정보
-                </Button>
-              </div>
+              <Button onClick={() => setShowHighAdmissionForm(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                새 예고 입시정보
+              </Button>
             </div>
 
             <div className="grid gap-4">
