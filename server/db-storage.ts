@@ -77,7 +77,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteMiddleSchoolAdmission(id: number): Promise<boolean> {
     const result = await db.delete(middleSchoolAdmission).where(eq(middleSchoolAdmission.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   // High School Admission methods
@@ -144,7 +144,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteHighSchoolAdmission(id: number): Promise<boolean> {
     const result = await db.delete(highSchoolAdmission).where(eq(highSchoolAdmission.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
   constructor() {
     this.initializeSampleData();

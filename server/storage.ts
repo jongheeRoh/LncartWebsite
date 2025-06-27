@@ -67,7 +67,11 @@ export class MemStorage implements IStorage {
     this.notices = new Map();
     this.galleryItems = new Map();
     this.roadmaps = new Map();
+    this.middleSchoolAdmissions = new Map();
+    this.highSchoolAdmissions = new Map();
     this.currentUserId = 1;
+    this.currentMiddleSchoolAdmissionId = 1;
+    this.currentHighSchoolAdmissionId = 1;
     this.currentNoticeId = 1;
     this.currentGalleryItemId = 1;
     this.currentRoadmapId = 1;
@@ -408,6 +412,137 @@ export class MemStorage implements IStorage {
       monthlyVisitors: 3247,
       viewsGrowth: "+12%"
     };
+  }
+
+  // Middle School Admission methods
+  async getAllMiddleSchoolAdmission(page: number = 1, limit: number = 10, category?: string, search?: string): Promise<{ items: MiddleSchoolAdmission[], total: number }> {
+    const allItems = Array.from(this.middleSchoolAdmissions.values());
+    let filteredItems = allItems;
+
+    if (category) {
+      filteredItems = filteredItems.filter(item => item.category === category);
+    }
+
+    if (search) {
+      filteredItems = filteredItems.filter(item => 
+        item.title.toLowerCase().includes(search.toLowerCase()) ||
+        item.content.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    const startIndex = (page - 1) * limit;
+    const items = filteredItems.slice(startIndex, startIndex + limit);
+
+    return { items, total: filteredItems.length };
+  }
+
+  async getMiddleSchoolAdmission(id: number): Promise<MiddleSchoolAdmission | undefined> {
+    return this.middleSchoolAdmissions.get(id);
+  }
+
+  async createMiddleSchoolAdmission(insertAdmission: InsertMiddleSchoolAdmission): Promise<MiddleSchoolAdmission> {
+    const id = this.currentMiddleSchoolAdmissionId++;
+    const admission: MiddleSchoolAdmission = {
+      ...insertAdmission,
+      id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.middleSchoolAdmissions.set(id, admission);
+    return admission;
+  }
+
+  async updateMiddleSchoolAdmission(id: number, updates: UpdateMiddleSchoolAdmission): Promise<MiddleSchoolAdmission | undefined> {
+    const existing = this.middleSchoolAdmissions.get(id);
+    if (!existing) return undefined;
+
+    const updated: MiddleSchoolAdmission = {
+      ...existing,
+      ...updates,
+      updatedAt: new Date(),
+    };
+    this.middleSchoolAdmissions.set(id, updated);
+    return updated;
+  }
+
+  async deleteMiddleSchoolAdmission(id: number): Promise<boolean> {
+    return this.middleSchoolAdmissions.delete(id);
+  }
+
+  // High School Admission methods
+  async getAllHighSchoolAdmission(page: number = 1, limit: number = 10, category?: string, search?: string): Promise<{ items: HighSchoolAdmission[], total: number }> {
+    const allItems = Array.from(this.highSchoolAdmissions.values());
+    let filteredItems = allItems;
+
+    if (category) {
+      filteredItems = filteredItems.filter(item => item.category === category);
+    }
+
+    if (search) {
+      filteredItems = filteredItems.filter(item => 
+        item.title.toLowerCase().includes(search.toLowerCase()) ||
+        item.content.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    const startIndex = (page - 1) * limit;
+    const items = filteredItems.slice(startIndex, startIndex + limit);
+
+    return { items, total: filteredItems.length };
+  }
+
+  async getHighSchoolAdmission(id: number): Promise<HighSchoolAdmission | undefined> {
+    return this.highSchoolAdmissions.get(id);
+  }
+
+  async createHighSchoolAdmission(insertAdmission: InsertHighSchoolAdmission): Promise<HighSchoolAdmission> {
+    const id = this.currentHighSchoolAdmissionId++;
+    const admission: HighSchoolAdmission = {
+      ...insertAdmission,
+      id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.highSchoolAdmissions.set(id, admission);
+    return admission;
+  }
+
+  async updateHighSchoolAdmission(id: number, updates: UpdateHighSchoolAdmission): Promise<HighSchoolAdmission | undefined> {
+    const existing = this.highSchoolAdmissions.get(id);
+    if (!existing) return undefined;
+
+    const updated: HighSchoolAdmission = {
+      ...existing,
+      ...updates,
+      updatedAt: new Date(),
+    };
+    this.highSchoolAdmissions.set(id, updated);
+    return updated;
+  }
+
+  async deleteHighSchoolAdmission(id: number): Promise<boolean> {
+    return this.highSchoolAdmissions.delete(id);
+  }
+
+  // Comment methods
+  async getComments(type: string, postId: number): Promise<Comment[]> {
+    // Simple in-memory implementation
+    return [];
+  }
+
+  async createComment(insertComment: InsertComment): Promise<Comment> {
+    // Simple in-memory implementation
+    const comment: Comment = {
+      ...insertComment,
+      id: Date.now(),
+      createdAt: new Date(),
+    };
+    return comment;
+  }
+
+  async deleteComment(id: number): Promise<boolean> {
+    // Simple in-memory implementation
+    return true;
   }
 }
 

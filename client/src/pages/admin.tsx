@@ -58,10 +58,10 @@ function AdminDashboard() {
     enabled: activeSection === "high-admission",
   });
 
-  const notices = noticesData?.notices || [];
-  const galleryItems = galleryData?.items || [];
-  const middleAdmissions = middleAdmissionsData?.items || [];
-  const highAdmissions = highAdmissionsData?.items || [];
+  const notices = (noticesData as any)?.notices || [];
+  const galleryItems = (galleryData as any)?.items || [];
+  const middleAdmissions = (middleAdmissionsData as any)?.items || [];
+  const highAdmissions = (highAdmissionsData as any)?.items || [];
 
   // Delete mutations
   const deleteNoticeMutation = useMutation({
@@ -212,7 +212,7 @@ function AdminDashboard() {
                   <Bell className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stats?.totalNotices || 0}</div>
+                  <div className="text-2xl font-bold">{(stats as any)?.totalNotices || 0}</div>
                 </CardContent>
               </Card>
               
@@ -222,7 +222,7 @@ function AdminDashboard() {
                   <Image className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stats?.totalImages || 0}</div>
+                  <div className="text-2xl font-bold">{(stats as any)?.totalImages || 0}</div>
                 </CardContent>
               </Card>
               
@@ -232,7 +232,7 @@ function AdminDashboard() {
                   <BarChart3 className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stats?.monthlyVisitors || 0}</div>
+                  <div className="text-2xl font-bold">{(stats as any)?.monthlyVisitors || 0}</div>
                 </CardContent>
               </Card>
               
@@ -242,7 +242,7 @@ function AdminDashboard() {
                   <BarChart3 className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-green-600">{stats?.viewsGrowth || "+0%"}</div>
+                  <div className="text-2xl font-bold text-green-600">{(stats as any)?.viewsGrowth || "+0%"}</div>
                 </CardContent>
               </Card>
             </div>
@@ -331,59 +331,65 @@ function AdminDashboard() {
               </Button>
             </div>
 
-            <div className="grid gap-4">
+            <div className="bg-white border rounded-lg">
               {middleAdmissions.length === 0 ? (
-                <Card>
-                  <CardContent className="p-8 text-center">
-                    <School className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                    <p className="text-gray-500">등록된 예중 입시정보가 없습니다.</p>
-                  </CardContent>
-                </Card>
+                <div className="p-8 text-center">
+                  <School className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                  <p className="text-gray-500">등록된 예중 입시정보가 없습니다.</p>
+                </div>
               ) : (
-                middleAdmissions.map((admission: MiddleSchoolAdmission) => (
-                  <Card key={admission.id}>
-                    <CardContent className="p-6">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-lg font-semibold">{admission.title}</h3>
-                            <Badge variant="outline">{admission.category}</Badge>
-                          </div>
-                          <div 
-                            className="text-gray-600 mb-2 prose prose-sm max-w-none video-content"
-                            dangerouslySetInnerHTML={{ 
-                              __html: admission.content?.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"') || '' 
-                            }}
-                            style={{ maxHeight: '100px', overflow: 'hidden' }}
-                          />
-                          <div className="flex items-center text-sm text-gray-500">
-                            <Calendar className="w-4 h-4 mr-1" />
+                <div className="overflow-hidden">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">번호</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">글제목</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">카테고리</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">작성일</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">관리</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {middleAdmissions.map((admission: MiddleSchoolAdmission, index: number) => (
+                        <tr key={admission.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {middleAdmissions.length - index}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-gray-900">{admission.title}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <Badge variant="outline" className="text-xs">{admission.category}</Badge>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {new Date(admission.createdAt).toLocaleDateString('ko-KR')}
-                          </div>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setEditingMiddleAdmission(admission);
-                              setShowMiddleAdmissionForm(true);
-                            }}
-                          >
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => deleteMiddleAdmissionMutation.mutate(admission.id)}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div className="flex space-x-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setEditingMiddleAdmission(admission);
+                                  setShowMiddleAdmissionForm(true);
+                                }}
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => deleteMiddleAdmissionMutation.mutate(admission.id)}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
           </div>
@@ -400,59 +406,65 @@ function AdminDashboard() {
               </Button>
             </div>
 
-            <div className="grid gap-4">
+            <div className="bg-white border rounded-lg">
               {highAdmissions.length === 0 ? (
-                <Card>
-                  <CardContent className="p-8 text-center">
-                    <GraduationCap className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                    <p className="text-gray-500">등록된 예고 입시정보가 없습니다.</p>
-                  </CardContent>
-                </Card>
+                <div className="p-8 text-center">
+                  <GraduationCap className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                  <p className="text-gray-500">등록된 예고 입시정보가 없습니다.</p>
+                </div>
               ) : (
-                highAdmissions.map((admission: HighSchoolAdmission) => (
-                  <Card key={admission.id}>
-                    <CardContent className="p-6">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-lg font-semibold">{admission.title}</h3>
-                            <Badge variant="outline">{admission.category}</Badge>
-                          </div>
-                          <div 
-                            className="text-gray-600 mb-2 prose prose-sm max-w-none video-content"
-                            dangerouslySetInnerHTML={{ 
-                              __html: admission.content?.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"') || '' 
-                            }}
-                            style={{ maxHeight: '100px', overflow: 'hidden' }}
-                          />
-                          <div className="flex items-center text-sm text-gray-500">
-                            <Calendar className="w-4 h-4 mr-1" />
+                <div className="overflow-hidden">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">번호</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">글제목</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">카테고리</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">작성일</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">관리</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {highAdmissions.map((admission: HighSchoolAdmission, index: number) => (
+                        <tr key={admission.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {highAdmissions.length - index}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-gray-900">{admission.title}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <Badge variant="outline" className="text-xs">{admission.category}</Badge>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {new Date(admission.createdAt).toLocaleDateString('ko-KR')}
-                          </div>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setEditingHighAdmission(admission);
-                              setShowHighAdmissionForm(true);
-                            }}
-                          >
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => deleteHighAdmissionMutation.mutate(admission.id)}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div className="flex space-x-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setEditingHighAdmission(admission);
+                                  setShowHighAdmissionForm(true);
+                                }}
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => deleteHighAdmissionMutation.mutate(admission.id)}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
           </div>
@@ -501,7 +513,7 @@ function AdminDashboard() {
               </DialogTitle>
             </DialogHeader>
             <MiddleSchoolAdmissionForm
-              admission={editingMiddleAdmission}
+              admission={editingMiddleAdmission || undefined}
               onSuccess={() => {
                 setShowMiddleAdmissionForm(false);
                 setEditingMiddleAdmission(null);
@@ -518,7 +530,7 @@ function AdminDashboard() {
               </DialogTitle>
             </DialogHeader>
             <HighSchoolAdmissionForm
-              admission={editingHighAdmission}
+              admission={editingHighAdmission || undefined}
               onSuccess={() => {
                 setShowHighAdmissionForm(false);
                 setEditingHighAdmission(null);

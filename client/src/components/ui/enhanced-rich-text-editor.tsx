@@ -24,7 +24,7 @@ import {
   Heading2,
   Heading3
 } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface EnhancedRichTextEditorProps {
   value: string;
@@ -75,11 +75,74 @@ export default function EnhancedRichTextEditor({
     },
     editorProps: {
       attributes: {
-        class: `prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none p-6`,
+        class: `prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none p-6 video-content`,
         style: `min-height: ${minHeight}; font-size: ${fontSize}px; line-height: ${lineHeight};`,
       },
     },
   });
+
+  // Process content for real-time video rendering
+  useEffect(() => {
+    if (editor) {
+      const editorElement = editor.view.dom;
+      
+      const processContent = () => {
+        // Find all text nodes that contain HTML entities for video iframes
+        const walker = document.createTreeWalker(
+          editorElement,
+          NodeFilter.SHOW_TEXT,
+          null
+        );
+
+        const textNodes: Text[] = [];
+        let node;
+        while (node = walker.nextNode()) {
+          const textContent = node.textContent || '';
+          if (textContent.includes('&lt;div style="position: relative') && 
+              textContent.includes('iframe') && 
+              textContent.includes('youtube.com/embed')) {
+            textNodes.push(node as Text);
+          }
+        }
+
+        // Replace HTML entities with actual rendered content
+        textNodes.forEach(textNode => {
+          if (textNode.nodeValue && textNode.parentNode) {
+            const decoded = textNode.nodeValue
+              .replace(/&lt;/g, '<')
+              .replace(/&gt;/g, '>')
+              .replace(/&quot;/g, '"')
+              .replace(/&amp;/g, '&');
+            
+            if (decoded !== textNode.nodeValue && decoded.includes('<iframe')) {
+              const wrapper = document.createElement('div');
+              wrapper.innerHTML = decoded;
+              
+              // Replace the text node with the rendered content
+              const parent = textNode.parentNode;
+              parent.replaceChild(wrapper, textNode);
+            }
+          }
+        });
+      };
+
+      // Initial processing
+      processContent();
+
+      // Set up mutation observer for real-time processing
+      const observer = new MutationObserver(() => {
+        setTimeout(processContent, 100); // Small delay to ensure content is rendered
+      });
+
+      observer.observe(editorElement, {
+        childList: true,
+        subtree: true,
+        characterData: true
+      });
+
+      return () => observer.disconnect();
+    }
+  }, [editor, value]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
