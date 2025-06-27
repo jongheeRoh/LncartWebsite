@@ -247,50 +247,75 @@ export default function EnhancedRichTextEditor({
   };
 
   const addVideo = () => {
-    if (videoUrl) {
-      let embedUrl = videoUrl;
-      
-      // YouTube URL 변환
-      if (videoUrl.includes('youtube.com/watch?v=')) {
-        const videoId = videoUrl.split('v=')[1]?.split('&')[0];
-        embedUrl = `https://www.youtube.com/embed/${videoId}`;
-      } else if (videoUrl.includes('youtu.be/')) {
-        const videoId = videoUrl.split('youtu.be/')[1]?.split('?')[0];
-        embedUrl = `https://www.youtube.com/embed/${videoId}`;
-      } else if (videoUrl.includes('vimeo.com/')) {
-        const videoId = videoUrl.split('vimeo.com/')[1];
-        embedUrl = `https://player.vimeo.com/video/${videoId}`;
-      }
-      
-      // Create iframe with proper HTML structure for immediate rendering
-      const iframe = `<div style="position: relative; width: 100%; height: 0; padding-bottom: 56.25%; margin: 24px 0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);"><iframe src="${embedUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe></div>`;
-      
-      // Simple direct insertion with forced rendering
-      editor?.commands.insertContent(iframe);
-      
-      // Immediate video rendering trigger
-      setTimeout(() => {
-        if (editor) {
-          const editorElement = editor.view.dom;
-          // Force all iframes to be visible and interactive
-          const allIframes = editorElement.querySelectorAll('iframe');
-          allIframes.forEach(iframe => {
-            const htmlIframe = iframe as HTMLIFrameElement;
-            htmlIframe.style.display = 'block';
-            htmlIframe.style.visibility = 'visible';
-            htmlIframe.style.opacity = '1';
-            htmlIframe.style.pointerEvents = 'auto';
-            htmlIframe.setAttribute('data-video-rendered', 'true');
-          });
-          
-          // Trigger a content refresh
-          const currentContent = editor.getHTML();
-          editor.commands.setContent(currentContent, false);
-        }
-      }, 100);
-      
-      setVideoUrl("");
+    if (!videoUrl || !editor) return;
+    
+    let embedUrl = videoUrl;
+    
+    // YouTube URL 변환
+    if (videoUrl.includes('youtube.com/watch?v=')) {
+      const videoId = videoUrl.split('v=')[1]?.split('&')[0];
+      embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`;
+    } else if (videoUrl.includes('youtu.be/')) {
+      const videoId = videoUrl.split('youtu.be/')[1]?.split('?')[0];
+      embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`;
+    } else if (videoUrl.includes('vimeo.com/')) {
+      const videoId = videoUrl.split('vimeo.com/')[1];
+      embedUrl = `https://player.vimeo.com/video/${videoId}`;
     }
+    
+    // 단순하고 확실한 iframe HTML 생성
+    const videoHTML = `
+      <div style="position: relative; width: 100%; height: 0; padding-bottom: 56.25%; margin: 24px 0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); background: #000;">
+        <iframe src="${embedUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen frameborder="0"></iframe>
+      </div>
+    `;
+    
+    // 에디터에 직접 삽입
+    editor.commands.insertContent(videoHTML);
+    
+    // 강제 렌더링을 위한 여러 단계 접근
+    const forceVideoRender = () => {
+      setTimeout(() => {
+        const editorElement = editor.view.dom;
+        const iframes = editorElement.querySelectorAll('iframe[src*="youtube.com"], iframe[src*="vimeo.com"]');
+        
+        iframes.forEach((iframe) => {
+          const iframeEl = iframe as HTMLIFrameElement;
+          const parent = iframeEl.parentElement;
+          
+          if (parent) {
+            // 부모 컨테이너 강제 표시
+            parent.style.display = 'block';
+            parent.style.visibility = 'visible';
+            parent.style.position = 'relative';
+            parent.style.width = '100%';
+            parent.style.height = '0';
+            parent.style.paddingBottom = '56.25%';
+            
+            // iframe 강제 표시
+            iframeEl.style.position = 'absolute';
+            iframeEl.style.top = '0';
+            iframeEl.style.left = '0';
+            iframeEl.style.width = '100%';
+            iframeEl.style.height = '100%';
+            iframeEl.style.border = '0';
+            iframeEl.style.display = 'block';
+            iframeEl.style.visibility = 'visible';
+            iframeEl.style.opacity = '1';
+            
+            // DOM 강제 리플로우
+            iframeEl.offsetHeight;
+          }
+        });
+      }, 0);
+    };
+    
+    // 여러 번 시도하여 확실히 렌더링
+    forceVideoRender();
+    setTimeout(forceVideoRender, 100);
+    setTimeout(forceVideoRender, 500);
+    
+    setVideoUrl("");
   };
 
   const setTextColor = () => {
