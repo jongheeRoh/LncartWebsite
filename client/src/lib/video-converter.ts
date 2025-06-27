@@ -6,7 +6,7 @@ export function convertYouTubeUrlsToIframes(content: string): string {
   let processedContent = content;
 
   // 1. YouTube 마커 패턴 처리 [YOUTUBE_VIDEO:videoId]
-  const markerPattern = /\[YOUTUBE_VIDEO:([a-zA-Z0-9_-]{11})\]/g;
+  const markerPattern = /\[YOUTUBE_VIDEO:([a-zA-Z0-9_-]+)\]/g;
   processedContent = processedContent.replace(markerPattern, (match, videoId) => {
     const embedUrl = `https://www.youtube.com/embed/${videoId}`;
     return `<div style="position: relative; width: 100%; height: 0; padding-bottom: 56.25%; margin: 24px 0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); background: #000;">

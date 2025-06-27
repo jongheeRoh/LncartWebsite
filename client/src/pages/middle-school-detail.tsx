@@ -27,25 +27,7 @@ export default function MiddleSchoolDetail() {
 
   // Process video HTML and convert YouTube URLs to iframes
   const processedContent = admission?.content ? 
-    convertYouTubeUrlsToIframes(
-      admission.content.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
-    ) : '';
-
-  useEffect(() => {
-    if (contentRef.current) {
-      // Force re-render of video embeds
-      const iframes = contentRef.current.querySelectorAll('iframe[src*="youtube.com"]');
-      iframes.forEach(iframe => {
-        const src = iframe.getAttribute('src');
-        if (src) {
-          iframe.setAttribute('src', '');
-          setTimeout(() => {
-            iframe.setAttribute('src', src);
-          }, 100);
-        }
-      });
-    }
-  }, [processedContent]);
+    convertYouTubeUrlsToIframes(admission.content) : '';
 
   const currentIndex = allAdmissions?.items?.findIndex((item: any) => item.id === parseInt(id || "0")) ?? -1;
   const prevAdmission = currentIndex > 0 && allAdmissions?.items ? allAdmissions.items[currentIndex - 1] : null;
