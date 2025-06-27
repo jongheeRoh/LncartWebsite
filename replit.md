@@ -4,6 +4,14 @@
 
 This is a full-stack web application for an art academy (선과색미술학원) that specializes in art entrance exam preparation for middle school, high school, and university art programs. The application features a modern React frontend with a Node.js/Express backend, using PostgreSQL for data persistence and Drizzle ORM for database operations.
 
+### Current Project Status
+- **Frontend**: React 18 + TypeScript with shadcn/ui components
+- **Backend**: Express.js with PostgreSQL database integration
+- **Content Management**: Complete CMS with CKEditor 5 Classic integration
+- **Authentication**: Session-based admin authentication system
+- **File Handling**: Image upload system with 5MB limit and multiple format support
+- **Database**: PostgreSQL with comprehensive schema for users, notices, gallery, and admission info
+
 ## System Architecture
 
 ### Frontend Architecture
@@ -34,12 +42,22 @@ This is a full-stack web application for an art academy (선과색미술학원) 
 1. **Users Table**: Handles authentication with username/password and admin roles
 2. **Notices Table**: Content management for announcements with categories and timestamps
 3. **Gallery Items Table**: Image gallery with metadata and categorization
+4. **Middle School Admission Table**: 예중입시정보 content with rich text and attachments
+5. **High School Admission Table**: 예고입시정보 content with rich text and attachments
+6. **Roadmap Table**: Educational pathway guides for entrance exam preparation
+7. **Comments Table**: Anonymous commenting system for admission information posts
+8. **Sessions Table**: PostgreSQL-based session storage for admin authentication
 
 ### Frontend Components
 1. **Layout Components**: Navbar and Footer for consistent site structure
 2. **Page Components**: Home, About, Notices, Gallery, Admin, and educational content pages
-3. **UI Components**: Complete shadcn/ui component library integration
-4. **Form Management**: React Hook Form with Zod validation
+3. **Content Management Pages**: 
+   - Middle School Admission (예중입시정보) with detail views and commenting
+   - High School Admission (예고입시정보) with detail views and commenting
+   - Roadmap management for educational pathways
+4. **UI Components**: Complete shadcn/ui component library integration
+5. **Rich Text Editor**: CKEditor 5 Classic with image upload and media embedding
+6. **Form Management**: React Hook Form with Zod validation
 
 ### Backend Services
 1. **Storage Layer**: Abstracted storage interface with in-memory fallback
