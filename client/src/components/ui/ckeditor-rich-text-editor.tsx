@@ -1,9 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Image } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 interface CKEditorRichTextEditorProps {
   value: string;
@@ -26,9 +21,6 @@ export default function CKEditorRichTextEditor({
 }: CKEditorRichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const editorInstanceRef = useRef<any>(null);
-  const [imageUrl, setImageUrl] = useState("");
-  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!editorRef.current || !window.ClassicEditor) return;
@@ -46,7 +38,7 @@ export default function CKEditorRichTextEditor({
             'link',
             'blockQuote',
             'insertTable',
-
+            'uploadImage',
             'mediaEmbed',
             '|',
             'bulletedList',
@@ -66,7 +58,6 @@ export default function CKEditorRichTextEditor({
               { model: 'heading3', view: 'h3', title: '제목 3', class: 'ck-heading_heading3' }
             ]
           },
-
           table: {
             contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
           },
@@ -74,6 +65,33 @@ export default function CKEditorRichTextEditor({
             previewsInData: true
           }
         });
+
+        // Custom upload adapter for image uploads
+        editor.plugins.get('FileRepository').createUploadAdapter = (loader: any) => {
+          return {
+            upload: () => {
+              return new Promise((resolve, reject) => {
+                const body = new FormData();
+                loader.file.then((file: any) => {
+                  body.append('file', file);
+                  fetch('/api/upload', {
+                    method: 'POST',
+                    body: body
+                  })
+                  .then(res => res.json())
+                  .then(res => {
+                    resolve({
+                      default: res.url
+                    });
+                  })
+                  .catch(err => {
+                    reject(err);
+                  });
+                });
+              });
+            }
+          };
+        };
 
         // Set initial content
         if (value) {
@@ -122,88 +140,9 @@ export default function CKEditorRichTextEditor({
     }
   }, [value]);
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const imageUrl = data.url;
-        
-        // Insert image into editor
-        if (editorInstanceRef.current) {
-          editorInstanceRef.current.execute('insertImage', { source: imageUrl });
-        }
-        setIsImageDialogOpen(false);
-      }
-    } catch (error) {
-      console.error('Image upload failed:', error);
-    }
-  };
-
-  const handleImageUrlInsert = () => {
-    if (imageUrl && editorInstanceRef.current) {
-      editorInstanceRef.current.execute('insertImage', { source: imageUrl });
-      setImageUrl("");
-      setIsImageDialogOpen(false);
-    }
-  };
-
   return (
     <div className={`ckeditor-container ${className}`}>
       <div ref={editorRef} />
-      
-      {/* Image Upload Controls */}
-      <div className="mt-3 flex gap-2 items-center">
-        <Dialog open={isImageDialogOpen} onOpenChange={setIsImageDialogOpen}>
-          <DialogTrigger asChild>
-            <Button type="button" variant="outline" size="sm" className="flex items-center gap-2">
-              <Image className="h-4 w-4" />
-              이미지 삽입
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>이미지 삽입</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <Label>파일 업로드</Label>
-                <Input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label>또는 이미지 URL 입력</Label>
-                <div className="flex gap-2 mt-1">
-                  <Input
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                    placeholder="https://example.com/image.jpg"
-                  />
-                  <Button onClick={handleImageUrlInsert} disabled={!imageUrl}>
-                    삽입
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
-
       <style dangerouslySetInnerHTML={{
         __html: `
           .ckeditor-container .ck-editor__editable {
@@ -215,9 +154,7 @@ export default function CKEditorRichTextEditor({
             padding: 16px !important;
           }
           .ckeditor-container .ck-toolbar {
-            position: sticky !important;
-            top: 0 !important;
-            z-index: 10 !important;
+            position: static !important;
             background: white !important;
             border-bottom: 1px solid #eee !important;
             border-top: 1px solid #e2e8f0 !important;

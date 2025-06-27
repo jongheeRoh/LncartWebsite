@@ -91,7 +91,7 @@ This is a full-stack web application for an art academy (선과색미술학원) 
 
 ## Recent Changes
 
-- **June 27, 2025**: **CKEditor 5 완전 통합** - TipTap 에디터를 CKEditor 5 Classic으로 교체, 모든 관리자 폼에서 새로운 에디터 사용
+- **June 27, 2025**: **CKEditor 5 완전 통합 및 최적화** - TipTap 에디터를 CKEditor 5 Classic으로 교체, 툴바에서 직접 이미지 업로드 가능, 정적 툴바 배치로 사용성 개선
 - **June 27, 2025**: **상세 페이지 라우팅 문제 해결** - 상세 페이지가 홈페이지 전체를 다시 로딩하는 문제 수정, 독립적인 페이지 구조로 변경
 - **June 27, 2025**: **상세 페이지 레이아웃 완전 개선** - 예중입시정보 상세 페이지 깔끔한 디자인으로 재구성, 동영상 렌더링 기능 완전 통합
 - **June 27, 2025**: **동영상 렌더링 기능 완전 구현** - YouTube URL을 특수 마커로 저장하고 상세 페이지에서 자동 iframe 변환하는 시스템 구축
