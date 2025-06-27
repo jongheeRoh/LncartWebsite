@@ -1,4 +1,5 @@
 import { pgTable, text, serial, integer, boolean, timestamp, jsonb, varchar } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -134,3 +135,26 @@ export type GalleryItem = typeof galleryItems.$inferSelect;
 export type InsertRoadmap = z.infer<typeof insertRoadmapSchema>;
 export type UpdateRoadmap = z.infer<typeof updateRoadmapSchema>;
 export type Roadmap = typeof roadmaps.$inferSelect;
+
+// Comments table for notices and admissions
+export const comments = pgTable("comments", {
+  id: serial("id").primaryKey(),
+  type: varchar("type").notNull(), // 'notice', 'middle_school', 'high_school'
+  postId: integer("post_id").notNull(),
+  author: varchar("author").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const commentsRelations = relations(comments, ({ one }) => ({
+  notice: one(notices, { fields: [comments.postId], references: [notices.id] }),
+  middleSchoolAdmission: one(middleSchoolAdmission, { fields: [comments.postId], references: [middleSchoolAdmission.id] }),
+  highSchoolAdmission: one(highSchoolAdmission, { fields: [comments.postId], references: [highSchoolAdmission.id] }),
+}));
+
+export const insertCommentSchema = createInsertSchema(comments);
+export const updateCommentSchema = insertCommentSchema.partial();
+
+export type Comment = typeof comments.$inferSelect;
+export type InsertComment = z.infer<typeof insertCommentSchema>;
+export type UpdateComment = z.infer<typeof updateCommentSchema>;

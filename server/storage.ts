@@ -1,4 +1,4 @@
-import { users, notices, galleryItems, roadmaps, middleSchoolAdmission, highSchoolAdmission, type User, type InsertUser, type InsertNotice, type UpdateNotice, type Notice, type InsertGalleryItem, type UpdateGalleryItem, type GalleryItem, type Roadmap, type InsertRoadmap, type UpdateRoadmap, type MiddleSchoolAdmission, type InsertMiddleSchoolAdmission, type UpdateMiddleSchoolAdmission, type HighSchoolAdmission, type InsertHighSchoolAdmission, type UpdateHighSchoolAdmission } from "@shared/schema";
+import { users, notices, galleryItems, roadmaps, middleSchoolAdmission, highSchoolAdmission, comments, type User, type InsertUser, type InsertNotice, type UpdateNotice, type Notice, type InsertGalleryItem, type UpdateGalleryItem, type GalleryItem, type Roadmap, type InsertRoadmap, type UpdateRoadmap, type MiddleSchoolAdmission, type InsertMiddleSchoolAdmission, type UpdateMiddleSchoolAdmission, type HighSchoolAdmission, type InsertHighSchoolAdmission, type UpdateHighSchoolAdmission, type Comment, type InsertComment } from "@shared/schema";
 
 export interface IStorage {
   // User methods
@@ -41,6 +41,11 @@ export interface IStorage {
 
   // Stats
   getStats(): Promise<{ totalNotices: number, totalImages: number, monthlyVisitors: number, viewsGrowth: string }>;
+
+  // Comment methods
+  getComments(type: string, postId: number): Promise<Comment[]>;
+  createComment(comment: InsertComment): Promise<Comment>;
+  deleteComment(id: number): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {

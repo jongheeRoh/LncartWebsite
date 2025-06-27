@@ -3,26 +3,28 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Share2 } from "lucide-react";
 import { Link } from "wouter";
+import type { HighSchoolAdmission } from "@shared/schema";
+import CommentSection from "@/components/comments/comment-section";
 
 export default function HighSchoolDetail() {
   const { id } = useParams();
   const [, setLocation] = useLocation();
 
-  const { data: admission, isLoading, error } = useQuery({
+  const { data: admission, isLoading, error } = useQuery<HighSchoolAdmission>({
     queryKey: [`/api/high-school-admission/${id}`],
   });
 
   // 전체 목록을 가져와서 이전글/다음글 찾기
-  const { data: allAdmissions } = useQuery({
+  const { data: allAdmissions } = useQuery<{ items: HighSchoolAdmission[], total: number }>({
     queryKey: ["/api/high-school-admission"],
     queryFn: () => fetch("/api/high-school-admission?limit=100").then(res => res.json()),
   });
 
-  const currentIndex = allAdmissions?.items?.findIndex((item: any) => item.id === parseInt(id || "0"));
-  const prevAdmission = currentIndex > 0 ? allAdmissions?.items[currentIndex - 1] : null;
-  const nextAdmission = currentIndex >= 0 && currentIndex < (allAdmissions?.items?.length - 1) ? allAdmissions?.items[currentIndex + 1] : null;
+  const currentIndex = allAdmissions?.items?.findIndex((item: any) => item.id === parseInt(id || "0")) ?? -1;
+  const prevAdmission = currentIndex > 0 && allAdmissions?.items ? allAdmissions.items[currentIndex - 1] : null;
+  const nextAdmission = currentIndex >= 0 && currentIndex < ((allAdmissions?.items?.length ?? 0) - 1) && allAdmissions?.items ? allAdmissions.items[currentIndex + 1] : null;
 
   if (isLoading) {
     return (
@@ -79,19 +81,19 @@ export default function HighSchoolDetail() {
           <CardContent className="p-8">
             <div className="mb-6">
               <Badge variant="secondary" className="mb-4">
-                {admission.category}
+                {admission?.category}
               </Badge>
               <h1 className="text-3xl font-bold text-slate-900 mb-4">
-                {admission.title}
+                {admission?.title}
               </h1>
               <p className="text-sm text-gray-500">
-                작성일: {new Date(admission.createdAt).toLocaleDateString('ko-KR')}
+                작성일: {admission?.createdAt ? new Date(admission.createdAt).toLocaleDateString('ko-KR') : ''}
               </p>
             </div>
             
             <div 
               className="prose prose-slate max-w-none"
-              dangerouslySetInnerHTML={{ __html: admission.content }}
+              dangerouslySetInnerHTML={{ __html: admission?.content || '' }}
             />
 
             {/* 네비게이션 영역 */}
@@ -137,6 +139,40 @@ export default function HighSchoolDetail() {
             </div>
           </CardContent>
         </Card>
+
+        {/* 공유 및 댓글 섹션 */}
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-semibold">공유하기</h3>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                if (navigator.share) {
+                  navigator.share({
+                    title: admission?.title || '예고 입시정보',
+                    text: admission?.title || '예고 입시정보',
+                    url: window.location.href,
+                  });
+                } else {
+                  navigator.clipboard.writeText(window.location.href);
+                  alert('링크가 복사되었습니다.');
+                }
+              }}
+            >
+              <Share2 className="h-4 w-4 mr-2" />
+              공유
+            </Button>
+          </div>
+        </div>
+
+        {/* 댓글 섹션 */}
+        {admission && (
+          <CommentSection 
+            type="high_school" 
+            postId={admission.id} 
+          />
+        )}
       </div>
     </div>
   );

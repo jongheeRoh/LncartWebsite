@@ -5,9 +5,10 @@ import { Calendar, BookOpen, Users, Target, CheckCircle, Clock, Award, Palette, 
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
+import type { MiddleSchoolAdmission } from "@shared/schema";
 
 export default function MiddleSchool() {
-  const { data: admissionData, isLoading, error } = useQuery({
+  const { data: admissionData, isLoading, error } = useQuery<{ items: MiddleSchoolAdmission[], total: number }>({
     queryKey: ["/api/middle-school-admission"],
   });
 

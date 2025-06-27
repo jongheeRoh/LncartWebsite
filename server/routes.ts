@@ -1,7 +1,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage, authStorage } from "./storage";
-import { insertNoticeSchema, updateNoticeSchema, insertGalleryItemSchema, updateGalleryItemSchema, insertRoadmapSchema, updateRoadmapSchema, insertMiddleSchoolAdmissionSchema, updateMiddleSchoolAdmissionSchema, insertHighSchoolAdmissionSchema, updateHighSchoolAdmissionSchema } from "@shared/schema";
+import { insertNoticeSchema, updateNoticeSchema, insertGalleryItemSchema, updateGalleryItemSchema, insertRoadmapSchema, updateRoadmapSchema, insertMiddleSchoolAdmissionSchema, updateMiddleSchoolAdmissionSchema, insertHighSchoolAdmissionSchema, updateHighSchoolAdmissionSchema, insertCommentSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { upload, createFileAttachment } from "./upload";
 import { scrapeAndImportMiddleSchoolData, scrapeAndImportHighSchoolData } from "./web-scraper";
@@ -481,6 +481,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(stats);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch stats" });
+    }
+  });
+
+  // Comment routes
+  app.get("/api/comments/:type/:postId", async (req, res) => {
+    try {
+      const { type, postId } = req.params;
+      const comments = await storage.getComments(type, parseInt(postId));
+      res.json(comments);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch comments" });
+    }
+  });
+
+  app.post("/api/comments", async (req, res) => {
+    try {
+      const validatedData = insertCommentSchema.parse(req.body);
+      const comment = await storage.createComment(validatedData);
+      res.status(201).json(comment);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ error: "Invalid data", details: error.errors });
+      }
+      res.status(500).json({ error: "Failed to create comment" });
+    }
+  });
+
+  app.delete("/api/comments/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteComment(id);
+      
+      if (!success) {
+        return res.status(404).json({ error: "Comment not found" });
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete comment" });
     }
   });
 

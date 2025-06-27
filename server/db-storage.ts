@@ -1,13 +1,14 @@
 import { eq, desc, like, and, or, sql } from "drizzle-orm";
 import { db } from "./db";
-import { users, notices, galleryItems, roadmaps, middleSchoolAdmission, highSchoolAdmission } from "@shared/schema";
+import { users, notices, galleryItems, roadmaps, middleSchoolAdmission, highSchoolAdmission, comments } from "@shared/schema";
 import type { 
   User, InsertUser, 
   Notice, InsertNotice, UpdateNotice,
   GalleryItem, InsertGalleryItem, UpdateGalleryItem,
   Roadmap, InsertRoadmap, UpdateRoadmap,
   MiddleSchoolAdmission, InsertMiddleSchoolAdmission, UpdateMiddleSchoolAdmission,
-  HighSchoolAdmission, InsertHighSchoolAdmission, UpdateHighSchoolAdmission
+  HighSchoolAdmission, InsertHighSchoolAdmission, UpdateHighSchoolAdmission,
+  Comment, InsertComment
 } from "@shared/schema";
 import type { IStorage } from "./storage";
 
@@ -380,5 +381,24 @@ export class DatabaseStorage implements IStorage {
       monthlyVisitors: 1250,
       viewsGrowth: "+12.5%"
     };
+  }
+
+  // Comment methods
+  async getComments(type: string, postId: number): Promise<Comment[]> {
+    const result = await db.select()
+      .from(comments)
+      .where(and(eq(comments.type, type), eq(comments.postId, postId)))
+      .orderBy(desc(comments.createdAt));
+    return result;
+  }
+
+  async createComment(insertComment: InsertComment): Promise<Comment> {
+    const [comment] = await db.insert(comments).values(insertComment).returning();
+    return comment;
+  }
+
+  async deleteComment(id: number): Promise<boolean> {
+    const result = await db.delete(comments).where(eq(comments.id, id));
+    return (result.rowCount || 0) > 0;
   }
 }
