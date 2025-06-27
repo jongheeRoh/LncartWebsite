@@ -115,15 +115,14 @@ export default function MiddleSchool() {
                       {extractPlainText(admission.content || '').substring(0, 120)}
                       {extractPlainText(admission.content || '').length > 120 ? '...' : ''}
                     </div>
-                    <Link href={`/middle-school/${admission.id}`} className="mt-auto">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="w-full"
-                      >
-                        자세히 보기
-                      </Button>
-                    </Link>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full"
+                      onClick={() => window.location.href = `/middle-school/${admission.id}`}
+                    >
+                      자세히 보기
+                    </Button>
                   </CardContent>
                 </Card>
               ))}

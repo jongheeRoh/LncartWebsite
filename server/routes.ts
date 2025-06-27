@@ -568,7 +568,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const admission = await storage.getMiddleSchoolAdmission(id);
       
       if (!admission) {
-        return res.status(404).json({ error: "Admission info not found" });
+        return res.status(404).json({ error: "Middle school admission not found" });
       }
       
       res.json(admission);
@@ -578,20 +578,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/middle-school-admission/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const admission = await storage.getMiddleSchoolAdmission(id);
-      
-      if (!admission) {
-        return res.status(404).json({ error: "Middle school admission not found" });
-      }
-      
-      res.json(admission);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to fetch middle school admission" });
-    }
-  });
+
 
   app.post("/api/middle-school-admission", async (req, res) => {
     try {
