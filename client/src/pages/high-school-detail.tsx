@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronLeft, ChevronRight, Share2, X } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Share2, X, List } from "lucide-react";
 import { Link } from "wouter";
 import type { HighSchoolAdmission } from "@shared/schema";
 import CommentSection from "@/components/comments/comment-section";
@@ -129,46 +129,43 @@ export default function HighSchoolDetail() {
               }}
             />
 
-            {/* 네비게이션 영역 */}
-            <div className="mt-12 pt-8 border-t border-gray-200">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* 이전글 */}
-                <div className="text-left">
-                  {prevAdmission ? (
-                    <Link href={`/high-school/${prevAdmission.id}`}>
-                      <Button variant="outline" className="w-full flex items-center justify-start">
-                        <ChevronLeft className="h-4 w-4 mr-2" />
-                        이전글
-                      </Button>
-                    </Link>
-                  ) : (
-                    <div className="h-10"></div>
-                  )}
-                </div>
-
-                {/* 목록으로 */}
-                <div className="text-center">
-                  <Link href="/high-school">
-                    <Button variant="outline" className="w-full bg-black/10 hover:bg-black/20 border-black/20">
-                      목록으로
-                    </Button>
-                  </Link>
-                </div>
-
-                {/* 다음글 */}
-                <div className="text-right">
-                  {nextAdmission ? (
-                    <Link href={`/high-school/${nextAdmission.id}`}>
-                      <Button variant="outline" className="w-full flex items-center justify-end">
-                        다음글
-                        <ChevronRight className="h-4 w-4 ml-2" />
-                      </Button>
-                    </Link>
-                  ) : (
-                    <div className="h-10"></div>
-                  )}
-                </div>
+            {/* Navigation Footer */}
+            <div className="mt-8">
+              <div className="flex justify-center gap-4">
+                {prevAdmission && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setLocation(`/high-school/${prevAdmission.id}`)}
+                    className="flex items-center gap-2 px-4 py-2"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    이전글
+                  </Button>
+                )}
+                
+                {nextAdmission && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setLocation(`/high-school/${nextAdmission.id}`)}
+                    className="flex items-center gap-2 px-4 py-2"
+                  >
+                    다음글
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
+            </div>
+
+            {/* Bottom Navigation */}
+            <div className="mt-8 text-center">
+              <Button
+                onClick={() => setLocation("/high-school")}
+                variant="outline"
+                className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 hover:text-slate-900 px-6 py-2.5 font-medium"
+              >
+                <List className="h-4 w-4 mr-2" />
+                목록으로 돌아가기
+              </Button>
             </div>
           </CardContent>
         </Card>
