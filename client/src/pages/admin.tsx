@@ -399,6 +399,98 @@ function AdminDashboard() {
           </div>
         )}
 
+        {/* Gallery Management */}
+        {activeSection === "gallery" && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold">갤러리 관리</h2>
+              <Button onClick={() => setShowGalleryForm(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                새 갤러리 항목
+              </Button>
+            </div>
+
+            <div className="bg-white border rounded-lg">
+              {galleryItems.length === 0 ? (
+                <div className="p-8 text-center">
+                  <Image className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                  <p className="text-gray-500">등록된 갤러리 항목이 없습니다.</p>
+                </div>
+              ) : (
+                <div className="overflow-hidden">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">번호</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">이미지</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">제목</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">카테고리</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">작성일</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">관리</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {galleryItems.map((item: GalleryItem, index: number) => (
+                        <tr key={item.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {galleryItems.length - index}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {item.imageUrl ? (
+                              <img
+                                src={item.imageUrl}
+                                alt={item.title}
+                                className="h-12 w-12 object-cover rounded-lg"
+                              />
+                            ) : (
+                              <div className="h-12 w-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                                <Image className="h-6 w-6 text-gray-400" />
+                              </div>
+                            )}
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="text-sm font-medium text-gray-900">{item.title}</div>
+                            <div className="text-sm text-gray-500 max-w-xs truncate">
+                              {item.description?.replace(/<[^>]*>/g, '') || ''}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <Badge variant="outline" className="text-xs">{item.category}</Badge>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {new Date(item.createdAt).toLocaleDateString('ko-KR')}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div className="flex space-x-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setEditingGallery(item);
+                                  setShowGalleryForm(true);
+                                }}
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => deleteGalleryMutation.mutate(item.id)}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* High School Admission Management */}
         {activeSection === "high-admission" && (
           <div className="space-y-6">
