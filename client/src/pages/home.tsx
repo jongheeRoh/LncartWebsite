@@ -142,7 +142,7 @@ export default function Home() {
               <CardContent className="p-0">
                 <div className="aspect-video bg-gray-900 rounded-t-xl overflow-hidden relative">
                   <iframe
-                    src="https://www.youtube.com/embed/wcq3v3sydzA"
+                    src="https://www.youtube.com/embed/wcq3v3sydzA?rel=0&modestbranding=1&showinfo=0"
                     className="absolute inset-0 w-full h-full object-cover"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen

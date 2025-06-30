@@ -245,7 +245,7 @@ export default function About() {
                 <CardContent className="p-0">
                   <div className="aspect-video bg-gray-900 rounded-t-xl overflow-hidden relative">
                     <iframe
-                      src="https://www.youtube.com/embed/p_r6sLXDuJs"
+                      src="https://www.youtube.com/embed/p_r6sLXDuJs?rel=0&modestbranding=1&showinfo=0"
                       className="absolute inset-0 w-full h-full object-cover"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
