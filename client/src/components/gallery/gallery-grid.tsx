@@ -26,7 +26,7 @@ export default function GalleryGrid({ items, isLoading, onImageUpdated, onImageD
 
   const deleteItemMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest("DELETE", `/api/gallery/${id}`);
+      await apiRequest(`/api/gallery/${id}`, "DELETE");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/gallery"] });

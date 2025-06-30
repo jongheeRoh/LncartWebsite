@@ -31,7 +31,8 @@ export function MiddleSchoolAdmissionForm({ admission, onSuccess }: MiddleSchool
 
   const createMutation = useMutation({
     mutationFn: async (data: InsertMiddleSchoolAdmission) => {
-      return await apiRequest("/api/middle-school-admission", "POST", { ...data, content });
+      const response = await apiRequest("/api/middle-school-admission", "POST", { ...data, content });
+      return await response.json();
     },
     onSuccess: () => {
       toast({
@@ -55,7 +56,8 @@ export function MiddleSchoolAdmissionForm({ admission, onSuccess }: MiddleSchool
 
   const updateMutation = useMutation({
     mutationFn: async (data: InsertMiddleSchoolAdmission) => {
-      return await apiRequest(`/api/middle-school-admission/${admission!.id}`, "PUT", { ...data, content });
+      const response = await apiRequest(`/api/middle-school-admission/${admission!.id}`, "PUT", { ...data, content });
+      return await response.json();
     },
     onSuccess: () => {
       toast({

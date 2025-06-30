@@ -39,11 +39,12 @@ export default function GalleryForm({ item, onSuccess }: GalleryFormProps) {
 
   const mutation = useMutation({
     mutationFn: async (data: InsertGalleryItem) => {
-      return await apiRequest(
+      const response = await apiRequest(
         item ? `/api/gallery/${item.id}` : "/api/gallery",
         item ? "PUT" : "POST",
         data
       );
+      return await response.json();
     },
     onSuccess: () => {
       toast({
