@@ -10,6 +10,7 @@ import Schedule from "@/pages/schedule";
 import Notices from "@/pages/notices-new";
 import NoticeDetail from "@/pages/notice-detail-clean";
 import Gallery from "@/pages/gallery";
+import GalleryWrite from "@/pages/gallery-write";
 import Entrance from "@/pages/entrance";
 import MiddleSchool from "@/pages/middle-school";
 import HighSchool from "@/pages/high-school";
@@ -45,6 +46,7 @@ function Router() {
             <Route path="/schedule" component={Schedule} />
             <Route path="/notices" component={Notices} />
             <Route path="/gallery" component={Gallery} />
+            <Route path="/gallery/write" component={GalleryWrite} />
             <Route path="/entrance" component={Entrance} />
             <Route path="/entrance/middle-school" component={MiddleSchoolEntrance} />
             <Route path="/entrance/high-school" component={HighSchoolEntrance} />
