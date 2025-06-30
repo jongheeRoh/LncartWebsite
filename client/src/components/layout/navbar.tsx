@@ -37,13 +37,13 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+    <nav className="bg-white/90 backdrop-blur-md shadow-lg border-b border-purple-100 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
           <div className="flex items-center space-x-8">
             <div className="flex-shrink-0">
               <Link href="/">
-                <h1 className="text-2xl font-bold text-primary cursor-pointer">선과색미술학원</h1>
+                <h1 className="text-3xl font-bold gradient-text cursor-pointer">선과색미술학원</h1>
               </Link>
             </div>
             <div className="hidden md:block">
@@ -54,21 +54,21 @@ export default function Navbar() {
                       <DropdownMenu key={item.id}>
                         <DropdownMenuTrigger asChild>
                           <button
-                            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${
+                            className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center ${
                               isActive(item.href) || item.subItems.some(sub => isActive(sub.href))
-                                ? "text-primary border-b-2 border-primary"
-                                : "text-slate-600 hover:text-primary"
+                                ? "gradient-bg text-white shadow-lg"
+                                : "text-gray-700 hover:text-purple-600 hover:bg-purple-50"
                             }`}
                           >
                             {item.label}
                             <ChevronDown className="ml-1 h-4 w-4" />
                           </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent>
+                        <DropdownMenuContent className="rounded-xl border-purple-100 shadow-xl">
                           {item.subItems.map((subItem) => (
-                            <DropdownMenuItem key={subItem.href} asChild>
+                            <DropdownMenuItem key={subItem.href} asChild className="rounded-lg">
                               <Link href={subItem.href}>
-                                <span className="w-full cursor-pointer">{subItem.label}</span>
+                                <span className="w-full cursor-pointer font-medium text-gray-700 hover:text-purple-600">{subItem.label}</span>
                               </Link>
                             </DropdownMenuItem>
                           ))}
@@ -80,10 +80,10 @@ export default function Navbar() {
                   return (
                     <Link key={item.id} href={item.href}>
                       <span
-                        className={`px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                        className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                           isActive(item.href)
-                            ? "text-primary border-b-2 border-primary"
-                            : "text-slate-600 hover:text-primary"
+                            ? "gradient-bg text-white shadow-lg"
+                            : "text-gray-700 hover:text-purple-600 hover:bg-purple-50"
                         }`}
                       >
                         {item.label}
