@@ -31,22 +31,7 @@ export function MiddleSchoolAdmissionForm({ admission, onSuccess }: MiddleSchool
 
   const createMutation = useMutation({
     mutationFn: async (data: InsertMiddleSchoolAdmission) => {
-      const sessionId = localStorage.getItem('adminSessionId');
-      const response = await fetch("/api/middle-school-admission", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${sessionId}`
-        },
-        body: JSON.stringify({ ...data, content }),
-      });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to create admission info");
-      }
-      
-      return response.json();
+      return await apiRequest("/api/middle-school-admission", "POST", { ...data, content });
     },
     onSuccess: () => {
       toast({
@@ -62,7 +47,7 @@ export function MiddleSchoolAdmissionForm({ admission, onSuccess }: MiddleSchool
       console.error("Middle school admission error:", error);
       toast({
         title: "오류",
-        description: `예중 입시정보 생성에 실패했습니다: ${error.message}`,
+        description: "예중 입시정보 생성에 실패했습니다.",
         variant: "destructive",
       });
     },
@@ -70,20 +55,7 @@ export function MiddleSchoolAdmissionForm({ admission, onSuccess }: MiddleSchool
 
   const updateMutation = useMutation({
     mutationFn: async (data: InsertMiddleSchoolAdmission) => {
-      const response = await fetch(`/api/middle-school-admission/${admission!.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...data, content }),
-      });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to update admission info");
-      }
-      
-      return response.json();
+      return await apiRequest(`/api/middle-school-admission/${admission!.id}`, "PUT", { ...data, content });
     },
     onSuccess: () => {
       toast({
@@ -100,8 +72,8 @@ export function MiddleSchoolAdmissionForm({ admission, onSuccess }: MiddleSchool
     onError: (error) => {
       console.error("Middle school admission error:", error);
       toast({
-        title: "오류",
-        description: `예중 입시정보 ${admission ? "수정" : "생성"}에 실패했습니다: ${error.message}`,
+        title: "오류", 
+        description: `예중 입시정보 ${admission ? "수정" : "생성"}에 실패했습니다.`,
         variant: "destructive",
       });
     },
