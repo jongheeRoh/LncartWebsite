@@ -8,7 +8,7 @@ import Home from "@/pages/home";
 import About from "@/pages/about";
 import Schedule from "@/pages/schedule";
 import Notices from "@/pages/notices-new";
-import NoticeDetail from "@/pages/notice-detail-new";
+import NoticeDetail from "@/pages/notice-detail-clean";
 import Gallery from "@/pages/gallery";
 import Entrance from "@/pages/entrance";
 import MiddleSchool from "@/pages/middle-school";

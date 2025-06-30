@@ -17,7 +17,7 @@ interface FileAttachment {
   uploadedAt: Date;
 }
 
-export default function NoticeDetailNew() {
+export default function NoticeDetailClean() {
   const [match, params] = useRoute("/notices/:id");
   const noticeId = params?.id;
 
@@ -126,42 +126,6 @@ export default function NoticeDetailNew() {
                 __html: convertYouTubeUrlsToIframes(notice.content) 
               }}
             />
-            
-            {/* File Attachments */}
-            {notice.attachments && Array.isArray(notice.attachments) && notice.attachments.length > 0 && (
-              <div className="mt-8 pt-6 border-t">
-                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
-                  첨부 파일
-                </h3>
-                <div className="space-y-3">
-                  {(notice.attachments as FileAttachment[]).map((file) => (
-                    <div
-                      key={file.id}
-                      className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border"
-                    >
-                      <div className="flex items-center gap-3">
-                        <FileText className="h-5 w-5 text-slate-600" />
-                        <div>
-                          <p className="font-medium text-slate-900">{file.originalName}</p>
-                          <p className="text-sm text-slate-600">
-                            {(file.size / 1024).toFixed(1)} KB
-                          </p>
-                        </div>
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => window.open(file.url, '_blank')}
-                      >
-                        <Download className="h-4 w-4 mr-2" />
-                        다운로드
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Navigation Footer */}
             <div className="mt-8 pt-6 border-t">

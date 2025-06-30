@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { useRoute } from "wouter";
+import { useRoute, Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Calendar, Download, FileText, ChevronLeft, ChevronRight, List } from "lucide-react";
-import { Link } from "wouter";
 import type { Notice } from "@shared/schema";
 import { convertYouTubeUrlsToIframes } from "@/lib/video-converter";
+
 interface FileAttachment {
   id: string;
   originalName: string;
@@ -17,7 +17,7 @@ interface FileAttachment {
   uploadedAt: Date;
 }
 
-export default function NoticeDetail() {
+export default function NoticeDetailFixed() {
   const [match, params] = useRoute("/notices/:id");
   const noticeId = params?.id;
 
@@ -51,6 +51,15 @@ export default function NoticeDetail() {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
@@ -66,11 +75,11 @@ export default function NoticeDetail() {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-slate-900 mb-4">공지사항을 찾을 수 없습니다</h1>
+          <p className="text-slate-600">게시글을 찾을 수 없습니다.</p>
           <Link href="/notices">
-            <Button>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              공지사항 목록으로
+            <Button className="mt-4">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              목록으로 돌아가기
             </Button>
           </Link>
         </div>
@@ -80,34 +89,27 @@ export default function NoticeDetail() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Back Button */}
-        <div className="mb-6">
-          <Link href="/notices">
-            <Button variant="outline" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              목록으로 돌아가기
-            </Button>
-          </Link>
-        </div>
-
-        {/* Notice Content */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <CardTitle className="text-2xl">{notice.title}</CardTitle>
-                  <Badge variant={getCategoryColor(notice.category)}>
-                    {notice.category}
-                  </Badge>
-                </div>
-                <div className="flex items-center gap-4 text-sm text-slate-600">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4" />
-                    {new Date(notice.createdAt).toLocaleDateString('ko-KR')}
-                  </div>
-                </div>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <Card className="bg-white shadow-lg">
+          <CardHeader className="border-b">
+            <div className="flex items-center justify-between mb-4">
+              <Link href="/notices">
+                <Button variant="outline" size="sm">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  목록
+                </Button>
+              </Link>
+              <Badge variant={getCategoryColor(notice.category)}>
+                {notice.category}
+              </Badge>
+            </div>
+            <CardTitle className="text-2xl font-bold text-slate-900 mb-4">
+              {notice.title}
+            </CardTitle>
+            <div className="flex items-center gap-4 text-sm text-slate-600">
+              <div className="flex items-center gap-1">
+                <Calendar className="h-4 w-4" />
+                <span>{formatDate(notice.createdAt.toString())}</span>
               </div>
             </div>
           </CardHeader>
@@ -165,8 +167,6 @@ export default function NoticeDetail() {
                   const currentIndex = notices.findIndex((n: any) => n.id === parseInt(noticeId!));
                   const prevNotice = currentIndex > 0 ? notices[currentIndex - 1] : null;
                   const nextNotice = currentIndex < notices.length - 1 ? notices[currentIndex + 1] : null;
-                  
-
                   
                   return (
                     <>
