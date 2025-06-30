@@ -3,11 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronLeft, ChevronRight, Share2, X, List } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Share2, X, List, Eye } from "lucide-react";
 import { Link } from "wouter";
 import type { HighSchoolAdmission } from "@shared/schema";
 import CommentSection from "@/components/comments/comment-section";
 import { convertYouTubeUrlsToIframes } from "@/lib/video-converter";
+import { useEffect } from "react";
 
 export default function HighSchoolDetail() {
   const { id } = useParams();
@@ -16,6 +17,15 @@ export default function HighSchoolDetail() {
   const { data: admission, isLoading, error } = useQuery<HighSchoolAdmission>({
     queryKey: [`/api/high-school-admission/${id}`],
   });
+
+  // 조회수 증가
+  useEffect(() => {
+    if (id && admission) {
+      fetch(`/api/high-school-admission/${id}/increment-views`, {
+        method: 'POST',
+      }).catch(console.error);
+    }
+  }, [id, admission]);
 
   // 전체 목록을 가져와서 이전글/다음글 찾기
   const { data: allAdmissions } = useQuery<{ items: HighSchoolAdmission[], total: number }>({
@@ -96,9 +106,13 @@ export default function HighSchoolDetail() {
                 {admission?.title}
               </h1>
               <div className="flex items-center justify-between">
-                <p className="text-sm text-gray-500">
-                  작성일: {admission?.createdAt ? new Date(admission.createdAt).toLocaleDateString('ko-KR') : ''}
-                </p>
+                <div className="flex items-center space-x-4 text-sm text-gray-500">
+                  <span>작성일: {admission?.createdAt ? new Date(admission.createdAt).toLocaleDateString('ko-KR') : ''}</span>
+                  <div className="flex items-center space-x-1">
+                    <Eye className="w-4 h-4" />
+                    <span>조회수: {admission?.views || 0}</span>
+                  </div>
+                </div>
                 <Button
                   variant="ghost"
                   size="sm"

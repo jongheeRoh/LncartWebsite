@@ -80,6 +80,16 @@ export class DatabaseStorage implements IStorage {
     return (result.rowCount ?? 0) > 0;
   }
 
+  async incrementMiddleSchoolAdmissionViews(id: number): Promise<void> {
+    await db
+      .update(middleSchoolAdmission)
+      .set({
+        views: sql`${middleSchoolAdmission.views} + 1`,
+        updatedAt: new Date(),
+      })
+      .where(eq(middleSchoolAdmission.id, id));
+  }
+
   // High School Admission methods
   async getAllHighSchoolAdmission(page: number = 1, limit: number = 10, category?: string, search?: string): Promise<{ items: HighSchoolAdmission[], total: number }> {
     let query = db.select().from(highSchoolAdmission);
@@ -145,6 +155,16 @@ export class DatabaseStorage implements IStorage {
   async deleteHighSchoolAdmission(id: number): Promise<boolean> {
     const result = await db.delete(highSchoolAdmission).where(eq(highSchoolAdmission.id, id));
     return (result.rowCount ?? 0) > 0;
+  }
+
+  async incrementHighSchoolAdmissionViews(id: number): Promise<void> {
+    await db
+      .update(highSchoolAdmission)
+      .set({
+        views: sql`${highSchoolAdmission.views} + 1`,
+        updatedAt: new Date(),
+      })
+      .where(eq(highSchoolAdmission.id, id));
   }
   constructor() {
     this.initializeSampleData();

@@ -3,10 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronLeft, ChevronRight, List, Calendar } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, List, Calendar, Eye, Paperclip } from "lucide-react";
 import type { MiddleSchoolAdmission } from "@shared/schema";
 import CommentSection from "@/components/comments/comment-section";
 import { convertYouTubeUrlsToIframes } from "@/lib/video-converter";
+import { useEffect } from "react";
 
 export default function MiddleSchoolDetail() {
   const { id } = useParams();
@@ -21,6 +22,17 @@ export default function MiddleSchoolDetail() {
     },
     enabled: !!id,
   });
+
+  // 조회수 증가
+  useEffect(() => {
+    if (admission?.id) {
+      fetch(`/api/middle-school-admission/${admission.id}/increment-views`, {
+        method: 'POST',
+      }).catch(error => {
+        console.error('Failed to increment views:', error);
+      });
+    }
+  }, [admission?.id]);
 
   // 전체 목록을 가져와서 이전글/다음글 찾기
   const { data: allAdmissions } = useQuery<{ items: MiddleSchoolAdmission[], total: number }>({
@@ -131,9 +143,15 @@ export default function MiddleSchoolDetail() {
                 >
                   {admission.category}
                 </Badge>
-                <div className="flex items-center text-sm opacity-90">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  {formatDate(admission.createdAt)}
+                <div className="flex items-center gap-4 text-sm opacity-90">
+                  <div className="flex items-center">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    {formatDate(admission.createdAt)}
+                  </div>
+                  <div className="flex items-center">
+                    <Eye className="h-4 w-4 mr-2" />
+                    {admission.views || 0}
+                  </div>
                 </div>
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold leading-tight">
@@ -152,6 +170,41 @@ export default function MiddleSchoolDetail() {
                 }}
                 dangerouslySetInnerHTML={{ __html: processedContent }}
               />
+
+              {/* 첨부파일 */}
+              {admission.attachments && Array.isArray(admission.attachments) && admission.attachments.length > 0 && (
+                <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-4 flex items-center">
+                    <Paperclip className="h-5 w-5 mr-2" />
+                    첨부파일
+                  </h3>
+                  <div className="space-y-2">
+                    {admission.attachments.map((file: any, index: number) => (
+                      <div key={index} className="flex items-center p-3 bg-white rounded border">
+                        <div className="flex items-center flex-1">
+                          <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-3">
+                            <Paperclip className="h-4 w-4 text-blue-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">{file.originalName}</p>
+                            <p className="text-xs text-gray-500">
+                              {file.size ? `${(file.size / 1024).toFixed(1)} KB` : ''}
+                            </p>
+                          </div>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.open(file.url || `/uploads/${file.id}`, '_blank')}
+                          className="ml-4"
+                        >
+                          다운로드
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
 

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, BookOpen, Users, Target, CheckCircle, Clock, Award, Palette, FileText, Trophy, Brush, PaintBucket } from "lucide-react";
+import { Calendar, BookOpen, Users, Target, CheckCircle, Clock, Award, Palette, FileText, Trophy, Brush, PaintBucket, Eye } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
@@ -103,9 +103,13 @@ export default function HighSchool() {
                       <Badge variant="secondary" className="text-xs">
                         {admission.category}
                       </Badge>
-                      <span className="text-xs text-gray-500">
-                        {new Date(admission.createdAt).toLocaleDateString('ko-KR')}
-                      </span>
+                      <div className="text-xs text-gray-500 flex items-center space-x-2">
+                        <div className="flex items-center space-x-1">
+                          <Eye className="w-3 h-3" />
+                          <span>{admission.views || 0}</span>
+                        </div>
+                        <span>{new Date(admission.createdAt).toLocaleDateString('ko-KR')}</span>
+                      </div>
                     </div>
                     <CardTitle className="text-lg font-bold text-slate-900 line-clamp-2 h-[56px]">
                       {admission.title}

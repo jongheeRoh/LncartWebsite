@@ -50,6 +50,7 @@ export const middleSchoolAdmission = pgTable("middle_school_admission", {
   excerpt: text("excerpt"),
   category: text("category").notNull().default("예중입시정보"),
   attachments: jsonb("attachments").default([]),
+  views: integer("views").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -61,6 +62,7 @@ export const highSchoolAdmission = pgTable("high_school_admission", {
   excerpt: text("excerpt"),
   category: text("category").notNull().default("예고입시정보"),
   attachments: jsonb("attachments").default([]),
+  views: integer("views").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

@@ -584,6 +584,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/middle-school-admission/:id/increment-views", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.incrementMiddleSchoolAdmissionViews(id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("API Error:", error);
+      res.status(500).json({ error: "Failed to increment views" });
+    }
+  });
+
 
 
   app.post("/api/middle-school-admission", async (req, res) => {
@@ -681,6 +692,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(admission);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch high school admission" });
+    }
+  });
+
+  app.post("/api/high-school-admission/:id/increment-views", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.incrementHighSchoolAdmissionViews(id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("API Error:", error);
+      res.status(500).json({ error: "Failed to increment views" });
     }
   });
 
