@@ -3,7 +3,7 @@ import { useRoute } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Calendar, Download, FileText } from "lucide-react";
+import { ArrowLeft, Calendar, Download, FileText, ChevronLeft, ChevronRight, List } from "lucide-react";
 import { Link } from "wouter";
 import type { Notice } from "@shared/schema";
 import { convertYouTubeUrlsToIframes } from "@/lib/video-converter";
@@ -147,6 +147,39 @@ export default function NoticeDetail() {
                 </div>
               </div>
             )}
+
+            {/* Navigation Footer */}
+            <div className="mt-8 pt-6 border-t">
+              <div className="flex justify-center items-center gap-4">
+                <Button
+                  variant="outline"
+                  onClick={() => window.history.back()}
+                  className="flex items-center gap-2 px-4 py-2"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  이전글
+                </Button>
+                
+                <Link href="/notices">
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2 px-6 py-2"
+                  >
+                    <List className="h-4 w-4" />
+                    리스트
+                  </Button>
+                </Link>
+                
+                <Button
+                  variant="outline"
+                  onClick={() => window.history.forward()}
+                  className="flex items-center gap-2 px-4 py-2"
+                >
+                  다음글
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>

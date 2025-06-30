@@ -201,47 +201,37 @@ export default function NoticeDetail() {
           </Card>
 
           {/* Navigation Footer */}
-          <div className="mt-8 space-y-4">
-            {nextNotice && (
-              <Card 
-                className="p-4 cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-blue-500"
-                onClick={() => setLocation(`/notices/${nextNotice.id}`)}
+          <div className="mt-8">
+            <div className="flex justify-center items-center gap-4">
+              <Button
+                variant="outline"
+                onClick={() => prevNotice ? setLocation(`/notices/${prevNotice.id}`) : undefined}
+                disabled={!prevNotice}
+                className="flex items-center gap-2 px-4 py-2"
               >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-slate-500 mb-1">다음글</p>
-                    <p className="font-medium text-slate-900">{nextNotice.title}</p>
-                  </div>
-                  <ChevronRight className="h-5 w-5 text-slate-400" />
-                </div>
-              </Card>
-            )}
-            
-            {prevNotice && (
-              <Card 
-                className="p-4 cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-slate-300"
-                onClick={() => setLocation(`/notices/${prevNotice.id}`)}
+                <ChevronLeft className="h-4 w-4" />
+                이전글
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => setLocation("/notices")}
+                className="flex items-center gap-2 px-6 py-2"
               >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-slate-500 mb-1">이전글</p>
-                    <p className="font-medium text-slate-900">{prevNotice.title}</p>
-                  </div>
-                  <ChevronLeft className="h-5 w-5 text-slate-400" />
-                </div>
-              </Card>
-            )}
-          </div>
-
-          {/* Bottom Navigation */}
-          <div className="mt-8 text-center">
-            <Button
-              onClick={() => setLocation("/notices")}
-              className="bg-primary hover:bg-primary/90"
-            >
-              <List className="h-4 w-4 mr-2" />
-              목록으로 돌아가기
-            </Button>
+                <List className="h-4 w-4" />
+                리스트
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => nextNotice ? setLocation(`/notices/${nextNotice.id}`) : undefined}
+                disabled={!nextNotice}
+                className="flex items-center gap-2 px-4 py-2"
+              >
+                다음글
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </section>

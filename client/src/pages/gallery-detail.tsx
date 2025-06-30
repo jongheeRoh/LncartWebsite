@@ -185,31 +185,36 @@ export default function GalleryDetail() {
         </Card>
 
         {/* Navigation Buttons */}
-        <div className="flex justify-center space-x-4 mt-8">
-          <Button 
-            variant="outline" 
-            onClick={handlePrevious}
-            className="flex items-center"
-          >
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            이전 글
-          </Button>
-          
-          <Link href="/gallery">
-            <Button variant="outline" className="flex items-center">
-              <List className="mr-2 h-4 w-4" />
-              목록보기
+        <div className="mt-8">
+          <div className="flex justify-center items-center gap-4">
+            <Button
+              variant="outline"
+              onClick={handlePrevious}
+              className="flex items-center gap-2 px-4 py-2"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              이전글
             </Button>
-          </Link>
-          
-          <Button 
-            variant="outline" 
-            onClick={handleNext}
-            className="flex items-center"
-          >
-            다음 글
-            <ChevronRight className="ml-2 h-4 w-4" />
-          </Button>
+            
+            <Link href="/gallery">
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 px-6 py-2"
+              >
+                <List className="h-4 w-4" />
+                리스트
+              </Button>
+            </Link>
+            
+            <Button
+              variant="outline"
+              onClick={handleNext}
+              className="flex items-center gap-2 px-4 py-2"
+            >
+              다음글
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </section>
