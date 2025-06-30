@@ -140,13 +140,19 @@ export default function Home() {
           <div className="max-w-5xl mx-auto">
             <Card className="card-hover bg-white border-0 shadow-2xl overflow-hidden">
               <CardContent className="p-0">
-                <div className="aspect-video bg-gray-900 rounded-t-xl overflow-hidden">
+                <div className="aspect-video bg-gray-900 rounded-t-xl overflow-hidden relative">
                   <iframe
                     src="https://www.youtube.com/embed/wcq3v3sydzA"
-                    className="w-full h-full"
+                    className="absolute inset-0 w-full h-full object-cover"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                     title="선과색미술학원 소개 영상"
+                    style={{ 
+                      width: '100%', 
+                      height: '100%', 
+                      border: 'none',
+                      display: 'block'
+                    }}
                   />
                 </div>
                 <div className="p-8">
