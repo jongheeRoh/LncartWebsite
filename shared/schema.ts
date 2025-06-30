@@ -17,6 +17,7 @@ export const notices = pgTable("notices", {
   excerpt: text("excerpt").notNull(),
   category: text("category").notNull().default("일반"),
   attachments: jsonb("attachments").default([]),
+  views: integer("views").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

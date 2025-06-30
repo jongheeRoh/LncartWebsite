@@ -3,7 +3,7 @@ import { useRoute, Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Calendar, Download, FileText, ChevronLeft, ChevronRight, List } from "lucide-react";
+import { ArrowLeft, Calendar, Download, FileText, ChevronLeft, ChevronRight, List, Eye } from "lucide-react";
 import type { Notice } from "@shared/schema";
 import { convertYouTubeUrlsToIframes } from "@/lib/video-converter";
 
@@ -116,6 +116,10 @@ export default function NoticeDetailClean() {
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
                 <span>{formatDate(new Date(notice.createdAt).toISOString())}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Eye className="h-4 w-4" />
+                <span>조회수 {notice.views || 0}</span>
               </div>
             </div>
           </CardHeader>

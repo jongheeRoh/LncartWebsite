@@ -313,6 +313,12 @@ export class DatabaseStorage implements IStorage {
     return (result.rowCount || 0) > 0;
   }
 
+  async incrementNoticeViews(id: number): Promise<void> {
+    await db.update(notices)
+      .set({ views: sql`${notices.views} + 1` })
+      .where(eq(notices.id, id));
+  }
+
   // Gallery operations
   async getAllGalleryItems(page: number = 1, limit: number = 12, category?: string): Promise<{ items: GalleryItem[], total: number }> {
     let query = db.select().from(galleryItems);

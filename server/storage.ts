@@ -12,6 +12,7 @@ export interface IStorage {
   createNotice(notice: InsertNotice): Promise<Notice>;
   updateNotice(id: number, updates: UpdateNotice): Promise<Notice | undefined>;
   deleteNotice(id: number): Promise<boolean>;
+  incrementNoticeViews(id: number): Promise<void>;
 
   // Middle School Admission methods
   getAllMiddleSchoolAdmission(page?: number, limit?: number, category?: string, search?: string): Promise<{ items: MiddleSchoolAdmission[], total: number }>;
@@ -292,6 +293,7 @@ export class MemStorage implements IStorage {
       excerpt: insertNotice.excerpt,
       category: insertNotice.category || "일반",
       attachments: insertNotice.attachments || [],
+      views: 0,
       createdAt: now,
       updatedAt: now,
     };
@@ -306,6 +308,7 @@ export class MemStorage implements IStorage {
     const updatedNotice: Notice = {
       ...notice,
       ...updates,
+      views: notice.views || 0,
       updatedAt: new Date(),
     };
     this.notices.set(id, updatedNotice);
@@ -314,6 +317,14 @@ export class MemStorage implements IStorage {
 
   async deleteNotice(id: number): Promise<boolean> {
     return this.notices.delete(id);
+  }
+
+  async incrementNoticeViews(id: number): Promise<void> {
+    const notice = this.notices.get(id);
+    if (notice) {
+      const updatedNotice = { ...notice, views: (notice.views || 0) + 1 };
+      this.notices.set(id, updatedNotice);
+    }
   }
 
   async getAllGalleryItems(page: number = 1, limit: number = 12, category?: string): Promise<{ items: GalleryItem[], total: number }> {
@@ -443,8 +454,12 @@ export class MemStorage implements IStorage {
   async createMiddleSchoolAdmission(insertAdmission: InsertMiddleSchoolAdmission): Promise<MiddleSchoolAdmission> {
     const id = this.currentMiddleSchoolAdmissionId++;
     const admission: MiddleSchoolAdmission = {
-      ...insertAdmission,
       id,
+      title: insertAdmission.title,
+      content: insertAdmission.content,
+      excerpt: insertAdmission.excerpt || null,
+      category: insertAdmission.category || "일반",
+      attachments: insertAdmission.attachments || [],
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -498,8 +513,12 @@ export class MemStorage implements IStorage {
   async createHighSchoolAdmission(insertAdmission: InsertHighSchoolAdmission): Promise<HighSchoolAdmission> {
     const id = this.currentHighSchoolAdmissionId++;
     const admission: HighSchoolAdmission = {
-      ...insertAdmission,
       id,
+      title: insertAdmission.title,
+      content: insertAdmission.content,
+      excerpt: insertAdmission.excerpt || null,
+      category: insertAdmission.category || "일반",
+      attachments: insertAdmission.attachments || [],
       createdAt: new Date(),
       updatedAt: new Date(),
     };

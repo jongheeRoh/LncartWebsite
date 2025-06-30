@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import { NOTICE_CATEGORIES } from "@/lib/types";
 import type { Notice } from "@shared/schema";
 import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
@@ -151,8 +151,12 @@ export default function Notices() {
                             {notice.category}
                           </Badge>
                           <span className="text-slate-500 text-sm">
-                            {formatDate(notice.createdAt)}
+                            {formatDate(new Date(notice.createdAt).toISOString())}
                           </span>
+                          <div className="flex items-center gap-1 text-slate-500 text-sm">
+                            <Eye className="h-3 w-3" />
+                            <span>{notice.views || 0}</span>
+                          </div>
                         </div>
                         <h3 className="text-lg font-semibold text-slate-900 mb-2 hover:text-primary transition-colors">
                           {notice.title}
