@@ -31,6 +31,15 @@ export default function NoticeDetail() {
     enabled: !!noticeId,
   });
 
+  const { data: allNotices } = useQuery({
+    queryKey: ['/api/notices'],
+    queryFn: async () => {
+      const response = await fetch('/api/notices?page=1&limit=100');
+      if (!response.ok) throw new Error("Failed to fetch notices");
+      return response.json();
+    },
+  });
+
   const getCategoryColor = (category: string) => {
     switch (category) {
       case "긴급":
@@ -151,33 +160,70 @@ export default function NoticeDetail() {
             {/* Navigation Footer */}
             <div className="mt-8 pt-6 border-t">
               <div className="flex justify-center items-center gap-4">
-                <Button
-                  variant="outline"
-                  onClick={() => window.history.back()}
-                  className="flex items-center gap-2 px-4 py-2"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  이전글
-                </Button>
-                
-                <Link href="/notices">
-                  <Button
-                    variant="outline"
-                    className="flex items-center gap-2 px-6 py-2"
-                  >
-                    <List className="h-4 w-4" />
-                    리스트
-                  </Button>
-                </Link>
-                
-                <Button
-                  variant="outline"
-                  onClick={() => window.history.forward()}
-                  className="flex items-center gap-2 px-4 py-2"
-                >
-                  다음글
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+                {(() => {
+                  if (!allNotices?.notices) return null;
+                  
+                  const notices = allNotices.notices;
+                  const currentIndex = notices.findIndex((n: Notice) => n.id === parseInt(noticeId!));
+                  const prevNotice = currentIndex > 0 ? notices[currentIndex - 1] : null;
+                  const nextNotice = currentIndex < notices.length - 1 ? notices[currentIndex + 1] : null;
+                  
+                  return (
+                    <>
+                      {prevNotice ? (
+                        <Link href={`/notices/${prevNotice.id}`}>
+                          <Button
+                            variant="outline"
+                            className="flex items-center gap-2 px-4 py-2"
+                          >
+                            <ChevronLeft className="h-4 w-4" />
+                            이전글
+                          </Button>
+                        </Link>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          disabled
+                          className="flex items-center gap-2 px-4 py-2 opacity-50"
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                          이전글
+                        </Button>
+                      )}
+                      
+                      <Link href="/notices">
+                        <Button
+                          variant="outline"
+                          className="flex items-center gap-2 px-6 py-2"
+                        >
+                          <List className="h-4 w-4" />
+                          리스트
+                        </Button>
+                      </Link>
+                      
+                      {nextNotice ? (
+                        <Link href={`/notices/${nextNotice.id}`}>
+                          <Button
+                            variant="outline"
+                            className="flex items-center gap-2 px-4 py-2"
+                          >
+                            다음글
+                            <ChevronRight className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          disabled
+                          className="flex items-center gap-2 px-4 py-2 opacity-50"
+                        >
+                          다음글
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             </div>
           </CardContent>
