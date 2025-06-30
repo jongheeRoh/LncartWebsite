@@ -157,41 +157,36 @@ export default function MiddleSchoolDetail() {
 
           {/* Navigation Footer */}
           <div className="mt-8">
-            <div className="flex justify-center gap-4">
-              {prevAdmission && (
-                <Button
-                  variant="outline"
-                  onClick={() => setLocation(`/middle-school/${prevAdmission.id}`)}
-                  className="flex items-center gap-2 px-4 py-2"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  이전글
-                </Button>
-              )}
+            <div className="flex justify-center items-center gap-4">
+              <Button
+                variant="outline"
+                onClick={() => prevAdmission ? setLocation(`/middle-school/${prevAdmission.id}`) : undefined}
+                disabled={!prevAdmission}
+                className="flex items-center gap-2 px-4 py-2"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                이전글
+              </Button>
               
-              {nextAdmission && (
-                <Button
-                  variant="outline"
-                  onClick={() => setLocation(`/middle-school/${nextAdmission.id}`)}
-                  className="flex items-center gap-2 px-4 py-2"
-                >
-                  다음글
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              )}
+              <Button
+                variant="outline"
+                onClick={() => setLocation("/middle-school")}
+                className="flex items-center gap-2 px-6 py-2"
+              >
+                <List className="h-4 w-4" />
+                리스트
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={() => nextAdmission ? setLocation(`/middle-school/${nextAdmission.id}`) : undefined}
+                disabled={!nextAdmission}
+                className="flex items-center gap-2 px-4 py-2"
+              >
+                다음글
+                <ChevronRight className="h-4 w-4" />
+              </Button>
             </div>
-          </div>
-
-          {/* Bottom Navigation */}
-          <div className="mt-8 text-center">
-            <Button
-              onClick={() => setLocation("/middle-school")}
-              variant="outline"
-              className="bg-white hover:bg-slate-50 border-slate-200 text-slate-700 hover:text-slate-900 px-6 py-2.5 font-medium"
-            >
-              <List className="h-4 w-4 mr-2" />
-              목록으로 돌아가기
-            </Button>
           </div>
         </div>
       </section>
