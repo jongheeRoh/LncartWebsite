@@ -46,7 +46,6 @@ function Router() {
             <Route path="/schedule" component={Schedule} />
             <Route path="/notices" component={Notices} />
             <Route path="/gallery" component={Gallery} />
-            <Route path="/gallery/write" component={GalleryWrite} />
             <Route path="/entrance" component={Entrance} />
             <Route path="/entrance/middle-school" component={MiddleSchoolEntrance} />
             <Route path="/entrance/high-school" component={HighSchoolEntrance} />

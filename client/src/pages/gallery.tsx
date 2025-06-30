@@ -75,18 +75,10 @@ export default function Gallery() {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Gallery Header with Write Button */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h2 className="text-3xl font-bold gradient-text mb-2">작품 갤러리</h2>
-            <p className="text-gray-600">학생들의 창의적인 작품을 공유해보세요</p>
-          </div>
-          <Link href="/gallery/write">
-            <Button className="gradient-bg text-white border-0 px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-all shadow-lg">
-              <Plus className="w-4 h-4 mr-2" />
-              작품 등록
-            </Button>
-          </Link>
+        {/* Gallery Header */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold gradient-text mb-2">작품 갤러리</h2>
+          <p className="text-gray-600">학생들의 창의적인 작품을 감상해보세요</p>
         </div>
 
         {/* Search */}
