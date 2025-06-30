@@ -123,6 +123,51 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Academy Video Section */}
+      <section className="py-24 bg-gradient-to-br from-purple-50 to-blue-50 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl md:text-6xl font-bold mb-6">
+              <span className="gradient-text">학원을</span>
+              <br />
+              <span className="text-gray-900">직접 만나보세요</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              선과색미술학원의 생생한 교육 현장과 학생들의 열정적인 작품 활동을 영상으로 확인하세요.
+            </p>
+          </div>
+          
+          <div className="max-w-5xl mx-auto">
+            <Card className="card-hover bg-white border-0 shadow-2xl overflow-hidden">
+              <CardContent className="p-0">
+                <div className="aspect-video bg-gray-900 rounded-t-xl overflow-hidden">
+                  <iframe
+                    src="https://www.youtube.com/embed/wcq3v3sydzA"
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    title="선과색미술학원 소개 영상"
+                  />
+                </div>
+                <div className="p-8">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">선과색미술학원 소개영상</h3>
+                  <p className="text-gray-600 leading-relaxed mb-6">
+                    30년 전통의 선과색미술학원에서 이루어지는 체계적인 교육과정과 
+                    학생들의 꿈을 현실로 만드는 과정을 영상으로 만나보세요.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">예중입시</span>
+                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">예고입시</span>
+                    <span className="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-medium">실기교육</span>
+                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">포트폴리오</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Entrance Exam Section */}
       <section className="py-24 gradient-bg relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
