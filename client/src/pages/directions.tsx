@@ -261,7 +261,7 @@ export default function Directions() {
                   size="lg" 
                   variant="outline" 
                   className="border-2 border-white text-white hover:bg-white hover:text-primary"
-                  onClick={() => window.open('https://maps.google.com/maps/dir//서울특별시+광진구+천호대로+677+선과색미술학원', '_blank')}
+                  onClick={() => window.open('https://map.naver.com/p/directions/-/-,/-/walk?c=16.78,0,0,0,dh&isCorrectAnswer=true', '_blank')}
                 >
                   <Navigation className="mr-2 h-4 w-4" />
                   길찾기
