@@ -255,11 +255,7 @@ function AdminDashboard() {
               </Card>
             </div>
 
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold">로드맵 관리</h3>
-              <RoadmapForm type="middle_school" />
-              <RoadmapForm type="high_school" />
-            </div>
+
           </div>
         )}
 
@@ -485,87 +481,34 @@ function AdminDashboard() {
               <h2 className="text-2xl font-semibold text-gray-900">로드맵 관리</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Middle School Roadmap */}
+            {/* Roadmap Forms Section */}
+            <div className="space-y-8">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <School className="h-5 w-5 text-orange-600" />
-                    예중 입시 로드맵
+                    예중 입시 로드맵 편집
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {middleRoadmap ? (
-                    <div className="space-y-4">
-                      <div className="text-sm text-gray-600">
-                        마지막 수정: {new Date((middleRoadmap as any).updatedAt).toLocaleDateString()}
-                      </div>
-                      <div className="prose prose-sm max-w-none">
-                        <div dangerouslySetInnerHTML={{ 
-                          __html: ((middleRoadmap as any).content?.substring(0, 200) + '...') || '내용 없음' 
-                        }} />
-                      </div>
-                      <Button 
-                        onClick={() => window.location.href = '/admin/roadmap/middle'}
-                        className="w-full"
-                      >
-                        수정하기
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <p className="text-gray-500 mb-4">로드맵이 없습니다.</p>
-                      <Button 
-                        onClick={() => window.location.href = '/admin/roadmap/middle'}
-                        variant="outline"
-                      >
-                        로드맵 생성하기
-                      </Button>
-                    </div>
-                  )}
+                  <RoadmapForm type="middle_school" />
                 </CardContent>
               </Card>
 
-              {/* High School Roadmap */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <GraduationCap className="h-5 w-5 text-red-600" />
-                    예고 입시 로드맵
+                    예고 입시 로드맵 편집
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {highRoadmap ? (
-                    <div className="space-y-4">
-                      <div className="text-sm text-gray-600">
-                        마지막 수정: {new Date((highRoadmap as any).updatedAt).toLocaleDateString()}
-                      </div>
-                      <div className="prose prose-sm max-w-none">
-                        <div dangerouslySetInnerHTML={{ 
-                          __html: ((highRoadmap as any).content?.substring(0, 200) + '...') || '내용 없음' 
-                        }} />
-                      </div>
-                      <Button 
-                        onClick={() => window.location.href = '/admin/roadmap/high'}
-                        className="w-full"
-                      >
-                        수정하기
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <p className="text-gray-500 mb-4">로드맵이 없습니다.</p>
-                      <Button 
-                        onClick={() => window.location.href = '/admin/roadmap/high'}
-                        variant="outline"
-                      >
-                        로드맵 생성하기
-                      </Button>
-                    </div>
-                  )}
+                  <RoadmapForm type="high_school" />
                 </CardContent>
               </Card>
             </div>
+
+
           </div>
         )}
 
