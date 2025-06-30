@@ -41,8 +41,8 @@ export default function Gallery() {
 
   const totalPages = data ? Math.ceil(data.total / 9) : 0;
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatDate = (dateInput: string | Date) => {
+    const date = new Date(dateInput);
     return date.toLocaleDateString('ko-KR', {
       year: 'numeric',
       month: 'numeric',

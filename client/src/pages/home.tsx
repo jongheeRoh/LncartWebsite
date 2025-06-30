@@ -74,11 +74,11 @@ export default function Home() {
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">입시 성과</h3>
                 <p className="text-gray-600 mb-6 leading-relaxed">30년간 쌓아온 노하우로 매년 우수한 입시 성과를 자랑합니다.</p>
-                <Link href="/notices">
+                <Link href="/about">
                   <Button 
                     className="gradient-bg text-white border-0 px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition-all"
                   >
-                    성과 보기
+                    학원 소개
                   </Button>
                 </Link>
               </CardContent>

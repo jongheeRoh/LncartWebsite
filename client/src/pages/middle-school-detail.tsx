@@ -172,14 +172,14 @@ export default function MiddleSchoolDetail() {
               />
 
               {/* 첨부파일 */}
-              {admission.attachments && Array.isArray(admission.attachments) && admission.attachments.length > 0 && (
+              {admission.attachments && Array.isArray(admission.attachments) && admission.attachments.length > 0 ? (
                 <div className="mt-8 p-4 bg-gray-50 rounded-lg">
                   <h3 className="text-lg font-semibold mb-4 flex items-center">
                     <Paperclip className="h-5 w-5 mr-2" />
                     첨부파일
                   </h3>
                   <div className="space-y-2">
-                    {admission.attachments.map((file: any, index: number) => (
+                    {(admission.attachments as any[]).map((file: any, index: number) => (
                       <div key={index} className="flex items-center p-3 bg-white rounded border">
                         <div className="flex items-center flex-1">
                           <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-3">
@@ -204,7 +204,7 @@ export default function MiddleSchoolDetail() {
                     ))}
                   </div>
                 </div>
-              )}
+              ) : null}
             </CardContent>
           </Card>
 

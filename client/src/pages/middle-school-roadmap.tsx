@@ -9,7 +9,7 @@ import type { FileAttachment } from "@/components/ui/file-upload";
 
 export default function MiddleSchoolRoadmap() {
   const { data: roadmap, isLoading } = useQuery<Roadmap>({
-    queryKey: ["/api/roadmaps/middle_school"],
+    queryKey: ["/api/roadmap", "middle_school"],
   });
 
   if (isLoading) {
@@ -79,20 +79,22 @@ export default function MiddleSchoolRoadmap() {
         </div>
 
         {/* Content */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="text-2xl">{roadmap.title}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div 
-              className="prose prose-lg max-w-none"
-              dangerouslySetInnerHTML={{ __html: roadmap.content }}
-            />
-          </CardContent>
-        </Card>
+        {roadmap && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="text-2xl">{roadmap.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div 
+                className="prose prose-lg max-w-none"
+                dangerouslySetInnerHTML={{ __html: roadmap.content || '' }}
+              />
+            </CardContent>
+          </Card>
+        )}
 
         {/* Attachments */}
-        {roadmap.attachments && roadmap.attachments.length > 0 && (
+        {roadmap && roadmap.attachments && Array.isArray(roadmap.attachments) && roadmap.attachments.length > 0 && (
           <Card>
             <CardHeader>
               <CardTitle className="text-xl flex items-center gap-2">

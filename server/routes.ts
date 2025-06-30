@@ -40,6 +40,16 @@ function requireAuth(req: Request, res: Response, next: NextFunction) {
   console.log('Auth middleware - cookies:', req.cookies);
   console.log('Auth middleware - available sessions:', Array.from(adminSessions.keys()));
   
+  // Check if it's a logged in admin session first
+  if (sessionId && adminSessions.has(sessionId)) {
+    const session = adminSessions.get(sessionId);
+    if (session && session.isLoggedIn) {
+      console.log('Auth middleware - Found valid session');
+      req.adminSession = session;
+      return next();
+    }
+  }
+  
   if (!sessionId) {
     console.log('Auth middleware - No session ID found');
     return res.status(401).json({ error: "Unauthorized" });
@@ -408,7 +418,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Roadmap routes
-  app.get("/api/roadmaps/:type", async (req, res) => {
+  app.get("/api/roadmap/:type", async (req, res) => {
     try {
       const type = req.params.type;
       const roadmap = await storage.getRoadmap(type);
@@ -423,7 +433,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/roadmaps", requireAuth, async (req, res) => {
+  app.post("/api/roadmap", requireAuth, async (req, res) => {
     try {
       const validatedData = insertRoadmapSchema.parse(req.body);
       const roadmap = await storage.createRoadmap(validatedData);
@@ -436,7 +446,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/roadmaps/:type", requireAuth, async (req, res) => {
+  app.patch("/api/roadmap/:type", requireAuth, async (req, res) => {
     try {
       const type = req.params.type;
       const validatedData = updateRoadmapSchema.parse(req.body);
