@@ -19,7 +19,7 @@ import AdminLogin from "./admin-login";
 function AdminDashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [activeSection, setActiveSection] = useState<"dashboard" | "notices" | "gallery" | "middle-admission" | "high-admission">("dashboard");
+  const [activeSection, setActiveSection] = useState<"dashboard" | "notices" | "gallery" | "middle-admission" | "high-admission" | "roadmap">("dashboard");
   const [showNoticeForm, setShowNoticeForm] = useState(false);
   const [showGalleryForm, setShowGalleryForm] = useState(false);
   const [showMiddleAdmissionForm, setShowMiddleAdmissionForm] = useState(false);
@@ -56,6 +56,17 @@ function AdminDashboard() {
   const { data: highAdmissionsData } = useQuery({
     queryKey: ["/api/high-school-admission", { limit: 100 }],
     enabled: activeSection === "high-admission",
+  });
+
+  // Fetch roadmaps
+  const { data: middleRoadmap } = useQuery({
+    queryKey: ["/api/roadmap", "middle"],
+    enabled: activeSection === "roadmap",
+  });
+
+  const { data: highRoadmap } = useQuery({
+    queryKey: ["/api/roadmap", "high"],
+    enabled: activeSection === "roadmap",
   });
 
   const notices = (noticesData as any)?.notices || [];
@@ -133,7 +144,7 @@ function AdminDashboard() {
         </div>
 
         {/* Dashboard Navigation */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
           <Card 
             className={`cursor-pointer transition-all ${activeSection === "dashboard" ? "ring-2 ring-blue-500" : ""}`}
             onClick={() => setActiveSection("dashboard")}
@@ -183,22 +194,19 @@ function AdminDashboard() {
               <span className="text-sm font-medium">예고입시</span>
             </CardContent>
           </Card>
+          
+          <Card 
+            className={`cursor-pointer transition-all ${activeSection === "roadmap" ? "ring-2 ring-blue-500" : ""}`}
+            onClick={() => setActiveSection("roadmap")}
+          >
+            <CardContent className="flex flex-col items-center justify-center p-6">
+              <Map className="h-8 w-8 mb-2 text-indigo-600" />
+              <span className="text-sm font-medium">로드맵</span>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Quick Actions */}
-        <div className="mb-8">
-          <h3 className="text-lg font-semibold mb-4">빠른 작업</h3>
-          <div className="flex gap-4">
-            <Button
-              onClick={() => window.location.href = '/admin/roadmap'}
-              className="flex items-center"
-              variant="outline"
-            >
-              <Map className="h-4 w-4 mr-2" />
-              로드맵 관리
-            </Button>
-          </div>
-        </div>
+
 
         {/* Dashboard Overview */}
         {activeSection === "dashboard" && (
@@ -466,6 +474,97 @@ function AdminDashboard() {
                   </table>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Roadmap Management Section */}
+        {activeSection === "roadmap" && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-semibold text-gray-900">로드맵 관리</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Middle School Roadmap */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <School className="h-5 w-5 text-orange-600" />
+                    예중 입시 로드맵
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {middleRoadmap ? (
+                    <div className="space-y-4">
+                      <div className="text-sm text-gray-600">
+                        마지막 수정: {new Date((middleRoadmap as any).updatedAt).toLocaleDateString()}
+                      </div>
+                      <div className="prose prose-sm max-w-none">
+                        <div dangerouslySetInnerHTML={{ 
+                          __html: ((middleRoadmap as any).content?.substring(0, 200) + '...') || '내용 없음' 
+                        }} />
+                      </div>
+                      <Button 
+                        onClick={() => window.location.href = '/admin/roadmap/middle'}
+                        className="w-full"
+                      >
+                        수정하기
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <p className="text-gray-500 mb-4">로드맵이 없습니다.</p>
+                      <Button 
+                        onClick={() => window.location.href = '/admin/roadmap/middle'}
+                        variant="outline"
+                      >
+                        로드맵 생성하기
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* High School Roadmap */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <GraduationCap className="h-5 w-5 text-red-600" />
+                    예고 입시 로드맵
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {highRoadmap ? (
+                    <div className="space-y-4">
+                      <div className="text-sm text-gray-600">
+                        마지막 수정: {new Date((highRoadmap as any).updatedAt).toLocaleDateString()}
+                      </div>
+                      <div className="prose prose-sm max-w-none">
+                        <div dangerouslySetInnerHTML={{ 
+                          __html: ((highRoadmap as any).content?.substring(0, 200) + '...') || '내용 없음' 
+                        }} />
+                      </div>
+                      <Button 
+                        onClick={() => window.location.href = '/admin/roadmap/high'}
+                        className="w-full"
+                      >
+                        수정하기
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <p className="text-gray-500 mb-4">로드맵이 없습니다.</p>
+                      <Button 
+                        onClick={() => window.location.href = '/admin/roadmap/high'}
+                        variant="outline"
+                      >
+                        로드맵 생성하기
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </div>
           </div>
         )}
