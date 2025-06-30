@@ -226,6 +226,56 @@ export default function About() {
           </div>
         </section>
 
+        {/* Creative Talent Education Video Section */}
+        <section className="py-24 bg-gradient-to-br from-purple-50 to-blue-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-5xl md:text-6xl font-bold mb-6">
+                <span className="gradient-text">창의적</span>
+                <br />
+                <span className="text-gray-900">재능교육</span>
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                학생들의 창의적 재능을 발굴하고 키워주는 선과색미술학원의 특별한 교육 과정을 확인해보세요.
+              </p>
+            </div>
+            
+            <div className="max-w-5xl mx-auto">
+              <Card className="card-hover bg-white border-0 shadow-2xl overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="aspect-video bg-gray-900 rounded-t-xl overflow-hidden relative">
+                    <iframe
+                      src="https://www.youtube.com/embed/p_r6sLXDuJs"
+                      className="absolute inset-0 w-full h-full object-cover"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      title="창의적 재능교육 영상"
+                      style={{ 
+                        width: '100%', 
+                        height: '100%', 
+                        border: 'none',
+                        display: 'block'
+                      }}
+                    />
+                  </div>
+                  <div className="p-8">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4">창의적 재능교육</h3>
+                    <p className="text-gray-600 leading-relaxed mb-6">
+                      개별 학생의 특성과 재능을 파악하여 맞춤형 교육을 제공하며,
+                      창의적 사고력과 예술적 감성을 동시에 키워나가는 교육 과정입니다.
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">창의성 개발</span>
+                      <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">개별 맞춤 교육</span>
+                      <span className="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-medium">재능 발굴</span>
+                      <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">예술적 감성</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
 
       </div>
     </div>
