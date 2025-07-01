@@ -194,6 +194,22 @@ export default function Directions() {
           </div>
         </section>
 
+        {/* 주차안내 */}
+        <section className="mb-16">
+          <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">주차안내</h3>
+          <Card className="bg-white shadow-lg">
+            <CardContent className="p-8">
+              <div className="flex justify-center">
+                <img 
+                  src="/parking-guide.jpeg" 
+                  alt="선과색미술학원 주차안내" 
+                  className="max-w-full h-auto rounded-lg shadow-md"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
         {/* 사업자 정보 */}
         <section className="mb-16">
           <h3 className="text-3xl font-bold text-slate-900 mb-8 text-center">사업자 정보</h3>
