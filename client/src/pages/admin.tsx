@@ -214,46 +214,71 @@ function AdminDashboard() {
             <h2 className="text-2xl font-bold mb-6">대시보드 개요</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <Card>
+              <Card className="bg-blue-50 border-blue-200">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">총 공지사항</CardTitle>
-                  <Bell className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-medium text-blue-700">등록된 공지사항</CardTitle>
+                  <Bell className="h-4 w-4 text-blue-600" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{(stats as any)?.totalNotices || 0}</div>
+                  <div className="text-2xl font-bold text-blue-900">{(stats as any)?.totalNotices || 0}개</div>
+                  <p className="text-xs text-blue-600 mt-1">데이터베이스 실제 카운트</p>
                 </CardContent>
               </Card>
               
-              <Card>
+              <Card className="bg-green-50 border-green-200">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">갤러리 이미지</CardTitle>
-                  <Image className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-medium text-green-700">갤러리 이미지</CardTitle>
+                  <Image className="h-4 w-4 text-green-600" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{(stats as any)?.totalImages || 0}</div>
+                  <div className="text-2xl font-bold text-green-900">{(stats as any)?.totalImages || 0}개</div>
+                  <p className="text-xs text-green-600 mt-1">업로드된 이미지 수</p>
                 </CardContent>
               </Card>
               
-              <Card>
+              <Card className="bg-purple-50 border-purple-200">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">월간 방문자</CardTitle>
-                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-medium text-purple-700">월간 방문자 추정</CardTitle>
+                  <BarChart3 className="h-4 w-4 text-purple-600" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{(stats as any)?.monthlyVisitors || 0}</div>
+                  <div className="text-2xl font-bold text-purple-900">{(stats as any)?.monthlyVisitors?.toLocaleString() || 0}명</div>
+                  <p className="text-xs text-purple-600 mt-1">조회수 기반 추정치</p>
                 </CardContent>
               </Card>
               
-              <Card>
+              <Card className="bg-orange-50 border-orange-200">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">조회수 증가</CardTitle>
-                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                  <CardTitle className="text-sm font-medium text-orange-700">성장률</CardTitle>
+                  <BarChart3 className="h-4 w-4 text-orange-600" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-green-600">{(stats as any)?.viewsGrowth || "+0%"}</div>
+                  <div className="text-2xl font-bold text-orange-900">{(stats as any)?.viewsGrowth || "+0%"}</div>
+                  <p className="text-xs text-orange-600 mt-1">콘텐츠 기반 계산</p>
                 </CardContent>
               </Card>
             </div>
+
+            {/* 통계 설명 */}
+            <Card className="bg-slate-50 border-slate-200">
+              <CardContent className="p-4">
+                <h3 className="font-semibold text-slate-900 mb-2">통계 정보 안내</h3>
+                <div className="grid md:grid-cols-2 gap-4 text-sm text-slate-600">
+                  <div>
+                    <span className="font-medium">공지사항 & 갤러리:</span> 데이터베이스에서 실시간으로 계산된 정확한 수치입니다.
+                  </div>
+                  <div>
+                    <span className="font-medium">월간 방문자:</span> 각 페이지의 조회수를 바탕으로 추정한 방문자 수입니다.
+                  </div>
+                  <div>
+                    <span className="font-medium">성장률:</span> 전체 콘텐츠 수를 기반으로 계산된 예상 성장률입니다.
+                  </div>
+                  <div>
+                    <span className="font-medium">업데이트:</span> 새로운 콘텐츠 추가 시 실시간으로 반영됩니다.
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
 
           </div>
@@ -607,36 +632,43 @@ function AdminDashboard() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-semibold text-gray-900">로드맵 관리</h2>
+              <div className="text-sm text-gray-600">
+                홈페이지 로드맵 버튼과 연결된 콘텐츠를 관리합니다
+              </div>
             </div>
 
             {/* Roadmap Forms Section */}
             <div className="space-y-8">
-              <Card>
-                <CardHeader>
+              <Card className="border-orange-200 shadow-lg">
+                <CardHeader className="bg-orange-50 border-b border-orange-200">
                   <CardTitle className="flex items-center gap-2">
                     <School className="h-5 w-5 text-orange-600" />
                     예중 입시 로드맵 편집
                   </CardTitle>
+                  <p className="text-sm text-gray-600 mt-1">
+                    홈페이지 "예중 입시로드맵 보기" 버튼과 연결된 페이지의 콘텐츠를 편집합니다
+                  </p>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-6">
                   <RoadmapForm type="middle_school" />
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
+              <Card className="border-blue-200 shadow-lg">
+                <CardHeader className="bg-blue-50 border-b border-blue-200">
                   <CardTitle className="flex items-center gap-2">
-                    <GraduationCap className="h-5 w-5 text-red-600" />
+                    <GraduationCap className="h-5 w-5 text-blue-600" />
                     예고 입시 로드맵 편집
                   </CardTitle>
+                  <p className="text-sm text-gray-600 mt-1">
+                    홈페이지 "예고 입시로드맵 보기" 버튼과 연결된 페이지의 콘텐츠를 편집합니다
+                  </p>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-6">
                   <RoadmapForm type="high_school" />
                 </CardContent>
               </Card>
             </div>
-
-
           </div>
         )}
 

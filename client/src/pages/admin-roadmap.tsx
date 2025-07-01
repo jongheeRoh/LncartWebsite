@@ -53,15 +53,13 @@ export default function AdminRoadmap() {
 
   const updateRoadmapMutation = useMutation({
     mutationFn: async (data: RoadmapFormData) => {
-      const response = await fetch(`/api/roadmap/${data.type}`, {
-        method: roadmap ? "PUT" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) throw new Error("Failed to save roadmap");
-      return response.json();
+      if (roadmap) {
+        // 기존 로드맵 수정
+        return await apiRequest(`/api/roadmap/${data.type}`, "PUT", data);
+      } else {
+        // 새 로드맵 생성
+        return await apiRequest("/api/roadmap", "POST", data);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/roadmap/${selectedType}`] });
@@ -69,7 +67,7 @@ export default function AdminRoadmap() {
     },
     onError: (error) => {
       console.error("Error saving roadmap:", error);
-      alert("로드맵 저장 중 오류가 발생했습니다.");
+      alert(`로드맵 저장 중 오류가 발생했습니다: ${error.message}`);
     },
   });
 

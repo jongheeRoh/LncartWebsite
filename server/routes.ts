@@ -462,6 +462,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.put("/api/roadmap/:type", requireAuth, async (req, res) => {
+    try {
+      const type = req.params.type;
+      const validatedData = updateRoadmapSchema.parse(req.body);
+      const roadmap = await storage.updateRoadmap(type, validatedData);
+      
+      if (!roadmap) {
+        return res.status(404).json({ error: "Roadmap not found" });
+      }
+      
+      res.json(roadmap);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ error: "Invalid data", details: error.errors });
+      }
+      res.status(500).json({ error: "Failed to update roadmap" });
+    }
+  });
+
   app.patch("/api/roadmap/:type", requireAuth, async (req, res) => {
     try {
       const type = req.params.type;
