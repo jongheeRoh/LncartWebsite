@@ -269,7 +269,7 @@ export default function Home() {
               <div className="text-gray-600">축적된 입시 노하우</div>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-bold gradient-text mb-2">100+</div>
+              <div className="text-5xl font-bold gradient-text mb-2">1K+</div>
               <div className="text-xl font-semibold text-gray-900 mb-2">합격생 배출</div>
               <div className="text-gray-600">매년 우수한 성과</div>
             </div>
