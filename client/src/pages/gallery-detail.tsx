@@ -79,37 +79,48 @@ export default function GalleryDetail() {
   return (
     <section className="py-16 bg-slate-50 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
+        {/* Back Button */}
+        <div className="mb-6">
           <Link href="/gallery">
-            <Button variant="ghost" className="mb-4">
+            <Button variant="outline" size="sm">
               <ArrowLeft className="mr-2 h-4 w-4" />
               갤러리 목록으로
             </Button>
           </Link>
-          
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold text-slate-900">갤러리</h1>
-            <div className="flex items-center text-sm text-slate-500">
-              <span>관리</span>
-            </div>
-          </div>
-          
-          <h2 className="text-2xl font-semibold text-slate-800 mb-2">{item.title}</h2>
-          
-          <div className="flex items-center space-x-4 text-sm text-slate-600 mb-6">
-            <div className="flex items-center">
-              <Calendar className="h-4 w-4 mr-1" />
-              <span>{formatDate(item.createdAt)}</span>
-            </div>
-            <Badge className="bg-primary/10 text-primary">
-              {item.category}
-            </Badge>
-          </div>
         </div>
 
         {/* Content */}
-        <Card className="bg-white shadow-lg">
+        <Card className="bg-white shadow-lg overflow-hidden">
+          {/* Header */}
+          <div className="bg-white border-b p-6">
+            <div className="flex items-center justify-between mb-4">
+              <Badge 
+                variant="outline" 
+                className="text-sm font-medium text-blue-600 border-blue-200 bg-blue-50"
+              >
+                {item.category}
+              </Badge>
+              <div className="flex items-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  {new Date(item.createdAt).toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    weekday: 'short'
+                  })}
+                </div>
+                <div className="flex items-center">
+                  <User className="h-4 w-4 mr-2" />
+                  관리자
+                </div>
+              </div>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
+              {item.title}
+            </h1>
+          </div>
+          
           <CardContent className="p-8">
             {/* Main Image */}
             {item.imageUrl && (

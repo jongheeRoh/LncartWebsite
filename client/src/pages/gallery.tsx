@@ -50,6 +50,30 @@ export default function Gallery() {
     });
   };
 
+  // Extract plain text from HTML and limit to 2 lines
+  const extractPlainText = (html: string): string => {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    const text = div.textContent || div.innerText || '';
+    
+    // Split by sentences and join to create consistent 2-line format
+    const sentences = text.split(/[.!?]\s+/).filter(sentence => sentence.trim().length > 0);
+    if (sentences.length === 0) return '';
+    
+    // Create 2 lines worth of content
+    let result = sentences[0];
+    if (sentences.length > 1) {
+      result += '. ' + sentences[1];
+    }
+    
+    // Truncate if too long (approximately 80 chars per line)
+    if (result.length > 160) {
+      result = result.substring(0, 157) + '...';
+    }
+    
+    return result;
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
@@ -163,9 +187,11 @@ export default function Gallery() {
                         {item.title}
                       </h4>
                       
-                      <p className="text-slate-600 text-sm mb-4 line-clamp-3">
-                        {item.description}
-                      </p>
+                      <div className="text-slate-600 text-sm mb-4 h-10 overflow-hidden">
+                        <p className="leading-5">
+                          {extractPlainText(item.description || '')}
+                        </p>
+                      </div>
                       
                       <div className="flex items-center justify-between text-xs text-slate-500">
                         <div className="flex items-center">

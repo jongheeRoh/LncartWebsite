@@ -93,24 +93,34 @@ export default function NoticeDetail() {
 
         {/* Notice Content */}
         <Card>
-          <CardHeader>
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <CardTitle className="text-2xl">{notice.title}</CardTitle>
-                  <Badge variant={getCategoryColor(notice.category)}>
-                    {notice.category}
-                  </Badge>
+          <div className="bg-white border-b p-6">
+            <div className="flex items-center justify-between mb-4">
+              <Badge 
+                variant="outline" 
+                className="text-sm font-medium text-blue-600 border-blue-200 bg-blue-50"
+              >
+                {notice.category}
+              </Badge>
+              <div className="flex items-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  {new Date(notice.createdAt).toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    weekday: 'short'
+                  })}
                 </div>
-                <div className="flex items-center gap-4 text-sm text-slate-600">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4" />
-                    {new Date(notice.createdAt).toLocaleDateString('ko-KR')}
-                  </div>
+                <div className="flex items-center">
+                  <FileText className="h-4 w-4 mr-2" />
+                  조회수 {notice.views || 0}
                 </div>
               </div>
             </div>
-          </CardHeader>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
+              {notice.title}
+            </h1>
+          </div>
           <CardContent>
             <div 
               className="prose max-w-none video-content"

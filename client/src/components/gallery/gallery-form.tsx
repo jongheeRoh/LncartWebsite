@@ -64,6 +64,13 @@ export default function GalleryForm({ item, onSuccess }: GalleryFormProps) {
     },
   });
 
+  // Extract first image from description for thumbnail
+  const extractFirstImageFromDescription = (htmlContent: string): string => {
+    const imgRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/i;
+    const match = htmlContent.match(imgRegex);
+    return match ? match[1] : "";
+  };
+
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -85,11 +92,17 @@ export default function GalleryForm({ item, onSuccess }: GalleryFormProps) {
       return;
     }
 
+    // Auto-extract thumbnail from description if imageUrl is empty
+    let finalImageUrl = imageUrl.trim();
+    if (!finalImageUrl && description) {
+      finalImageUrl = extractFirstImageFromDescription(description);
+    }
+
     const data: InsertGalleryItem = {
       title: title.trim(),
       description: description.trim() || "",
       category,
-      imageUrl: imageUrl.trim() || "",
+      imageUrl: finalImageUrl,
     };
 
     console.log("Submitting gallery data:", data);

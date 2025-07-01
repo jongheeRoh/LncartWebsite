@@ -135,26 +135,26 @@ export default function MiddleSchoolDetail() {
         <div className="max-w-4xl mx-auto px-4">
           <Card className="overflow-hidden">
             {/* Header */}
-            <div className="bg-gradient-to-r from-primary to-primary/80 text-white p-6">
+            <div className="bg-white border-b p-6">
               <div className="flex items-center justify-between mb-4">
                 <Badge 
-                  variant="secondary" 
-                  className="bg-white/20 text-white backdrop-blur-sm"
+                  variant="outline" 
+                  className="text-sm font-medium text-blue-600 border-blue-200 bg-blue-50"
                 >
                   {admission.category}
                 </Badge>
-                <div className="flex items-center gap-4 text-sm opacity-90">
+                <div className="flex items-center gap-4 text-sm text-gray-500">
                   <div className="flex items-center">
                     <Calendar className="h-4 w-4 mr-2" />
                     {formatDate(admission.createdAt)}
                   </div>
                   <div className="flex items-center">
                     <Eye className="h-4 w-4 mr-2" />
-                    {admission.views || 0}
+                    조회수 {admission.views || 0}
                   </div>
                 </div>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-bold leading-tight">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
                 {admission.title}
               </h1>
             </div>

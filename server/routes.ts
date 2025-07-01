@@ -417,6 +417,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update gallery thumbnails
+  app.post("/api/update-gallery-thumbnails", requireAuth, async (req, res) => {
+    try {
+      const { updateGalleryThumbnails } = await import('./update-gallery-thumbnails');
+      const result = await updateGalleryThumbnails();
+      res.json(result);
+    } catch (error) {
+      console.error("Thumbnail update error:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: `썸네일 업데이트 중 오류: ${error instanceof Error ? error.message : String(error)}`,
+        updated: 0
+      });
+    }
+  });
+
   // Roadmap routes
   app.get("/api/roadmap/:type", async (req, res) => {
     try {

@@ -410,13 +410,37 @@ function AdminDashboard() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">갤러리 관리</h2>
-              <Button onClick={() => {
-                setEditingGallery(null);
-                setShowGalleryForm(true);
-              }}>
-                <Plus className="w-4 h-4 mr-2" />
-                새 갤러리 항목
-              </Button>
+              <div className="flex space-x-2">
+                <Button 
+                  variant="outline" 
+                  onClick={async () => {
+                    try {
+                      const response = await apiRequest("/api/update-gallery-thumbnails", "POST", {}) as { message: string; updated: number };
+                      toast({
+                        title: "성공",
+                        description: response.message,
+                      });
+                      queryClient.invalidateQueries({ queryKey: ['/api/gallery'] });
+                    } catch (error: any) {
+                      toast({
+                        title: "오류",
+                        description: error.message || "썸네일 업데이트에 실패했습니다.",
+                        variant: "destructive",
+                      });
+                    }
+                  }}
+                >
+                  <Image className="w-4 h-4 mr-2" />
+                  썸네일 업데이트
+                </Button>
+                <Button onClick={() => {
+                  setEditingGallery(null);
+                  setShowGalleryForm(true);
+                }}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  새 갤러리 항목
+                </Button>
+              </div>
             </div>
 
             <div className="bg-white border rounded-lg">

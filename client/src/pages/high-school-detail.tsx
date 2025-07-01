@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronLeft, ChevronRight, Share2, X, List, Eye } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Share2, X, List, Eye, Calendar } from "lucide-react";
 import { Link } from "wouter";
 import type { HighSchoolAdmission } from "@shared/schema";
 import CommentSection from "@/components/comments/comment-section";
@@ -90,50 +90,62 @@ export default function HighSchoolDetail() {
 
         <Card className="bg-white shadow-lg">
           <CardContent className="p-8">
-            <div className="mb-6 relative">
+            {/* Header */}
+            <div className="bg-white border-b p-6 -m-8 mb-8">
               <Button
                 variant="ghost"
                 size="sm"
-                className="absolute top-0 right-0 text-gray-400 hover:text-gray-600"
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
                 onClick={() => setLocation("/high-school")}
               >
                 <X className="h-5 w-5" />
               </Button>
-              <Badge variant="secondary" className="mb-4">
-                {admission?.category}
-              </Badge>
-              <h1 className="text-3xl font-bold text-slate-900 mb-4">
-                {admission?.title}
-              </h1>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4 text-sm text-gray-500">
-                  <span>작성일: {admission?.createdAt ? new Date(admission.createdAt).toLocaleDateString('ko-KR') : ''}</span>
-                  <div className="flex items-center space-x-1">
-                    <Eye className="w-4 h-4" />
-                    <span>조회수: {admission?.views || 0}</span>
+              <div className="flex items-center justify-between mb-4">
+                <Badge 
+                  variant="outline" 
+                  className="text-sm font-medium text-blue-600 border-blue-200 bg-blue-50"
+                >
+                  {admission?.category}
+                </Badge>
+                <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <div className="flex items-center">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    {admission?.createdAt ? new Date(admission.createdAt).toLocaleDateString('ko-KR', {
+                      year: 'numeric',
+                      month: 'long', 
+                      day: 'numeric',
+                      weekday: 'short'
+                    }) : ''}
+                  </div>
+                  <div className="flex items-center">
+                    <Eye className="h-4 w-4 mr-2" />
+                    조회수 {admission?.views || 0}
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-500 hover:text-gray-700"
-                  onClick={() => {
-                    if (navigator.share) {
-                      navigator.share({
-                        title: admission?.title || '예고 입시정보',
-                        text: admission?.title || '예고 입시정보',
-                        url: window.location.href,
-                      });
-                    } else {
-                      navigator.clipboard.writeText(window.location.href);
-                      alert('링크가 복사되었습니다.');
-                    }
-                  }}
-                >
-                  <Share2 className="h-4 w-4 mr-1" />
-                  공유
-                </Button>
               </div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight mb-3">
+                {admission?.title}
+              </h1>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-gray-500 hover:text-gray-700"
+                onClick={() => {
+                  if (navigator.share) {
+                    navigator.share({
+                      title: admission?.title || '예고 입시정보',
+                      text: admission?.title || '예고 입시정보',
+                      url: window.location.href,
+                    });
+                  } else {
+                    navigator.clipboard.writeText(window.location.href);
+                    alert('링크가 복사되었습니다.');
+                  }
+                }}
+              >
+                <Share2 className="h-4 w-4 mr-1" />
+                공유
+              </Button>
             </div>
             
             <div 
