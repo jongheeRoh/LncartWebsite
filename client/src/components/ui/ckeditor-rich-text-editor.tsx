@@ -31,9 +31,14 @@ export default function CKEditorRichTextEditor({
           placeholder,
           toolbar: [
             'heading',
+            'fontSize',
             '|',
             'bold',
             'italic',
+            'underline',
+            '|',
+            'fontColor',
+            'fontBackgroundColor',
             '|',
             'link',
             'blockQuote',
@@ -43,6 +48,8 @@ export default function CKEditorRichTextEditor({
             '|',
             'bulletedList',
             'numberedList',
+            '|',
+            'alignment',
             '|',
             'outdent',
             'indent',
@@ -57,6 +64,23 @@ export default function CKEditorRichTextEditor({
               { model: 'heading2', view: 'h2', title: '제목 2', class: 'ck-heading_heading2' },
               { model: 'heading3', view: 'h3', title: '제목 3', class: 'ck-heading_heading3' }
             ]
+          },
+          fontSize: {
+            options: [
+              'tiny',
+              'small',
+              'default',
+              'big',
+              'huge'
+            ]
+          },
+          fontColor: {
+            columns: 5,
+            documentColors: 10
+          },
+          fontBackgroundColor: {
+            columns: 5,
+            documentColors: 10
           },
           table: {
             contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
@@ -183,6 +207,56 @@ export default function CKEditorRichTextEditor({
           }
           .ckeditor-container .ck-content .media iframe {
             border-radius: 8px !important;
+          }
+          
+          /* 헤딩 스타일 정의 */
+          .ckeditor-container .ck-content h1 {
+            font-size: 2.5rem !important;
+            font-weight: bold !important;
+            margin: 24px 0 16px 0 !important;
+            line-height: 1.2 !important;
+            color: #1e293b !important;
+          }
+          .ckeditor-container .ck-content h2 {
+            font-size: 2rem !important;
+            font-weight: bold !important;
+            margin: 20px 0 12px 0 !important;
+            line-height: 1.3 !important;
+            color: #334155 !important;
+          }
+          .ckeditor-container .ck-content h3 {
+            font-size: 1.5rem !important;
+            font-weight: bold !important;
+            margin: 16px 0 8px 0 !important;
+            line-height: 1.4 !important;
+            color: #475569 !important;
+          }
+          .ckeditor-container .ck-content p {
+            font-size: 1rem !important;
+            line-height: 1.6 !important;
+            margin: 8px 0 !important;
+            color: #64748b !important;
+          }
+          
+          /* 드롭다운 헤딩 미리보기 스타일 */
+          .ck-dropdown__panel .ck-list__item .ck-button__label {
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif !important;
+          }
+          .ck-dropdown__panel .ck-list__item[data-value="heading1"] .ck-button__label {
+            font-size: 1.5rem !important;
+            font-weight: bold !important;
+          }
+          .ck-dropdown__panel .ck-list__item[data-value="heading2"] .ck-button__label {
+            font-size: 1.25rem !important;
+            font-weight: bold !important;
+          }
+          .ck-dropdown__panel .ck-list__item[data-value="heading3"] .ck-button__label {
+            font-size: 1.125rem !important;
+            font-weight: bold !important;
+          }
+          .ck-dropdown__panel .ck-list__item[data-value="paragraph"] .ck-button__label {
+            font-size: 1rem !important;
+            font-weight: normal !important;
           }
         `
       }} />
