@@ -38,8 +38,7 @@ export function MiddleSchoolAdmissionForm({ admission, onSuccess }: MiddleSchool
   const createMutation = useMutation({
     mutationFn: async (data: InsertMiddleSchoolAdmission) => {
       try {
-        const response = await apiRequest("/api/middle-school-admission", "POST", { ...data, content });
-        return await response.json();
+        return await apiRequest("/api/middle-school-admission", "POST", { ...data, content });
       } catch (error) {
         console.error("API request failed:", error);
         throw error;
@@ -86,8 +85,7 @@ export function MiddleSchoolAdmissionForm({ admission, onSuccess }: MiddleSchool
   const updateMutation = useMutation({
     mutationFn: async (data: InsertMiddleSchoolAdmission) => {
       try {
-        const response = await apiRequest(`/api/middle-school-admission/${admission!.id}`, "PUT", { ...data, content });
-        return await response.json();
+        return await apiRequest(`/api/middle-school-admission/${admission!.id}`, "PUT", { ...data, content });
       } catch (error) {
         console.error("API update request failed:", error);
         throw error;

@@ -42,8 +42,7 @@ export function HighSchoolAdmissionForm({ admission, onSuccess }: HighSchoolForm
         : "/api/high-school-admission";
       const method = admission ? "PUT" : "POST";
       
-      const response = await apiRequest(url, method, { ...data, content });
-      return await response.json();
+      return await apiRequest(url, method, { ...data, content });
     },
     onSuccess: () => {
       toast({
