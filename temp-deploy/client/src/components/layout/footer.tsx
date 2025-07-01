@@ -73,8 +73,6 @@ export default function Footer() {
                   <a className="text-slate-300 hover:text-white transition-colors">예고입시정보</a>
                 </Link>
               </li>
-              <li><a href="#" className="text-slate-300 hover:text-white transition-colors">미대 입시</a></li>
-              <li><a href="#" className="text-slate-300 hover:text-white transition-colors">기초 과정</a></li>
             </ul>
           </div>
         </div>
