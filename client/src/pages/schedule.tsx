@@ -5,9 +5,9 @@ import heroImage from "/academy-hero-bg.png";
 
 export default function Schedule() {
   return (
-    <section className="py-16 bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
+    <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <section className="relative text-white py-16 overflow-hidden mb-12">
+      <section className="relative text-white py-16 overflow-hidden">
         <div className="absolute inset-0">
           <img 
             src={heroImage} 
@@ -16,15 +16,17 @@ export default function Schedule() {
           />
           <div className="absolute inset-0 bg-black/60"></div>
         </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-4 drop-shadow-lg">학원 시간표</h2>
-          <p className="text-xl text-orange-100 max-w-2xl mx-auto drop-shadow-lg">
-            선과색미술학원의 체계적인 수업 시간표를 확인하세요
-          </p>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">학원 시간표</h2>
+            <p className="text-xl text-orange-100 max-w-3xl mx-auto drop-shadow-lg">
+              선과색미술학원의 체계적인 수업 시간표를 확인하세요
+            </p>
+          </div>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* 초등 4, 5학년 */}
         <section className="mb-16">
           <div className="text-center mb-8">
@@ -361,6 +363,6 @@ export default function Schedule() {
           </Card>
         </section>
       </div>
-    </section>
+    </div>
   );
 }
