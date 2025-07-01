@@ -260,7 +260,7 @@ export default function Directions() {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="border-2 border-white text-white hover:bg-white hover:text-primary"
+                  className="border-2 border-white bg-white/10 text-white hover:bg-white hover:text-primary transition-all duration-200"
                   onClick={() => window.open('https://map.naver.com/p/directions/-/-,/-/walk?c=16.78,0,0,0,dh&isCorrectAnswer=true', '_blank')}
                 >
                   <Navigation className="mr-2 h-4 w-4" />
