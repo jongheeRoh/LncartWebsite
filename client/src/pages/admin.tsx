@@ -264,7 +264,10 @@ function AdminDashboard() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">공지사항 관리</h2>
-              <Button onClick={() => setShowNoticeForm(true)}>
+              <Button onClick={() => {
+                setEditingNotice(null);
+                setShowNoticeForm(true);
+              }}>
                 <Plus className="w-4 h-4 mr-2" />
                 새 공지사항
               </Button>
@@ -329,7 +332,10 @@ function AdminDashboard() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">예중 입시정보 관리</h2>
-              <Button onClick={() => setShowMiddleAdmissionForm(true)}>
+              <Button onClick={() => {
+                setEditingMiddleAdmission(null);
+                setShowMiddleAdmissionForm(true);
+              }}>
                 <Plus className="w-4 h-4 mr-2" />
                 새 예중 입시정보
               </Button>
@@ -404,7 +410,10 @@ function AdminDashboard() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">갤러리 관리</h2>
-              <Button onClick={() => setShowGalleryForm(true)}>
+              <Button onClick={() => {
+                setEditingGallery(null);
+                setShowGalleryForm(true);
+              }}>
                 <Plus className="w-4 h-4 mr-2" />
                 새 갤러리 항목
               </Button>
@@ -496,7 +505,10 @@ function AdminDashboard() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">예고 입시정보 관리</h2>
-              <Button onClick={() => setShowHighAdmissionForm(true)}>
+              <Button onClick={() => {
+                setEditingHighAdmission(null);
+                setShowHighAdmissionForm(true);
+              }}>
                 <Plus className="w-4 h-4 mr-2" />
                 새 예고 입시정보
               </Button>
@@ -605,7 +617,12 @@ function AdminDashboard() {
         )}
 
         {/* Dialogs */}
-        <Dialog open={showNoticeForm} onOpenChange={setShowNoticeForm}>
+        <Dialog open={showNoticeForm} onOpenChange={(open) => {
+          setShowNoticeForm(open);
+          if (!open) {
+            setEditingNotice(null);
+          }
+        }}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
@@ -622,7 +639,12 @@ function AdminDashboard() {
           </DialogContent>
         </Dialog>
 
-        <Dialog open={showGalleryForm} onOpenChange={setShowGalleryForm}>
+        <Dialog open={showGalleryForm} onOpenChange={(open) => {
+          setShowGalleryForm(open);
+          if (!open) {
+            setEditingGallery(null);
+          }
+        }}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
@@ -639,7 +661,12 @@ function AdminDashboard() {
           </DialogContent>
         </Dialog>
 
-        <Dialog open={showMiddleAdmissionForm} onOpenChange={setShowMiddleAdmissionForm}>
+        <Dialog open={showMiddleAdmissionForm} onOpenChange={(open) => {
+          setShowMiddleAdmissionForm(open);
+          if (!open) {
+            setEditingMiddleAdmission(null);
+          }
+        }}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
@@ -656,7 +683,12 @@ function AdminDashboard() {
           </DialogContent>
         </Dialog>
 
-        <Dialog open={showHighAdmissionForm} onOpenChange={setShowHighAdmissionForm}>
+        <Dialog open={showHighAdmissionForm} onOpenChange={(open) => {
+          setShowHighAdmissionForm(open);
+          if (!open) {
+            setEditingHighAdmission(null);
+          }
+        }}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
