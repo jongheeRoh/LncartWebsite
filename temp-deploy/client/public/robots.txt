@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# SEO optimized for art academy
+Sitemap: https://seonggwasaek.com/sitemap.xml
+
+# Block admin areas
+Disallow: /admin
+Disallow: /api/
+
+# Allow important pages for crawling
+Allow: /
+Allow: /about
+Allow: /notices
+Allow: /gallery
+Allow: /middle-school
+Allow: /high-school
+Allow: /middle-school-roadmap
+Allow: /high-school-roadmap
+Allow: /directions

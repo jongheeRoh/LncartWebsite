@@ -1,0 +1,305 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Naver Web Font Configuration */
+@layer base {
+  * {
+    font-family: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  }
+  
+  body {
+    font-feature-settings: "tnum";
+    font-variation-settings: "wght" 400;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    font-variation-settings: "wght" 600;
+  }
+}
+
+:root {
+  --background: hsl(245, 100%, 99%);
+  --foreground: hsl(232, 18%, 19%);
+  --muted: hsl(220, 100%, 98%);
+  --muted-foreground: hsl(232, 18%, 55%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(232, 18%, 19%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(232, 18%, 19%);
+  --border: hsl(220, 50%, 90%);
+  --input: hsl(220, 50%, 90%);
+  --primary: hsl(265, 85%, 60%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(220, 100%, 98%);
+  --secondary-foreground: hsl(232, 18%, 19%);
+  --accent: hsl(205, 100%, 96%);
+  --accent-foreground: hsl(232, 18%, 19%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(265, 85%, 60%);
+  --radius: 1rem;
+}
+
+.dark {
+  --background: hsl(232, 18%, 8%);
+  --foreground: hsl(245, 100%, 99%);
+  --muted: hsl(232, 18%, 16%);
+  --muted-foreground: hsl(232, 18%, 65%);
+  --popover: hsl(232, 18%, 12%);
+  --popover-foreground: hsl(245, 100%, 99%);
+  --card: hsl(232, 18%, 12%);
+  --card-foreground: hsl(245, 100%, 99%);
+  --border: hsl(232, 18%, 20%);
+  --input: hsl(232, 18%, 20%);
+  --primary: hsl(265, 85%, 70%);
+  --primary-foreground: hsl(232, 18%, 8%);
+  --secondary: hsl(232, 18%, 16%);
+  --secondary-foreground: hsl(245, 100%, 99%);
+  --accent: hsl(232, 18%, 16%);
+  --accent-foreground: hsl(245, 100%, 99%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(265, 85%, 70%);
+  --radius: 1rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Starry-inspired gradient backgrounds */
+.gradient-bg {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.gradient-bg-alt {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 1rem;
+}
+
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+.floating-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
+}
+
+/* 동영상 임베드 스타일 */
+.prose iframe,
+iframe {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 315px;
+  border-radius: 8px;
+  margin: 24px 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: none;
+  display: block;
+}
+
+.prose div[style*="position: relative"],
+div[style*="position: relative"] {
+  margin: 24px 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 0 !important;
+  padding-bottom: 56.25% !important;
+}
+
+.prose div[style*="position: relative"] iframe,
+div[style*="position: relative"] iframe {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+
+/* HTML이 텍스트로 표시되는 것을 방지 */
+.prose pre,
+.prose code {
+  white-space: pre-wrap;
+}
+
+.prose [data-youtube-video] {
+  margin: 24px 0;
+}
+
+/* 카드 내 이미지 오버플로우 방지 */
+.line-clamp-4 img,
+.line-clamp-3 img {
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 60px !important;
+  object-fit: cover !important;
+  border-radius: 4px !important;
+  margin: 2px 0 !important;
+  display: inline-block !important;
+}
+
+/* 카드 컨텐츠 영역 오버플로우 숨김 */
+.card-content-area {
+  overflow: hidden !important;
+  word-break: break-word !important;
+}
+
+.card-content-area * {
+  max-width: 100% !important;
+}
+
+.card-content-area img {
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: 50px !important;
+  object-fit: cover !important;
+}
+
+/* Enhanced video content styles for detail pages */
+.video-content iframe {
+  width: 100% !important;
+  height: 315px !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin: 24px 0;
+}
+
+/* Homepage video section - full size */
+.aspect-video iframe {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  display: block !important;
+  object-fit: cover !important;
+}
+
+.video-content div[style*="position: relative"] {
+  position: relative !important;
+  width: 100% !important;
+  height: 0 !important;
+  padding-bottom: 56.25% !important;
+  margin: 24px 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.video-content div[style*="position: relative"] iframe {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* TipTap 에디터 내 동영상 강제 렌더링 */
+.ProseMirror iframe,
+.rich-editor iframe {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.ProseMirror .video-wrapper,
+.rich-editor .video-wrapper {
+  display: block !important;
+  visibility: visible !important;
+}
+
+/* 동영상 컨테이너 강제 표시 */
+.video-wrapper {
+  display: block !important;
+  visibility: visible !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 0 !important;
+  padding-bottom: 56.25% !important;
+  margin: 24px 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  background: #000 !important;
+}
+
+.video-wrapper iframe {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Fix for video embeds showing as HTML */
+.prose iframe {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin: 24px 0;
+}
