@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { GraduationCap, Calendar, BookOpen, Users, Star, Clock, ArrowRight, Target, Award, Phone } from "lucide-react";
-import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
+import heroImage from "/academy-hero-bg.png";
 
 export default function Entrance() {
   return (

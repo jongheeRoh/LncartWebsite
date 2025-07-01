@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { Lock, User } from "lucide-react";
-import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
+import heroImage from "/academy-hero-bg.png";
 
 interface LoginFormData {
   username: string;

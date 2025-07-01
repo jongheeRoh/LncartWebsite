@@ -9,7 +9,7 @@ import {
   Bus, 
   Navigation
 } from "lucide-react";
-import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
+import heroImage from "/academy-hero-bg.png";
 
 export default function Directions() {
   return (

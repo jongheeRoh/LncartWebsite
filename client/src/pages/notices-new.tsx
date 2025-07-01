@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Search, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import { NOTICE_CATEGORIES } from "@/lib/types";
 import type { Notice } from "@shared/schema";
-import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
+import heroImage from "/academy-hero-bg.png";
 
 export default function Notices() {
   const [page, setPage] = useState(1);

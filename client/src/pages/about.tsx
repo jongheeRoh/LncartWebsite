@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Phone, Clock, Users, Award, Target, GraduationCap, Star } from "lucide-react";
-import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
+import heroImage from "/academy-hero-bg.png";
 
 export default function About() {
   return (

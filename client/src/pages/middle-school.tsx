@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, BookOpen, Users, Target, CheckCircle, Clock, Award, Palette, FileText, Trophy, Eye } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
-import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
+import heroImage from "/academy-hero-bg.png";
 import type { MiddleSchoolAdmission } from "@shared/schema";
 
 // HTML 태그와 이미지를 제거하고 순수 텍스트만 추출하는 함수

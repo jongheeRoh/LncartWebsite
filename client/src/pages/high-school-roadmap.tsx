@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Calendar, Download, FileText, BookOpen, Target, CheckCircle } from "lucide-react";
 import { Link } from "wouter";
 import { convertYouTubeUrlsToIframes } from "@/lib/video-converter";
-import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
+import heroImage from "/academy-hero-bg.png";
 
 interface FileAttachment {
   id: string;

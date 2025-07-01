@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Search, Calendar } from "lucide-react";
 import { NOTICE_CATEGORIES, type NoticeCategory } from "@/lib/types";
 import type { Notice } from "@shared/schema";
-import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
+import heroImage from "/academy-hero-bg.png";
 
 export default function Notices() {
   const [page, setPage] = useState(1);
@@ -38,8 +38,8 @@ export default function Notices() {
     refetch();
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatDate = (dateInput: string | Date) => {
+    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
     return date.toLocaleDateString('ko-KR', {
       year: 'numeric',
       month: 'numeric',

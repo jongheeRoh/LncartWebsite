@@ -8,7 +8,7 @@ import { Search, Calendar, User, Plus } from "lucide-react";
 import { Link } from "wouter";
 import { GALLERY_CATEGORIES, type GalleryCategory } from "@/lib/types";
 import type { GalleryItem } from "@shared/schema";
-import heroImage from "@assets/스크린샷 2025-06-25 222106_1750857872681.png";
+import heroImage from "/academy-hero-bg.png";
 
 export default function Gallery() {
   const [page, setPage] = useState(1);
