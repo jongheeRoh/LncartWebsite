@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Search, Calendar } from "lucide-react";
+import { Search, Calendar, Pin } from "lucide-react";
 import { NOTICE_CATEGORIES, type NoticeCategory } from "@/lib/types";
 import type { Notice } from "@shared/schema";
 import heroImage from "/academy-hero-bg.png";
@@ -137,9 +137,14 @@ export default function Notices() {
                       <div className="flex items-center">
                         <Badge variant="outline" className="mr-3 text-xs">{notice.id}</Badge>
                         <div className="flex flex-col">
-                          <span className="text-slate-900 hover:text-primary transition-colors">
-                            {notice.title}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            {notice.pinned && (
+                              <Pin className="h-4 w-4 text-red-500" fill="currentColor" />
+                            )}
+                            <span className="text-slate-900 hover:text-primary transition-colors">
+                              {notice.title}
+                            </span>
+                          </div>
                           <div className="flex items-center mt-1">
                             <Badge 
                               variant="secondary" 
@@ -153,6 +158,11 @@ export default function Notices() {
                             >
                               {notice.category}
                             </Badge>
+                            {notice.pinned && (
+                              <Badge variant="destructive" className="text-xs mr-2">
+                                고정
+                              </Badge>
+                            )}
                             <div className="flex items-center text-xs text-slate-500">
                               <Calendar className="h-3 w-3 mr-1" />
                               <span>{formatDate(notice.createdAt)}</span>

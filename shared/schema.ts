@@ -18,6 +18,7 @@ export const notices = pgTable("notices", {
   category: text("category").notNull().default("일반"),
   attachments: jsonb("attachments").default([]),
   views: integer("views").default(0).notNull(),
+  pinned: boolean("pinned").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -78,6 +79,7 @@ export const insertNoticeSchema = createInsertSchema(notices).pick({
   excerpt: true,
   category: true,
   attachments: true,
+  pinned: true,
 });
 
 export const updateNoticeSchema = insertNoticeSchema.partial();

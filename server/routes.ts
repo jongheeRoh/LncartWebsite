@@ -341,6 +341,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // 공지사항 고정/해제 토글
+  app.patch("/api/notices/:id/toggle-pin", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const notice = await storage.getNotice(id);
+      
+      if (!notice) {
+        return res.status(404).json({ error: "Notice not found" });
+      }
+      
+      const updatedNotice = await storage.updateNotice(id, { pinned: !notice.pinned });
+      res.json(updatedNotice);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to toggle pin notice" });
+    }
+  });
+
   // Gallery routes
   app.get("/api/gallery", async (req, res) => {
     try {

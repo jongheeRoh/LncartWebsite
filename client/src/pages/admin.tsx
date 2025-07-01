@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Edit, Plus, Calendar, BarChart3, Bell, Image, School, GraduationCap, Map } from "lucide-react";
+import { Trash2, Edit, Plus, Calendar, BarChart3, Bell, Image, School, GraduationCap, Map, Pin } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
 import NoticeForm from "@/components/notices/notice-form";
@@ -85,6 +85,19 @@ function AdminDashboard() {
     },
     onError: () => {
       toast({ title: "오류", description: "삭제에 실패했습니다.", variant: "destructive" });
+    },
+  });
+
+  const togglePinNoticeMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest(`/api/notices/${id}/toggle-pin`, "PATCH");
+    },
+    onSuccess: () => {
+      toast({ title: "성공", description: "공지사항 고정 상태가 변경되었습니다." });
+      queryClient.invalidateQueries({ queryKey: ["/api/notices"] });
+    },
+    onError: () => {
+      toast({ title: "오류", description: "고정 상태 변경에 실패했습니다.", variant: "destructive" });
     },
   });
 
@@ -313,8 +326,16 @@ function AdminDashboard() {
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
+                            {notice.pinned && (
+                              <Pin className="h-4 w-4 text-red-500" fill="currentColor" />
+                            )}
                             <h3 className="text-lg font-semibold">{notice.title}</h3>
                             <Badge variant="outline">{notice.category}</Badge>
+                            {notice.pinned && (
+                              <Badge variant="destructive" className="text-xs">
+                                고정
+                              </Badge>
+                            )}
                           </div>
                           <p className="text-gray-600 mb-2">{notice.excerpt}</p>
                           <div className="flex items-center text-sm text-gray-500">
@@ -323,6 +344,14 @@ function AdminDashboard() {
                           </div>
                         </div>
                         <div className="flex space-x-2">
+                          <Button
+                            variant={notice.pinned ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => togglePinNoticeMutation.mutate(notice.id)}
+                            title={notice.pinned ? "고정 해제" : "상단 고정"}
+                          >
+                            <Pin className="w-4 h-4" />
+                          </Button>
                           <Button
                             variant="outline"
                             size="sm"

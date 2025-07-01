@@ -295,8 +295,14 @@ export class DatabaseStorage implements IStorage {
       );
     }
 
-    // Sort by createdAt descending
-    filteredNotices.sort((a: Notice, b: Notice) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    // Sort by pinned first, then by createdAt descending
+    filteredNotices.sort((a: Notice, b: Notice) => {
+      // 고정 공지가 맨 위에 오도록 정렬
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      // 같은 고정 상태면 최신순으로 정렬
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
 
     const total = filteredNotices.length;
     const startIndex = (page - 1) * limit;
