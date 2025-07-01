@@ -49,8 +49,8 @@ function Router() {
             <Route path="/entrance" component={Entrance} />
             <Route path="/entrance/middle-school" component={MiddleSchoolEntrance} />
             <Route path="/entrance/high-school" component={HighSchoolEntrance} />
-            <Route path="/roadmap/middle-school" component={MiddleSchoolRoadmap} />
-            <Route path="/roadmap/high-school" component={HighSchoolRoadmap} />
+            <Route path="/middle-school-roadmap" component={MiddleSchoolRoadmap} />
+            <Route path="/high-school-roadmap" component={HighSchoolRoadmap} />
             <Route path="/middle-school" component={MiddleSchool} />
             <Route path="/high-school" component={HighSchool} />
             <Route path="/directions" component={Directions} />
