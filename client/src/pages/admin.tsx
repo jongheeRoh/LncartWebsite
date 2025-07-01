@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -678,14 +678,33 @@ function AdminDashboard() {
 }
 
 export default function Admin() {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem('adminSessionId') !== null;
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Check auth status on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/verify', {
+          credentials: 'include'
+        });
+        setIsLoggedIn(response.ok);
+      } catch {
+        setIsLoggedIn(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    checkAuth();
+  }, []);
 
   const handleLoginSuccess = (sessionId: string) => {
-    localStorage.setItem('adminSessionId', sessionId);
     setIsLoggedIn(true);
   };
+
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center">로딩 중...</div>;
+  }
 
   if (!isLoggedIn) {
     return <AdminLogin onLoginSuccess={handleLoginSuccess} />;

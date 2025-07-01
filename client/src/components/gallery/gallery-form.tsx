@@ -53,10 +53,12 @@ export default function GalleryForm({ item, onSuccess }: GalleryFormProps) {
       queryClient.invalidateQueries({ queryKey: ["/api/gallery"] });
       onSuccess?.();
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Gallery form error:", error);
+      const errorMessage = error instanceof Error ? error.message : "저장에 실패했습니다.";
       toast({
         title: "오류",
-        description: "저장에 실패했습니다.",
+        description: errorMessage,
         variant: "destructive",
       });
     },
@@ -64,7 +66,24 @@ export default function GalleryForm({ item, onSuccess }: GalleryFormProps) {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim() || !category) return;
+    
+    if (!title.trim()) {
+      toast({
+        title: "오류",
+        description: "제목을 입력해주세요.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!category) {
+      toast({
+        title: "오류", 
+        description: "카테고리를 선택해주세요.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const data: InsertGalleryItem = {
       title: title.trim(),
@@ -73,6 +92,7 @@ export default function GalleryForm({ item, onSuccess }: GalleryFormProps) {
       imageUrl: imageUrl.trim() || "",
     };
 
+    console.log("Submitting gallery data:", data);
     mutation.mutate(data);
   };
 
