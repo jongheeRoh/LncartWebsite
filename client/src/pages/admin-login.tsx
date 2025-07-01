@@ -160,16 +160,7 @@ export default function AdminLogin({ onLoginSuccess }: LoginProps) {
               </form>
             </Form>
 
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-800">
-                <strong>관리자 로그인 정보:</strong><br />
-                아이디: <code className="bg-blue-100 px-1 rounded">admin</code><br />
-                비밀번호: <code className="bg-blue-100 px-1 rounded">line2024!</code>
-              </p>
-              <p className="text-xs text-blue-600 mt-2">
-                위 정보를 정확히 입력해주세요. 대소문자를 구분합니다.
-              </p>
-            </div>
+
           </CardContent>
         </Card>
       </div>
