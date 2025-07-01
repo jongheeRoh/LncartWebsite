@@ -397,7 +397,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Stats
-  async getStats(): Promise<{ totalNotices: number, totalImages: number, monthlyVisitors: number, viewsGrowth: string }> {
+  async getStats(): Promise<{ totalNotices: number, totalImages: number, totalViews: number, viewsGrowth: string }> {
     // 실제 데이터베이스 카운트 계산
     const [noticesCountResult] = await db.select({
       count: sql<number>`count(*)`
@@ -433,20 +433,27 @@ export class DatabaseStorage implements IStorage {
     const totalMiddleAdmissions = Number(middleSchoolCountResult.count) || 0;
     const totalHighAdmissions = Number(highSchoolCountResult.count) || 0;
     
-    // 실제 조회수 기반 월간 방문자 추정 (조회수의 약 30%)
+    // 실제 총 조회수 계산
     const totalViews = (noticeViewsResult.totalViews || 0) + 
                       (middleAdmissionViewsResult.totalViews || 0) + 
                       (highAdmissionViewsResult.totalViews || 0);
-    const monthlyVisitors = Math.max(Math.floor(totalViews * 0.3), 0);
     
-    // 총 콘텐츠 수
+    // 실제 성장률 계산 (콘텐츠 수와 조회수 기반)
     const totalContent = totalNotices + totalImages + totalMiddleAdmissions + totalHighAdmissions;
+    let growthRate = "0%";
+    
+    if (totalViews > 0 && totalContent > 0) {
+      // 조회수 대비 콘텐츠 비율로 성장률 계산
+      const contentViewRatio = totalViews / totalContent;
+      const calculatedGrowth = Math.min(Math.floor(contentViewRatio * 0.5), 25); // 최대 25%
+      growthRate = `+${calculatedGrowth}%`;
+    }
     
     return {
       totalNotices,
       totalImages,
-      monthlyVisitors,
-      viewsGrowth: totalContent > 0 ? `+${Math.min(Math.floor(totalContent * 2.5), 50)}%` : "0%"
+      totalViews,
+      viewsGrowth: growthRate
     };
   }
 

@@ -23,9 +23,9 @@ export default function Home() {
               <span className="text-gray-900">현실로 만들다</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed">
-              선과색미술학원은 지난 30년간 선화 예중, 예고 입시를 전문적으로 운영하며 
+              선과색미술학원은 예고입시, 예중입시 전문학원으로 선화예중입시, 선화예고입시, 서물미고, 미대입시를 전문적으로 지도합니다.
               <br className="hidden md:block" />
-              대한민국을 대표하는 실기력으로 학생들의 꿈을 실현시켜왔습니다.
+              체계적인 커리큘럼과 개인별 맞춤 지도로 1K+ 합격생을 배출한 검증된 교육시스템을 제공합니다.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link href="/middle-school">

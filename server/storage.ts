@@ -41,7 +41,7 @@ export interface IStorage {
   updateRoadmap(type: string, updates: UpdateRoadmap): Promise<Roadmap | undefined>;
 
   // Stats
-  getStats(): Promise<{ totalNotices: number, totalImages: number, monthlyVisitors: number, viewsGrowth: string }>;
+  getStats(): Promise<{ totalNotices: number, totalImages: number, totalViews: number, viewsGrowth: string }>;
 
   // Comment methods
   getComments(type: string, postId: number): Promise<Comment[]>;
@@ -416,12 +416,12 @@ export class MemStorage implements IStorage {
     return updatedRoadmap;
   }
 
-  async getStats(): Promise<{ totalNotices: number, totalImages: number, monthlyVisitors: number, viewsGrowth: string }> {
+  async getStats(): Promise<{ totalNotices: number, totalImages: number, totalViews: number, viewsGrowth: string }> {
     return {
       totalNotices: this.notices.size,
       totalImages: this.galleryItems.size,
-      monthlyVisitors: 3247,
-      viewsGrowth: "+12%"
+      totalViews: 0,
+      viewsGrowth: "0%"
     };
   }
 

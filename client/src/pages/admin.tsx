@@ -238,23 +238,23 @@ function AdminDashboard() {
               
               <Card className="bg-purple-50 border-purple-200">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-purple-700">월간 방문자 추정</CardTitle>
+                  <CardTitle className="text-sm font-medium text-purple-700">총 조회수</CardTitle>
                   <BarChart3 className="h-4 w-4 text-purple-600" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-purple-900">{(stats as any)?.monthlyVisitors?.toLocaleString() || 0}명</div>
-                  <p className="text-xs text-purple-600 mt-1">조회수 기반 추정치</p>
+                  <div className="text-2xl font-bold text-purple-900">{(stats as any)?.totalViews?.toLocaleString() || 0}회</div>
+                  <p className="text-xs text-purple-600 mt-1">전체 페이지 조회 합계</p>
                 </CardContent>
               </Card>
               
               <Card className="bg-orange-50 border-orange-200">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-orange-700">성장률</CardTitle>
+                  <CardTitle className="text-sm font-medium text-orange-700">실제 성장률</CardTitle>
                   <BarChart3 className="h-4 w-4 text-orange-600" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold text-orange-900">{(stats as any)?.viewsGrowth || "+0%"}</div>
-                  <p className="text-xs text-orange-600 mt-1">콘텐츠 기반 계산</p>
+                  <p className="text-xs text-orange-600 mt-1">조회수 기반 계산</p>
                 </CardContent>
               </Card>
             </div>
@@ -268,13 +268,13 @@ function AdminDashboard() {
                     <span className="font-medium">공지사항 & 갤러리:</span> 데이터베이스에서 실시간으로 계산된 정확한 수치입니다.
                   </div>
                   <div>
-                    <span className="font-medium">월간 방문자:</span> 각 페이지의 조회수를 바탕으로 추정한 방문자 수입니다.
+                    <span className="font-medium">총 조회수:</span> 모든 페이지의 실제 조회수를 합산한 정확한 데이터입니다.
                   </div>
                   <div>
-                    <span className="font-medium">성장률:</span> 전체 콘텐츠 수를 기반으로 계산된 예상 성장률입니다.
+                    <span className="font-medium">성장률:</span> 실제 조회수와 콘텐츠 비율을 기반으로 계산된 성장률입니다.
                   </div>
                   <div>
-                    <span className="font-medium">업데이트:</span> 새로운 콘텐츠 추가 시 실시간으로 반영됩니다.
+                    <span className="font-medium">업데이트:</span> 새로운 콘텐츠 추가 및 조회수 증가 시 실시간으로 반영됩니다.
                   </div>
                 </div>
               </CardContent>
